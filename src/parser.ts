@@ -1,8 +1,11 @@
 import { SAXParser } from "./dep.ts";
-import { Channel } from "./types/mod.ts";
+import { Channel, RssField } from "./types/mod.ts";
 import { isEmpty } from "./str.ts";
 
 export const parse = (input: string): Promise<Channel | null> => {
+  const dateFields = [RssField.PubDate, RssField.LastBuildDate];
+  const numberFields = [RssField.Ttl, RssField.SkipHours, RssField.Length];
+
   const worker = new Promise<Channel | null>((resolve, reject) => {
     let channel: Channel;
     let textToAddOnNodeClose: string[] = [];
@@ -49,10 +52,22 @@ export const parse = (input: string): Promise<Channel | null> => {
 
       if (textToAddOnNodeClose.length !== 0) {
         if (Object.keys(node).length === 0) {
-          node = textToAddOnNodeClose.reduce(
+          const valueField = textToAddOnNodeClose.reduce(
             (res, text) => `${res}${text}`,
             "",
           );
+
+          if (isEmpty(valueField)) {
+            node = "";
+          } else {
+            if (dateFields.some((name) => name === nodeName)) {
+              node = new Date(valueField);
+            } else if (numberFields.some((name) => name === nodeName)) {
+              node = parseInt(valueField);
+            } else {
+              node = valueField;
+            }
+          }
         }
 
         textToAddOnNodeClose = [];
@@ -98,31 +113,31 @@ const getNodeName = (name: string): string => {
   if (!isEmpty(name)) {
     result = name;
     switch (name) {
-      case "TEXTINPUT":
+      case RssField.TextInput:
         result = "textInput";
         break;
-      case "SKIPHOURS":
+      case RssField.SkipHours:
         result = "skipHours";
         break;
-      case "SKIPDAYS":
+      case RssField.SkipDays:
         result = "skipDays";
         break;
-      case "PUBDATE":
+      case RssField.PubDate:
         result = "pubDate";
         break;
-      case "MANAGINGEDITOR":
+      case RssField.ManagingEditor:
         result = "managingEditor";
         break;
-      case "WEBMASTER":
+      case RssField.WebMaster:
         result = "webMaster";
         break;
-      case "LASTBUILDDATE":
+      case RssField.LastBuildDate:
         result = "lastBuildDate";
         break;
-      case "ITEM":
+      case RssField.Item:
         result = "items";
         break;
-      case "CATEGORY":
+      case RssField.Category:
         result = "categories";
         break;
       default:
