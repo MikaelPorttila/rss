@@ -1,4 +1,4 @@
-import { SAXParser } from "./dep.ts";
+import { SAXParser } from "../dep.ts";
 import { Channel } from "./types/mod.ts";
 import { isEmpty } from "./str.ts";
 import { RssField } from "./types/rss-field.ts";
@@ -9,6 +9,11 @@ export const parseRss = (input: string): Promise<Channel> => {
   const numberFields = [RssField.Ttl, RssField.SkipHours, RssField.Length];
 
   const worker = new Promise<Channel>((resolve, reject) => {
+    if (isEmpty(input)) {
+      reject("[RSS Parser] Input was undefined, null or empty");
+      return;
+    }
+
     let textToAddOnNodeClose: string[] = [];
     let skipParse = true;
     const stack: any[] = [];
