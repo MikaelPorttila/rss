@@ -26,7 +26,7 @@ export const parse = (input: string): Promise<Channel | null> => {
     };
 
     xmlParser.oncdata = (cdata: string) => {
-      textToAddOnNodeClose.push(cdata.trim());
+      textToAddOnNodeClose.push(cdata);
     };
 
     xmlParser.onattribute = (attribute: Attribute): void => {
@@ -40,7 +40,7 @@ export const parse = (input: string): Promise<Channel | null> => {
         return;
       }
 
-      textToAddOnNodeClose.push(text.trim());
+      textToAddOnNodeClose.push(text);
     };
 
     xmlParser.onclosetag = (nodeName: string): void => {
@@ -55,7 +55,7 @@ export const parse = (input: string): Promise<Channel | null> => {
           const valueField = textToAddOnNodeClose.reduce(
             (res, text) => `${res}${text}`,
             "",
-          );
+          ).trim();
 
           if (isEmpty(valueField)) {
             node = "";
