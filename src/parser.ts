@@ -1,18 +1,19 @@
 import { SAXParser } from "./dep.ts";
-import { Channel, RssField } from "./types/mod.ts";
+import { Channel } from "./types/mod.ts";
 import { isEmpty } from "./str.ts";
+import { RssField } from "./types/rss-field.ts";
 
-export const parse = (input: string): Promise<Channel | null> => {
+export const parseRss = (input: string): Promise<Channel> => {
   const dateFields = [RssField.PubDate, RssField.LastBuildDate];
   const numberFields = [RssField.Ttl, RssField.SkipHours, RssField.Length];
 
-  const worker = new Promise<Channel | null>((resolve, reject) => {
+  const worker = new Promise<Channel>((resolve, reject) => {
     let textToAddOnNodeClose: string[] = [];
     let skipParse = true;
     const stack: any[] = [];
 
     const xmlParser = new SAXParser(false, {
-      trim: true
+      trim: true,
     });
 
     xmlParser.onopentag = (node: OpenTag) => {

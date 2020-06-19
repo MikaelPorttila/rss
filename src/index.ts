@@ -1,4 +1,4 @@
-export * from "./types/mod.ts";
+/* export * from "./types/mod.ts";
 import { Channel } from "./types/mod.ts";
 import { parse } from "./parser.ts";
 
@@ -9,3 +9,4 @@ export const parseRss = (str: string): Promise<Channel> => {
   });
   return parseWorker;
 };
+ */
