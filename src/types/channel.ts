@@ -4,13 +4,10 @@ import { Item } from "./item.ts";
 
 // https://validator.w3.org/feed/docs/rss2.html#requiredChannelElements
 export interface Channel {
-  // Required fields
   title: string;
   link: string;
   description: string;
   items: Item[];
-
-  // Optional fields
   language?: string;
   copyright?: string;
   managingEditor?: string;

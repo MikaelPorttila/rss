@@ -1,17 +1,16 @@
 import { SAXParser } from "./dep.ts";
-import { Channel, Item, Image } from "./types/mod.ts";
+import { Channel } from "./types/mod.ts";
 import { isEmpty } from "./str.ts";
 
 export const parse = (input: string): Promise<Channel | null> => {
   const worker = new Promise<Channel | null>((resolve, reject) => {
-    let channel = {} as Channel;
-
-    const stack: any[] = [];
+    let channel: Channel;
     let textToAddOnNodeClose: string[] = [];
+    let skipParse = true;
+    const stack: any[] = [];
 
     const xmlParser = new SAXParser(false, {});
 
-    let skipParse = true;
     xmlParser.onopentag = (node: OpenTag) => {
       if (skipParse) {
         if (node.name == "CHANNEL") {
@@ -23,26 +22,17 @@ export const parse = (input: string): Promise<Channel | null> => {
       stack.push({});
     };
 
-    /* xmlParser.onopencdata = (cdata: any) => {
-      console.log('cdata', cdata);
-    }; */
-
-    /* xmlParser.onclosecdata = (cdata: any) => {
-      // nothing for now
-      console.log('cdataclose', cdata);
-    } */
-
     xmlParser.oncdata = (cdata: string) => {
       textToAddOnNodeClose.push(cdata.trim());
-    }
+    };
 
-    xmlParser.onattribute = (attribute: Attribute) => {
+    xmlParser.onattribute = (attribute: Attribute): void => {
       if (skipParse) {
         return;
       }
     };
 
-    xmlParser.ontext = function (text: string) {
+    xmlParser.ontext = (text: string): void => {
       if (skipParse) {
         return;
       }
@@ -50,7 +40,7 @@ export const parse = (input: string): Promise<Channel | null> => {
       textToAddOnNodeClose.push(text.trim());
     };
 
-    xmlParser.onclosetag = (nodeName: string) => {
+    xmlParser.onclosetag = (nodeName: string): void => {
       if (skipParse) {
         return;
       }
@@ -75,6 +65,7 @@ export const parse = (input: string): Promise<Channel | null> => {
       } else {
         const name = getNodeName(nodeName);
         const prevNode = stack[stack.length - 1];
+
         if (prevNode[name]) {
           if (!Array.isArray(prevNode[name])) {
             prevNode[name] = [prevNode[name]];
@@ -87,11 +78,11 @@ export const parse = (input: string): Promise<Channel | null> => {
       }
     };
 
-    xmlParser.onerror = (error: any) => {
+    xmlParser.onerror = (error: any): void => {
       reject(error);
     };
 
-    xmlParser.onend = () => {
+    xmlParser.onend = (): void => {
       resolve(channel);
     };
 
