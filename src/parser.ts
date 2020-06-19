@@ -11,10 +11,7 @@ export const parseRss = (input: string): Promise<Channel> => {
     let textToAddOnNodeClose: string[] = [];
     let skipParse = true;
     const stack: any[] = [];
-
-    const xmlParser = new SAXParser(false, {
-      trim: true,
-    });
+    const xmlParser = new SAXParser(false, { trim: true });
 
     xmlParser.onopentag = (node: OpenTag) => {
       if (skipParse) {
@@ -27,9 +24,7 @@ export const parseRss = (input: string): Promise<Channel> => {
       stack.push({});
     };
 
-    xmlParser.oncdata = (cdata: string) => {
-      textToAddOnNodeClose.push(cdata);
-    };
+    xmlParser.oncdata = (cdata: string) => textToAddOnNodeClose.push(cdata);
 
     xmlParser.onattribute = (attribute: Attribute): void => {
       if (skipParse) {
@@ -95,12 +90,7 @@ export const parseRss = (input: string): Promise<Channel> => {
       }
     };
 
-    xmlParser.onerror = (error: any): void => {
-      reject(error);
-    };
-
-    xmlParser.onend = (): void => {
-    };
+    xmlParser.onerror = (error: any): void => reject(error);
 
     xmlParser.write(input).close();
   });
