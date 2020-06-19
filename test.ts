@@ -1,14 +1,10 @@
-import { parseRss } from "./src/index.ts";
+import { parseRss } from "./mod.ts";
 
 (async () => {
-  const response = await fetch(
-    //"http://static.userland.com/gems/backend/rssTwoExample2.xml",
-    "https://www.fz.se/feeds/nyheter",
-  );
+  const response = await fetch("http://static.userland.com/gems/backend/rssTwoExample2.xml");
   const xml = await response.text();
-  //console.log(xml);
   const channel = await parseRss(xml);
 
-
-  //console.log(channel);
+  console.log("========== RESULT ============");
+  console.log(channel);
 })();

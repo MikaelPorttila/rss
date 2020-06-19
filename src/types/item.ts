@@ -6,7 +6,7 @@ export interface Item {
   link: string;
   description: string;
   author: string;
-  category: string;
+  categories: string[];
   comments: string;
   enclosure?: Enclosure;
   guid?: string;
