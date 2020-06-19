@@ -2,6 +2,7 @@ import { SAXParser } from "./dep.ts";
 import { Channel } from "./types/mod.ts";
 import { isEmpty } from "./str.ts";
 import { RssField } from "./types/rss-field.ts";
+import { mapFieldName } from "./mapper.ts";
 
 export const parseRss = (input: string): Promise<Channel> => {
   const dateFields = [RssField.PubDate, RssField.LastBuildDate];
@@ -75,7 +76,7 @@ export const parseRss = (input: string): Promise<Channel> => {
         resolve(node as Channel);
         skipParse = true;
       } else {
-        const name = getNodeName(nodeName);
+        const name = mapFieldName(nodeName);
         const prevNode = stack[stack.length - 1];
 
         if (prevNode[name]) {
@@ -91,53 +92,10 @@ export const parseRss = (input: string): Promise<Channel> => {
     };
 
     xmlParser.onerror = (error: any): void => reject(error);
-
     xmlParser.write(input).close();
   });
 
   return worker;
-};
-
-const getNodeName = (name: string): string => {
-  let result = name;
-
-  if (!isEmpty(name)) {
-    result = name;
-    switch (name) {
-      case RssField.TextInput:
-        result = "textInput";
-        break;
-      case RssField.SkipHours:
-        result = "skipHours";
-        break;
-      case RssField.SkipDays:
-        result = "skipDays";
-        break;
-      case RssField.PubDate:
-        result = "pubDate";
-        break;
-      case RssField.ManagingEditor:
-        result = "managingEditor";
-        break;
-      case RssField.WebMaster:
-        result = "webMaster";
-        break;
-      case RssField.LastBuildDate:
-        result = "lastBuildDate";
-        break;
-      case RssField.Item:
-        result = "items";
-        break;
-      case RssField.Category:
-        result = "categories";
-        break;
-      default:
-        result = name.toLowerCase();
-        break;
-    }
-  }
-
-  return result;
 };
 
 interface Attribute {
