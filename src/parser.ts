@@ -11,7 +11,9 @@ export const parse = (input: string): Promise<Channel | null> => {
     let skipParse = true;
     const stack: any[] = [];
 
-    const xmlParser = new SAXParser(false, {});
+    const xmlParser = new SAXParser(false, {
+      trim: true
+    });
 
     xmlParser.onopentag = (node: OpenTag) => {
       if (skipParse) {
@@ -32,6 +34,7 @@ export const parse = (input: string): Promise<Channel | null> => {
       if (skipParse) {
         return;
       }
+      // TODO: extend object with these attr.
     };
 
     xmlParser.ontext = (text: string): void => {
@@ -54,7 +57,7 @@ export const parse = (input: string): Promise<Channel | null> => {
           const valueField = textToAddOnNodeClose.reduce(
             (res, text) => res + text,
             "",
-          ).trim();
+          );
 
           if (isEmpty(valueField)) {
             node = "";
