@@ -7,7 +7,6 @@ export const parse = (input: string): Promise<Channel | null> => {
   const numberFields = [RssField.Ttl, RssField.SkipHours, RssField.Length];
 
   const worker = new Promise<Channel | null>((resolve, reject) => {
-    let channel: Channel;
     let textToAddOnNodeClose: string[] = [];
     let skipParse = true;
     const stack: any[] = [];
@@ -53,7 +52,7 @@ export const parse = (input: string): Promise<Channel | null> => {
       if (textToAddOnNodeClose.length !== 0) {
         if (Object.keys(node).length === 0) {
           const valueField = textToAddOnNodeClose.reduce(
-            (res, text) => `${res}${text}`,
+            (res, text) => res + text,
             "",
           ).trim();
 
@@ -74,9 +73,8 @@ export const parse = (input: string): Promise<Channel | null> => {
       }
 
       if (nodeName === "CHANNEL") {
+        resolve(node as Channel);
         skipParse = true;
-        channel = node as Channel;
-        //TODO: Try to call xmlParser.close();
       } else {
         const name = getNodeName(nodeName);
         const prevNode = stack[stack.length - 1];
@@ -98,7 +96,6 @@ export const parse = (input: string): Promise<Channel | null> => {
     };
 
     xmlParser.onend = (): void => {
-      resolve(channel);
     };
 
     xmlParser.write(input).close();
