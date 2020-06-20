@@ -2,7 +2,7 @@ import { parseRss } from './mod.ts';
 
 (async () => {
   const response = await fetch(
-    "https://www.reddit.com/r/Deno.rss",
+    "https://lorem-rss.herokuapp.com/feed?length=20",
   );
   const xml = await response.text();
   console.log(xml);
