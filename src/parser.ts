@@ -11,7 +11,7 @@ export const parseRss = (input: string): Promise<Channel> => {
       return;
     }
 
-    let textNodes: string[] = [];
+    let textNode: string | null = null;
     let skipParse = true;
     const stack: any[] = [];
     const xmlParser = new SAXParser(false, { trim: true });
@@ -32,7 +32,7 @@ export const parseRss = (input: string): Promise<Channel> => {
         return;
       }
 
-      textNodes.push(cdata);
+      textNode = (textNode || "") + cdata;
     };
 
     xmlParser.onattribute = (attr: Attribute): void => {
@@ -58,7 +58,7 @@ export const parseRss = (input: string): Promise<Channel> => {
         return;
       }
 
-      textNodes.push(text);
+      textNode = (textNode || "") + text;
     };
 
     xmlParser.onclosetag = (nodeName: string): void => {
@@ -72,8 +72,8 @@ export const parseRss = (input: string): Promise<Channel> => {
         resolve(node as Channel);
         skipParse = true;
       } else {
-        if (textNodes.length !== 0) {
-          const value = textNodes.join().trim();
+        if (textNode != null) {
+          const value = textNode.trim();
           switch (nodeName) {
             case Field.LastBuildDate:
             case Field.PubDate:
@@ -92,7 +92,7 @@ export const parseRss = (input: string): Promise<Channel> => {
               break;
           }
 
-          textNodes = [];
+          textNode = null;
         }
 
         const name = mapFieldName(nodeName);
