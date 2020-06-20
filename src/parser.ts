@@ -1,7 +1,7 @@
 import { SAXParser } from "../dep.ts";
 import { Channel } from "./types/mod.ts";
 import { isEmpty } from "./str.ts";
-import { RssField } from "./types/rss-field.ts";
+import { Field } from "./types/field.ts";
 import { mapFieldName } from "./mapper.ts";
 
 export const parseRss = (input: string): Promise<Channel> => {
@@ -44,7 +44,7 @@ export const parseRss = (input: string): Promise<Channel> => {
       const name = mapFieldName(attr.name);
 
       switch (attr.name) {
-        case RssField.isPermaLink:
+        case Field.isPermaLink:
           node[name] = attr.value === "true";
           break;
         default:
@@ -75,16 +75,16 @@ export const parseRss = (input: string): Promise<Channel> => {
         if (textNodes.length !== 0) {
           const value = textNodes.join().trim();
           switch (nodeName) {
-            case RssField.LastBuildDate:
-            case RssField.PubDate:
+            case Field.LastBuildDate:
+            case Field.PubDate:
               node = new Date(value);
               break;
-            case RssField.Ttl:
-            case RssField.SkipDays:
-            case RssField.SkipHours:
-            case RssField.Length:
-            case RssField.Width:
-            case RssField.Height:
+            case Field.Ttl:
+            case Field.SkipDays:
+            case Field.SkipHours:
+            case Field.Length:
+            case Field.Width:
+            case Field.Height:
               node = parseInt(value);
               break;
             default:
@@ -99,8 +99,8 @@ export const parseRss = (input: string): Promise<Channel> => {
         const prevNode = stack[stack.length - 1];
 
         switch (nodeName) {
-          case RssField.Category:
-          case RssField.Item:
+          case Field.Category:
+          case Field.Item:
             if (!prevNode[name]) {
               prevNode[name] = [];
             }

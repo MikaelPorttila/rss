@@ -1,40 +1,39 @@
 import { isEmpty } from "./str.ts";
-import { RssField } from "./types/rss-field.ts";
+import { Field } from "./types/field.ts";
 
 export const mapFieldName = (name: string): string => {
   let result = name;
 
   if (!isEmpty(name)) {
-    result = name;
     switch (name) {
-      case RssField.TextInput:
+      case Field.TextInput:
         result = "textInput";
         break;
-      case RssField.SkipHours:
+      case Field.SkipHours:
         result = "skipHours";
         break;
-      case RssField.SkipDays:
+      case Field.SkipDays:
         result = "skipDays";
         break;
-      case RssField.PubDate:
+      case Field.PubDate:
         result = "pubDate";
         break;
-      case RssField.ManagingEditor:
+      case Field.ManagingEditor:
         result = "managingEditor";
         break;
-      case RssField.WebMaster:
+      case Field.WebMaster:
         result = "webMaster";
         break;
-      case RssField.LastBuildDate:
+      case Field.LastBuildDate:
         result = "lastBuildDate";
         break;
-      case RssField.Item:
+      case Field.Item:
         result = "items";
         break;
-      case RssField.Category:
+      case Field.Category:
         result = "categories";
         break;
-      case RssField.isPermaLink:
+      case Field.isPermaLink:
         result = "isPermaLink";
         break;
       default:

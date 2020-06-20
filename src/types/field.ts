@@ -1,4 +1,4 @@
-export enum RssField {
+export enum Field {
   Title = "TITLE",
   Link = "LINK",
   Ttl = "TTL",
