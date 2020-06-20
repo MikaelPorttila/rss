@@ -1,4 +1,5 @@
 export enum Field {
+  Channel = "CHANNEL",
   Title = "TITLE",
   Link = "LINK",
   Ttl = "TTL",

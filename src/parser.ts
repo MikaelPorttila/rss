@@ -18,7 +18,7 @@ export const parseRss = (input: string): Promise<Channel> => {
 
     xmlParser.onopentag = (node: OpenTag) => {
       if (skipParse) {
-        if (node.name == "CHANNEL") {
+        if (node.name === Field.Channel) {
           skipParse = false;
         } else {
           return;
@@ -68,7 +68,7 @@ export const parseRss = (input: string): Promise<Channel> => {
 
       let node = stack.pop();
 
-      if (nodeName === "CHANNEL") {
+      if (stack.length === 0) {
         resolve(node as Channel);
         skipParse = true;
       } else {
