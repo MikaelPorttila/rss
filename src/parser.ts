@@ -5,16 +5,13 @@ import { RssField } from "./types/rss-field.ts";
 import { mapFieldName } from "./mapper.ts";
 
 export const parseRss = (input: string): Promise<Channel> => {
-  const dateFields = [RssField.PubDate, RssField.LastBuildDate];
-  const numberFields = [RssField.Ttl, RssField.SkipHours, RssField.Length];
-
   const worker = new Promise<Channel>((resolve, reject) => {
     if (isEmpty(input)) {
       reject("[RSS Parser] Input was undefined, null or empty");
       return;
     }
 
-    let textToAddOnNodeClose: string[] = [];
+    let textNodes: string[] = [];
     let skipParse = true;
     const stack: any[] = [];
     const xmlParser = new SAXParser(false, { trim: true });
@@ -30,13 +27,30 @@ export const parseRss = (input: string): Promise<Channel> => {
       stack.push({});
     };
 
-    xmlParser.oncdata = (cdata: string) => textToAddOnNodeClose.push(cdata);
-
-    xmlParser.onattribute = (attribute: Attribute): void => {
+    xmlParser.oncdata = (cdata: string) => {
       if (skipParse) {
         return;
       }
-      // TODO: extend object with these attr.
+
+      textNodes.push(cdata);
+    };
+
+    xmlParser.onattribute = (attr: Attribute): void => {
+      if (skipParse) {
+        return;
+      }
+
+      const node = stack[stack.length - 1];
+      const name = mapFieldName(attr.name);
+
+      switch (attr.name) {
+        case RssField.isPermaLink:
+          node[name] = attr.value === "true";
+          break;
+        default:
+          node[name] = attr.value;
+          break;
+      }
     };
 
     xmlParser.ontext = (text: string): void => {
@@ -44,7 +58,7 @@ export const parseRss = (input: string): Promise<Channel> => {
         return;
       }
 
-      textToAddOnNodeClose.push(text);
+      textNodes.push(text);
     };
 
     xmlParser.onclosetag = (nodeName: string): void => {
@@ -54,37 +68,51 @@ export const parseRss = (input: string): Promise<Channel> => {
 
       let node = stack.pop();
 
-      if (textToAddOnNodeClose.length !== 0) {
-        if (Object.keys(node).length === 0) {
-          const valueField = textToAddOnNodeClose.reduce(
-            (res, text) => res + text,
-            "",
-          );
-
-          if (isEmpty(valueField)) {
-            node = "";
-          } else {
-            if (dateFields.some((name) => name === nodeName)) {
-              node = new Date(valueField);
-            } else if (numberFields.some((name) => name === nodeName)) {
-              node = parseInt(valueField);
-            } else {
-              node = valueField;
-            }
-          }
-        }
-
-        textToAddOnNodeClose = [];
-      }
-
       if (nodeName === "CHANNEL") {
         resolve(node as Channel);
         skipParse = true;
       } else {
+        if (textNodes.length !== 0) {
+          const value = textNodes.join().trim();
+          switch (nodeName) {
+            case RssField.LastBuildDate:
+            case RssField.PubDate:
+              node = new Date(value);
+              break;
+            case RssField.Ttl:
+            case RssField.SkipDays:
+            case RssField.SkipHours:
+            case RssField.Length:
+            case RssField.Width:
+            case RssField.Height:
+              node = parseInt(value);
+              break;
+            default:
+              node = value;
+              break;
+          }
+
+          textNodes = [];
+        }
+
         const name = mapFieldName(nodeName);
         const prevNode = stack[stack.length - 1];
 
-        if (prevNode[name]) {
+        switch (nodeName) {
+          case RssField.Category:
+          case RssField.Item:
+            if (!prevNode[name]) {
+              prevNode[name] = [];
+            }
+
+            prevNode[name].push(node);
+            break;
+          default:
+            prevNode[name] = node;
+            break;
+        }
+
+        /* if (prevNode[name]) {
           if (!Array.isArray(prevNode[name])) {
             prevNode[name] = [prevNode[name]];
           }
@@ -92,7 +120,7 @@ export const parseRss = (input: string): Promise<Channel> => {
           prevNode[name].push(node);
         } else {
           prevNode[name] = node;
-        }
+        } */
       }
     };
 

@@ -26,4 +26,5 @@ export enum RssField {
   Width = "WIDTH",
   Height = "HEIGHT",
   Length = "LENGTH",
+  isPermaLink = "ISPERMALINK",
 }

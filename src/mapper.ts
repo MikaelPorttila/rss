@@ -34,6 +34,9 @@ export const mapFieldName = (name: string): string => {
       case RssField.Category:
         result = "categories";
         break;
+      case RssField.isPermaLink:
+        result = "isPermaLink";
+        break;
       default:
         result = name.toLowerCase();
         break;

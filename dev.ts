@@ -1,8 +1,9 @@
-import { parseRss } from './mod.ts';
+import { parseRss } from "./mod.ts";
 
 (async () => {
   const response = await fetch(
-    "https://lorem-rss.herokuapp.com/feed?length=20",
+    //"https://lorem-rss.herokuapp.com/feed?length=20",
+    "https://www.engadget.com/rss.xml",
   );
   const xml = await response.text();
   console.log(xml);
