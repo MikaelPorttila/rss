@@ -111,16 +111,6 @@ export const parseRss = (input: string): Promise<Channel> => {
             prevNode[name] = node;
             break;
         }
-
-        /* if (prevNode[name]) {
-          if (!Array.isArray(prevNode[name])) {
-            prevNode[name] = [prevNode[name]];
-          }
-
-          prevNode[name].push(node);
-        } else {
-          prevNode[name] = node;
-        } */
       }
     };
 
