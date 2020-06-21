@@ -13,7 +13,10 @@ export const parseRss = (input: string): Promise<Channel | Feed> => {
       return;
     }
 
-    const xmlParser = new SAXParser(false, { trim: true });
+    const xmlParser = new SAXParser(false, {
+      trim: true,
+      lowercase: true,
+    });
     let composer: Composer;
 
     const onComplete = (result: Channel | Feed): void => {
@@ -43,8 +46,8 @@ export const parseRss = (input: string): Promise<Channel | Feed> => {
 
       xmlParser.onopentag = composer.onOpenTag;
       xmlParser.onclosetag = composer.onCloseTag;
-      xmlParser.ontext = composer.onText;
-      xmlParser.oncdata = composer.onCData;
+      xmlParser.ontext = composer.onValueNode;
+      xmlParser.oncdata = composer.onValueNode;
       xmlParser.onattribute = composer.onAttribute;
     };
 
@@ -56,6 +59,6 @@ export const parseRss = (input: string): Promise<Channel | Feed> => {
 };
 
 enum FeedType {
-  Rss = "RSS",
-  Atom = "FEED",
+  Rss = "rss",
+  Atom = "feed",
 }

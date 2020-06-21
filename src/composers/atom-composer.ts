@@ -5,27 +5,16 @@ export class AtomComposer implements Composer {
   constructor(private complete: (feed: Feed) => void) {
   }
   private stack: any[] = [{}];
-  private valueNode: string | null = null;
-
   onOpenTag = (node: OpenTag): void => {
     this.stack.push({});
   };
+
   onCloseTag = (nodeName: string): void => {
     let node = this.stack.pop();
 
     if (this.stack.length === 0) {
       this.complete(node);
       return;
-    }
-
-    if (this.valueNode != null) {
-      if (isDateField(nodeName)) {
-        node = new Date(this.valueNode);
-      } else {
-        node = this.valueNode.trim();
-      }
-
-      this.valueNode = null;
     }
 
     let propertyName;
@@ -47,8 +36,13 @@ export class AtomComposer implements Composer {
         propertyName = "entries";
         isArrayNode = true;
         break;
+      case Field.Updated:
+      case Field.Published:
+        propertyName = nodeName;
+        node = new Date(node);
+        break;
       default:
-        propertyName = nodeName.toLowerCase();
+        propertyName = nodeName;
     }
 
     const parentNode = this.stack[this.stack.length - 1];
@@ -69,12 +63,10 @@ export class AtomComposer implements Composer {
       value = new Date(attr.value);
     }
 
-    this.stack[this.stack.length - 1][attr.name.toLowerCase()] = value;
+    this.stack[this.stack.length - 1][attr.name] = value;
   };
-  onCData = (text: string): void => {
-    this.valueNode = text;
-  };
-  onText = (text: string): void => {
-    this.valueNode = text;
+
+  onValueNode = (text: string): void => {
+    this.stack[this.stack.length - 1] = text.trim();
   };
 }

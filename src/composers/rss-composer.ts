@@ -75,11 +75,7 @@ export class RssComposer implements Composer {
     }
   };
 
-  onCData = (text: string): void => {
-    this.textNode = text;
-  };
-
-  onText = (text: string): void => {
+  onValueNode = (text: string): void => {
     this.textNode = text;
   };
 
