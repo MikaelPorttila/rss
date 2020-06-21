@@ -3,7 +3,6 @@ import { Feed, isDateField, Field } from "../types/atom.ts";
 
 export class AtomComposer implements Composer {
   constructor(private complete: (feed: Feed) => void) {
-    console.log("ATOM Composer init");
   }
   private stack: any[] = [{}];
   private valueNode: string | null = null;
@@ -29,9 +28,7 @@ export class AtomComposer implements Composer {
       this.valueNode = null;
     }
 
-    const parentNode = this.stack[this.stack.length - 1];
     let propertyName;
-
     let isArrayNode = false;
     switch (nodeName) {
       case Field.Category:
@@ -54,6 +51,7 @@ export class AtomComposer implements Composer {
         propertyName = nodeName.toLowerCase();
     }
 
+    const parentNode = this.stack[this.stack.length - 1];
     if (isArrayNode) {
       if (!parentNode[propertyName]) {
         parentNode[propertyName] = [];
