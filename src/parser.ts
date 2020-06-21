@@ -1,10 +1,9 @@
 import { SAXParser } from "../dep.ts";
 import { Channel } from "./types/mod.ts";
 import { isEmpty } from "./str.ts";
-import { OpenTag, Composer } from "./composers/composer.ts";
-import { AtomComposer } from "./composers/atom-composer.ts";
-import { RssComposer } from "./composers/rss-composer.ts";
 import { Feed } from "./types/atom.ts";
+import { resolveAtomField } from "./resolvers/atom-resolver.ts";
+import { resolveRssField } from "./resolvers/rss-resolver.ts";
 
 export const parseRss = (input: string): Promise<Channel | Feed> => {
   const worker = new Promise<Channel | Feed>((resolve, reject) => {
@@ -13,46 +12,83 @@ export const parseRss = (input: string): Promise<Channel | Feed> => {
       return;
     }
 
-    const xmlParser = new SAXParser(false, {
+    const stack: any[] = [{}];
+    const parser = new SAXParser(false, {
       trim: true,
       lowercase: true,
     });
-    let composer: Composer;
+    let resolveField: (nodeName: string) => [string, boolean, boolean, boolean];
 
-    const onComplete = (result: Channel | Feed): void => {
-      Object.assign(xmlParser, {
-        onopentag: undefined,
-        onclosetag: undefined,
-        ontext: undefined,
-        oncdata: undefined,
-        onattribute: undefined,
-      });
+    parser.ontext = (text: string): void => {
+      stack[stack.length - 1] = text.trim();
+    };
+    parser.oncdata = (text: string): void => {
+      stack[stack.length - 1] = text.trim();
+    };
+    const onOpenTag = (): void => {
+      stack.push({});
+    };
+    parser.onattribute = (attr: Attribute): void => {
+      stack[stack.length - 1][attr.name] = attr.value.trim();
+    };
+    parser.onclosetag = (nodeName: string) => {
+      let node = stack.pop();
 
-      resolve(result);
+      if (stack.length === 0) {
+        Object.assign(parser, {
+          onopentag: undefined,
+          onclosetag: undefined,
+          ontext: undefined,
+          oncdata: undefined,
+          onattribute: undefined,
+        });
+
+        resolve(node);
+      }
+
+      const [
+        propertyName,
+        isArrayNode,
+        isNumber,
+        isDate,
+      ] = resolveField(nodeName);
+
+      if (!isEmpty(node)) {
+        if (isNumber) {
+          node = parseInt(node);
+        } else if (isDate) {
+          node = new Date(node);
+        }
+      }
+
+      const targetNode = stack[stack.length - 1];
+      if (isArrayNode) {
+        if (!targetNode[propertyName]) {
+          targetNode[propertyName] = [];
+        }
+
+        targetNode[propertyName].push(node);
+      } else {
+        targetNode[propertyName] = node;
+      }
     };
 
-    xmlParser.onopentag = (node: OpenTag) => {
+    parser.onopentag = (node: OpenTag) => {
       switch (node.name) {
         case FeedType.Atom:
-          composer = new AtomComposer(onComplete);
+          resolveField = resolveAtomField;
           break;
         case FeedType.Rss:
-          composer = new RssComposer(onComplete);
+          resolveField = resolveRssField;
           break;
         default:
           reject(`Type ${node.name} is not supported`);
           break;
       }
 
-      xmlParser.onopentag = composer.onOpenTag;
-      xmlParser.onclosetag = composer.onCloseTag;
-      xmlParser.ontext = composer.onValueNode;
-      xmlParser.oncdata = composer.onValueNode;
-      xmlParser.onattribute = composer.onAttribute;
+      parser.onopentag = onOpenTag;
     };
-
-    xmlParser.onerror = (error: any): void => reject(error);
-    xmlParser.write(input).close();
+    parser.write(input).close();
   });
 
   return worker;
@@ -61,4 +97,15 @@ export const parseRss = (input: string): Promise<Channel | Feed> => {
 enum FeedType {
   Rss = "rss",
   Atom = "feed",
+}
+
+interface Attribute {
+  name: string;
+  value: string;
+}
+
+interface OpenTag {
+  name: string;
+  attributes: {};
+  isSelfClosing: boolean;
 }
