@@ -5,6 +5,7 @@ import {
   assertNotEquals,
 } from "https://deno.land/std/testing/asserts.ts";
 import { parseRss } from "./mod.ts";
+import { Channel } from './src/types/rss.ts';
 
 let cache: string = "";
 const getRssFeed = async (): Promise<string> => {
@@ -46,14 +47,14 @@ Deno.test("Parser", async () => {
 
 Deno.test("Parser number handling", async () => {
   const xml = await getRssFeed();
-  const result = await parseRss(xml);
+  const result = await parseRss(xml) as Channel;
 
   assertEquals(typeof result.ttl, typeof 1);
 });
 
 Deno.test("Parser nested fields", async () => {
   const xml = await getRssFeed();
-  const result = await parseRss(xml);
+  const result = await parseRss(xml) as Channel;
 
   assertEquals(typeof result.items, typeof []);
   assert(() => result.items === undefined, "items field is undefined");
