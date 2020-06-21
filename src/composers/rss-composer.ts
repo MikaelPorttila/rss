@@ -1,27 +1,26 @@
-import { Composer, OpenTag, Attribute } from './composer.ts';
-import { Field, Channel } from '../types/rss.ts';
-import {isEmpty} from './../str.ts';
+import { Composer, OpenTag, Attribute } from "./composer.ts";
+import { Field, Channel } from "../types/rss.ts";
+import { isEmpty } from "./../str.ts";
 
 export class RssComposer implements Composer {
-  
   constructor(private complete: (channel: Channel) => void) {}
 
   private stack: any[] = [];
   private textNode: string | null = null;
 
-  onOpenTag = (node: OpenTag) => {
+  onOpenTag = () => {
     this.stack.push({});
   };
 
   onCloseTag = (nodeName: string) => {
     let node = this.stack.pop();
 
-    if(this.stack.length === 0){
-      this.complete(node as any);
+    if (this.stack.length === 0) {
+      this.complete(node as Channel);
       return;
     }
 
-    if(this.textNode != null) {
+    if (this.textNode != null) {
       const value = this.textNode.trim();
       switch (nodeName) {
         case Field.LastBuildDate:
@@ -43,6 +42,7 @@ export class RssComposer implements Composer {
 
       this.textNode = null;
     }
+
     const name = this.mapFieldName(nodeName);
     const prevNode = this.stack[this.stack.length - 1];
 
@@ -61,11 +61,7 @@ export class RssComposer implements Composer {
     }
   };
 
-  onCData = (text: string): void => {
-    this.textNode = text;
-  };
-
-  onAttribute = (attr: Attribute) => {
+  onAttribute = (attr: Attribute): void => {
     const node = this.stack[this.stack.length - 1];
     const name = this.mapFieldName(attr.name);
 
@@ -78,53 +74,43 @@ export class RssComposer implements Composer {
         break;
     }
   };
-  onText = (text: string) => {
+
+  onCData = (text: string): void => {
+    this.textNode = text;
+  };
+
+  onText = (text: string): void => {
     this.textNode = text;
   };
 
   mapFieldName = (name: string): string => {
-    let result = name;
-
-    if(isEmpty(name)) {
-      return '';
+    if (isEmpty(name)) {
+      return "";
     }
-  
+
     switch (name) {
       case Field.TextInput:
-        result = "textInput";
-        break;
+        return "textInput";
       case Field.SkipHours:
-        result = "skipHours";
-        break;
+        return "skipHours";
       case Field.SkipDays:
-        result = "skipDays";
-        break;
+        return "skipDays";
       case Field.PubDate:
-        result = "pubDate";
-        break;
+        return "pubDate";
       case Field.ManagingEditor:
-        result = "managingEditor";
-        break;
+        return "managingEditor";
       case Field.WebMaster:
-        result = "webMaster";
-        break;
+        return "webMaster";
       case Field.LastBuildDate:
-        result = "lastBuildDate";
-        break;
+        return "lastBuildDate";
       case Field.Item:
-        result = "items";
-        break;
+        return "items";
       case Field.Category:
-        result = "categories";
-        break;
+        return "categories";
       case Field.isPermaLink:
-        result = "isPermaLink";
-        break;
+        return "isPermaLink";
       default:
-        result = name.toLowerCase();
-        break;
+        return name.toLowerCase();
     }
-  
-    return result;
   };
 }

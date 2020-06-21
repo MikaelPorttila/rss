@@ -96,5 +96,5 @@ export enum Field {
   Width = "WIDTH",
   Height = "HEIGHT",
   Length = "LENGTH",
-  isPermaLink = "ISPERMALINK"
+  isPermaLink = "ISPERMALINK",
 }

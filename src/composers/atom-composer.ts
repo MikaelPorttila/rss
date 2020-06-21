@@ -1,10 +1,9 @@
-import { Composer, OpenTag, Attribute } from './composer.ts';
-import { Feed, isDateField, Field } from '../types/atom.ts';
+import { Composer, OpenTag, Attribute } from "./composer.ts";
+import { Feed, isDateField, Field } from "../types/atom.ts";
 
 export class AtomComposer implements Composer {
-  
   constructor(private complete: (feed: Feed) => void) {
-    console.log('ATOM Composer init');
+    console.log("ATOM Composer init");
   }
   private stack: any[] = [{}];
   private valueNode: string | null = null;
@@ -15,49 +14,48 @@ export class AtomComposer implements Composer {
   onCloseTag = (nodeName: string): void => {
     let node = this.stack.pop();
 
-    if(this.stack.length === 0){
+    if (this.stack.length === 0) {
       this.complete(node);
       return;
     }
 
-    if(this.valueNode != null) { 
-      if(isDateField(nodeName)) {
+    if (this.valueNode != null) {
+      if (isDateField(nodeName)) {
         node = new Date(this.valueNode);
-      }
-      else {
+      } else {
         node = this.valueNode.trim();
       }
-      
+
       this.valueNode = null;
     }
 
     const parentNode = this.stack[this.stack.length - 1];
     let propertyName;
-    
+
     let isArrayNode = false;
-    switch(nodeName) {
+    switch (nodeName) {
       case Field.Category:
-        propertyName = 'categories';
-        isArrayNode = true; 
-      break;
+        propertyName = "categories";
+        isArrayNode = true;
+        break;
       case Field.Contributer:
-        propertyName = 'contributers';
+        propertyName = "contributers";
         isArrayNode = true;
-      break;
+        break;
       case Field.Link:
-        propertyName = 'links';
+        propertyName = "links";
         isArrayNode = true;
-      break;
+        break;
       case Field.Entry:
-        propertyName = 'entries';
+        propertyName = "entries";
         isArrayNode = true;
-      break;
+        break;
       default:
         propertyName = nodeName.toLowerCase();
     }
-    
-    if(isArrayNode) {
-      if(!parentNode[propertyName]) {
+
+    if (isArrayNode) {
+      if (!parentNode[propertyName]) {
         parentNode[propertyName] = [];
       }
 
@@ -69,7 +67,7 @@ export class AtomComposer implements Composer {
 
   onAttribute = (attr: Attribute): void => {
     let value: string | Date = attr.value.trim();
-    if(isDateField(attr.name)) {
+    if (isDateField(attr.name)) {
       value = new Date(attr.value);
     }
 

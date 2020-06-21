@@ -1,10 +1,10 @@
 import { SAXParser } from "../dep.ts";
-import { Channel  } from "./types/mod.ts";
+import { Channel } from "./types/mod.ts";
 import { isEmpty } from "./str.ts";
-import {  OpenTag, Composer } from './composers/composer.ts';
-import { AtomComposer } from './composers/atom-composer.ts';
-import { RssComposer } from './composers/rss-composer.ts';
-import { Feed } from './types/atom.ts';
+import { OpenTag, Composer } from "./composers/composer.ts";
+import { AtomComposer } from "./composers/atom-composer.ts";
+import { RssComposer } from "./composers/rss-composer.ts";
+import { Feed } from "./types/atom.ts";
 
 export const parseRss = (input: string): Promise<Channel | Feed> => {
   const worker = new Promise<Channel | Feed>((resolve, reject) => {
@@ -22,23 +22,23 @@ export const parseRss = (input: string): Promise<Channel | Feed> => {
         onclosetag: undefined,
         ontext: undefined,
         oncdata: undefined,
-        onattribute: undefined
+        onattribute: undefined,
       });
 
       resolve(result);
-    }
+    };
 
-    xmlParser.onopentag = (node: OpenTag) => {  
-      switch(node.name) {
+    xmlParser.onopentag = (node: OpenTag) => {
+      switch (node.name) {
         case FeedType.Atom:
           composer = new AtomComposer(onComplete);
-        break;
+          break;
         case FeedType.Rss:
           composer = new RssComposer(onComplete);
-        break;
+          break;
         default:
           reject(`Type ${node.name} is not supported`);
-        break;
+          break;
       }
 
       xmlParser.onopentag = composer.onOpenTag;
@@ -56,6 +56,6 @@ export const parseRss = (input: string): Promise<Channel | Feed> => {
 };
 
 enum FeedType {
-  Rss = 'RSS',
-  Atom = 'FEED'
+  Rss = "RSS",
+  Atom = "FEED",
 }

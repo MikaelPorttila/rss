@@ -5,7 +5,7 @@ import {
   assertNotEquals,
 } from "https://deno.land/std/testing/asserts.ts";
 import { parseRss } from "./mod.ts";
-import { Channel } from './src/types/rss.ts';
+import { Channel } from "./src/types/rss.ts";
 
 let cache: string = "";
 const getRssFeed = async (): Promise<string> => {

@@ -55,59 +55,36 @@ export interface Rights {
 }
 
 export enum Field {
-  Feed = 'FEED',
-  Id = 'ID',
-  Title = 'TITLE',
-  Icon = 'ICON',
-  Updated = 'UPDATED',
-  Link = 'LINK',
-  Entry = 'ENTRY',
-  Category = 'CATEGORY',
-  Type = 'TYPE',
-  Href = 'HREF',
-  Rel = 'REL',
-  Author = 'AUTHOR',
-  Contributer = 'CONTRIBUTER',
-  Summary = 'SUMMARY',
-  Rights = 'RIGHTS',
-  Source = 'SOURCE',
-  Src = 'SRC',
-  Value = 'VALUE',
-  Name = 'NAME',
-  Published = 'PUNLISHED',
-  Email = 'EMAIL',
-  Uri = 'URI',
-}
-
-export const isValueField = (fieldName: string): boolean => {
-  switch(fieldName) {
-    case Field.Id:
-    case Field.Title:
-    case Field.Icon:
-    case Field.Updated:
-    case Field.Type:
-    case Field.Href:
-    case Field.Rel:
-    case Field.Summary:
-    case Field.Type:
-    case Field.Src:
-    case Field.Value:
-    case Field.Name:
-    case Field.Email:
-    case Field.Uri:
-    // TODO: fix this list.
-      return true;
-    default:
-      return false;
-  }
+  Feed = "FEED",
+  Id = "ID",
+  Title = "TITLE",
+  Icon = "ICON",
+  Updated = "UPDATED",
+  Link = "LINK",
+  Entry = "ENTRY",
+  Category = "CATEGORY",
+  Type = "TYPE",
+  Href = "HREF",
+  Rel = "REL",
+  Author = "AUTHOR",
+  Contributer = "CONTRIBUTER",
+  Summary = "SUMMARY",
+  Rights = "RIGHTS",
+  Source = "SOURCE",
+  Src = "SRC",
+  Value = "VALUE",
+  Name = "NAME",
+  Published = "PUNLISHED",
+  Email = "EMAIL",
+  Uri = "URI",
 }
 
 export const isDateField = (fieldName: string): boolean => {
-  switch(fieldName) {
+  switch (fieldName) {
     case Field.Updated:
     case Field.Published:
       return true;
     default:
       return false;
   }
-}
+};
