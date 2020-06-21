@@ -78,13 +78,3 @@ export enum Field {
   Email = "email",
   Uri = "uri",
 }
-
-export const isDateField = (fieldName: string): boolean => {
-  switch (fieldName) {
-    case Field.Updated:
-    case Field.Published:
-      return true;
-    default:
-      return false;
-  }
-};

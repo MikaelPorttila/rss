@@ -1,11 +1,11 @@
-import { Composer, OpenTag, Attribute } from "./composer.ts";
-import { Feed, isDateField, Field } from "../types/atom.ts";
+import { Composer, Attribute } from "./composer.ts";
+import { Feed, Field } from "../types/atom.ts";
 
 export class AtomComposer implements Composer {
   constructor(private complete: (feed: Feed) => void) {
   }
   private stack: any[] = [{}];
-  onOpenTag = (node: OpenTag): void => {
+  onOpenTag = (): void => {
     this.stack.push({});
   };
 
@@ -13,7 +13,7 @@ export class AtomComposer implements Composer {
     let node = this.stack.pop();
 
     if (this.stack.length === 0) {
-      this.complete(node);
+      this.complete(node as Feed);
       return;
     }
 
@@ -58,12 +58,7 @@ export class AtomComposer implements Composer {
   };
 
   onAttribute = (attr: Attribute): void => {
-    let value: string | Date = attr.value.trim();
-    if (isDateField(attr.name)) {
-      value = new Date(attr.value);
-    }
-
-    this.stack[this.stack.length - 1][attr.name] = value;
+    this.stack[this.stack.length - 1][attr.name] = attr.value.trim();
   };
 
   onValueNode = (text: string): void => {
