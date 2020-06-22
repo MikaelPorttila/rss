@@ -1,5 +1,3 @@
-import { Field } from "../types/atom.ts";
-
 export const resolveAtomField = (
   nodeName: string,
 ): [string, boolean, boolean, boolean] => {
@@ -36,3 +34,28 @@ export const resolveAtomField = (
 
   return [propertyName, isArrayNode, isNumber, isDate];
 };
+
+enum Field {
+  Feed = "feed",
+  Id = "id",
+  Title = "title",
+  Icon = "icon",
+  Updated = "updated",
+  Link = "link",
+  Entry = "entry",
+  Category = "category",
+  Type = "type",
+  Href = "href",
+  Rel = "rel",
+  Author = "author",
+  Contributer = "contributer",
+  Summary = "summary",
+  Rights = "rights",
+  Source = "source",
+  Src = "src",
+  Value = "value",
+  Name = "name",
+  Published = "published",
+  Email = "email",
+  Uri = "uri",
+}

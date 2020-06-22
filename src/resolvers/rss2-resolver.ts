@@ -1,6 +1,6 @@
-import { Field } from "../types/rss.ts";
-
-export const resolveRssField = (nodeName: string): any => {
+export const resolveRss2Field = (
+  nodeName: string,
+): [string, boolean, boolean, boolean] => {
   let isArrayNode = false;
   let isNumber = false;
   let isDate = false;
@@ -53,3 +53,35 @@ export const resolveRssField = (nodeName: string): any => {
 
   return [propertyName, isArrayNode, isNumber, isDate];
 };
+
+enum Field {
+  Channel = "channel",
+  Title = "title",
+  Link = "link",
+  Ttl = "ttl",
+  Description = "description",
+  Item = "item",
+  Language = "language",
+  Copyright = "copyright",
+  ManagingEditor = "managingeditor",
+  WebMaster = "webmaster",
+  PubDate = "pubdate",
+  LastBuildDate = "lastbuilddate",
+  Category = "category",
+  Generator = "generator",
+  Docs = "docs",
+  Cloud = "cloud",
+  Image = "image",
+  TextInput = "textinput",
+  SkipHours = "skiphours",
+  SkipDays = "skipdays",
+  Author = "author",
+  Enclosure = "enclosure",
+  Guid = "guid",
+  Source = "source",
+  Url = "url",
+  Width = "width",
+  Height = "height",
+  Length = "length",
+  isPermaLink = "ispermalink",
+}

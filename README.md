@@ -8,7 +8,7 @@ import { parseRss } from 'https://unpkg.com/...';
 
 const request = await fetch('http://static.userland.com/gems/backend/rssTwoExample2.xml');
 const rss = await request.text();
-const parsedFeed = await parseRss(rss); 
+const [feedType, result] = await parseRss(rss);
 
 ```
 
@@ -20,9 +20,7 @@ Hardware: i7-9750H 2.60GHz, 32GB 2667 MHz.
 
 Rounds: 10000
 
-|Date| RSS | ATOM |
-|----|-----|------|
-| 2020-06-20| 1.3092ms|- |
-|2020-06-21 | 1.2322ms | 4.2792ms
-
+|Date | ATOM (2KB sample) | RSS 2.0 (4 KB sample) | RSS 1.0 (3 KB sample) |
+|-|-|-|-|
+| 2020-06-22| 0.193ms| 0.525ms | 0.1912ms
 

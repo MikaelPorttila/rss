@@ -4,59 +4,63 @@ import {
   assert,
   assertNotEquals,
 } from "https://deno.land/std/testing/asserts.ts";
-import { parseRss } from "./mod.ts";
-import { Channel } from "./src/types/rss.ts";
+import {
+  parseRss,
+  FeedType,
+  RSS2,
+} from "./mod.ts";
 
-let cache: string = "";
-const getRssFeed = async (): Promise<string> => {
-  if (cache === "") {
-    const response = await fetch(
-      "http://static.userland.com/gems/backend/rssTwoExample2.xml",
-    );
-    cache = await response.text();
+let cache: any = {};
+const loadSample = async (sampleName: string): Promise<string> => {
+  let cacheResult = cache[sampleName];
+  if (!cacheResult) {
+    const decoder = new TextDecoder("utf-8");
+    const result = await Deno.readFile(`./samples/${sampleName}.xml`);
+    cacheResult = cache[sampleName] = decoder.decode(result);
   }
-
-  return Promise.resolve(cache);
+  return cacheResult;
 };
 
-Deno.test("Parser error handling: undefined input", async () => {
+Deno.test("Parser RSS, error handling: undefined input", async () => {
   await assertThrowsAsync(async () => {
     await parseRss(undefined as any);
   });
 });
 
-Deno.test("Parser error handling: null input", async () => {
+Deno.test("Parser RSS, error handling: null input", async () => {
   await assertThrowsAsync(async () => {
     await parseRss(null as any);
   });
 });
 
-Deno.test("Parser error handling: empty input", async () => {
+Deno.test("Parser RSS, error handling: empty input", async () => {
   await assertThrowsAsync(async () => {
     await parseRss("");
   });
 });
 
-Deno.test("Parser", async () => {
-  const xml = await getRssFeed();
+Deno.test("Parser RSS", async () => {
+  const xml = await loadSample("rss2");
   const result = await parseRss(xml);
 
   assertNotEquals(result, undefined);
   assertNotEquals(result, null);
 });
 
-Deno.test("Parser number handling", async () => {
-  const xml = await getRssFeed();
-  const result = await parseRss(xml) as Channel;
+Deno.test("Parser RSS number handling", async () => {
+  const xml = await loadSample("rss2");
+  const [feedType, result] = await parseRss(xml) as [FeedType.Rss2, RSS2];
+  const { channel } = result;
 
-  assertEquals(typeof result.ttl, typeof 1);
+  assertEquals(typeof channel.ttl, typeof 1);
 });
 
-Deno.test("Parser nested fields", async () => {
-  const xml = await getRssFeed();
-  const result = await parseRss(xml) as Channel;
+Deno.test("Parser RSS nested fields", async () => {
+  const xml = await loadSample("rss2");
+  const [feedType, result] = await parseRss(xml) as [FeedType.Rss2, RSS2];
+  const { channel } = result;
 
-  assertEquals(typeof result.items, typeof []);
-  assert(() => result.items === undefined, "items field is undefined");
-  assert(() => result.items.length > 0, "items field is empty");
+  assertEquals(typeof channel.items, typeof []);
+  assert(() => channel.items === undefined, "items field is undefined");
+  assert(() => channel.items.length > 0, "items field is empty");
 });

@@ -10,13 +10,13 @@ export interface Feed {
   categories: string[];
 }
 
-export interface Link {
+interface Link {
   type: string;
   href: string;
   rel: string;
 }
 
-export interface Entry {
+interface Entry {
   id: string;
   published: Date;
   updated: Date;
@@ -31,50 +31,25 @@ export interface Entry {
   source: Source;
 }
 
-export interface Content {
+interface Content {
   type: string;
   src?: string;
   value: string;
 }
 
-export interface Person {
+interface Person {
   name: string;
   email: string;
   uri: string;
 }
 
-export interface Source {
+interface Source {
   id: string;
   title: string;
   updated: Date;
 }
 
-export interface Rights {
+interface Rights {
   type: string;
   value: string;
-}
-
-export enum Field {
-  Feed = "feed",
-  Id = "id",
-  Title = "title",
-  Icon = "icon",
-  Updated = "updated",
-  Link = "link",
-  Entry = "entry",
-  Category = "category",
-  Type = "type",
-  Href = "href",
-  Rel = "rel",
-  Author = "author",
-  Contributer = "contributer",
-  Summary = "summary",
-  Rights = "rights",
-  Source = "source",
-  Src = "src",
-  Value = "value",
-  Name = "name",
-  Published = "published",
-  Email = "email",
-  Uri = "uri",
 }
