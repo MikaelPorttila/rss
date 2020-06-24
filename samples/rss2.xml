@@ -6,7 +6,7 @@
         <title><![CDATA[Lorem ipsum feed for an interval of 1 minutes with 20 item(s)]]></title>
         <description><![CDATA[This is a constantly updating lorem ipsum feed]]></description>
         <link>http://example.com/</link>
-        <generator>RSS for Node</generator>
+        <generator>RSS for Deno</generator>
         <lastBuildDate>Mon, 22 Jun 2020 20:03:04 GMT</lastBuildDate>
         <pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
         <copyright><![CDATA[Michael Bertolacci, licensed under a Creative Commons Attribution 3.0 Unported License.]]></copyright>

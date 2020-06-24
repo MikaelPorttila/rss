@@ -35,15 +35,19 @@ export const parseRss = (
       parser.ontext = (text: string): void => {
         stack[stack.length - 1] = text.trim();
       };
+
       parser.oncdata = (text: string): void => {
         stack[stack.length - 1] = text.trim();
       };
+
       const onOpenTag = (): void => {
         stack.push({});
       };
+
       parser.onattribute = (attr: Attribute): void => {
         stack[stack.length - 1][attr.name] = attr.value.trim();
       };
+
       parser.onclosetag = (nodeName: string) => {
         let node = stack.pop();
 
@@ -61,25 +65,22 @@ export const parseRss = (
 
         const [
           propertyName,
-          isArrayNode,
+          isArray,
           isNumber,
           isDate,
         ] = resolveField(nodeName);
 
-        if (node) {
-          if (isNumber) {
-            node = parseInt(node);
-          } else if (isDate) {
-            node = new Date(node);
-          }
+        if (isNumber) {
+          node = parseInt(node);
+        } else if (isDate) {
+          node = new Date(node);
         }
 
         const targetNode = stack[stack.length - 1];
-        if (isArrayNode) {
+        if (isArray) {
           if (!targetNode[propertyName]) {
             targetNode[propertyName] = [];
           }
-
           targetNode[propertyName].push(node);
         } else {
           targetNode[propertyName] = node;
@@ -107,7 +108,6 @@ export const parseRss = (
         parser.onopentag = onOpenTag;
       };
 
-      // TODO: Work with streams instead of loading the whole input at once.
       parser.write(input).close();
     },
   );
