@@ -7,7 +7,7 @@ The project aims to provide a lightweight feed parser which supports both RSS an
 ## Usage
 
 ``` typescript
-import { parseRss } from 'https://deno.land/x/rss/mod.ts';
+import { parseRss } from 'https://raw.githubusercontent.com/MikaelPorttila/rss/master/mod.ts';
 
 const response = await fetch('http://static.userland.com/gems/backend/rssTwoExample2.xml');
 const xml = await response.text();
