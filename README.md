@@ -1,5 +1,9 @@
+![CI](https://github.com/MikaelPorttila/rss/workflows/CI/badge.svg?branch=master)
+
 ## About
-The project aims to provide a lightweight feed parsing library which supports both RSS and ATOM feeds.
+This Deno RSS module aims to provide a lightweight feed parsing library which supports both RSS and ATOM feeds.
+
+
 
 ## Usage
 
