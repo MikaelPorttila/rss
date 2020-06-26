@@ -1,12 +1,11 @@
 import {
   assert,
+  assertThrowsAsync,
 } from "https://deno.land/std/testing/asserts.ts";
-import {
-  parseRss,
-} from "./mod.ts";
+import { parseRss } from "./parser.ts";
 
 const decoder = new TextDecoder("utf-8");
-for (const fileInfo of Deno.readDirSync('./samples/')) {
+for (const fileInfo of Deno.readDirSync("./samples")) {
   if (fileInfo.isFile) {
     Deno.test(`Parse ${fileInfo.name}`, async () => {
       const filePath = `./samples/${fileInfo.name}`;
@@ -22,3 +21,13 @@ for (const fileInfo of Deno.readDirSync('./samples/')) {
     });
   }
 }
+
+[undefined, null, ""].forEach((input: any) => {
+  Deno.test(`Parse input: ${input}`, () => {
+    assertThrowsAsync(() => parseRss(input));
+  });
+});
+
+Deno.test(`Parser should reject input which doesn't match feed types`, () => {
+  assertThrowsAsync(() => parseRss("<test></test>"));
+});

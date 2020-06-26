@@ -11,8 +11,8 @@ export const resolveAtomField = (
       propertyName = "categories";
       isArrayNode = true;
       break;
-    case Field.Contributer:
-      propertyName = "contributers";
+    case Field.Contributor:
+      propertyName = "contributors";
       isArrayNode = true;
       break;
     case Field.Link:
@@ -48,7 +48,7 @@ enum Field {
   Href = "href",
   Rel = "rel",
   Author = "author",
-  Contributer = "contributer",
+  Contributor = "contributor",
   Summary = "summary",
   Rights = "rights",
   Source = "source",

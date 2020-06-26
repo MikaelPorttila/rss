@@ -1,7 +1,7 @@
 export const resolveRss2Field = (
   nodeName: string,
 ): [string, boolean, boolean, boolean] => {
-  let isArrayNode = false;
+  let isArray = false;
   let isNumber = false;
   let isDate = false;
   let propertyName = nodeName;
@@ -34,11 +34,11 @@ export const resolveRss2Field = (
       break;
     case Field.Item:
       propertyName = "items";
-      isArrayNode = true;
+      isArray = true;
       break;
     case Field.Category:
       propertyName = "categories";
-      isArrayNode = true;
+      isArray = true;
       break;
     case Field.isPermaLink:
       propertyName = "isPermaLink";
@@ -51,7 +51,7 @@ export const resolveRss2Field = (
       break;
   }
 
-  return [propertyName, isArrayNode, isNumber, isDate];
+  return [propertyName, isArray, isNumber, isDate];
 };
 
 enum Field {

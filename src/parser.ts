@@ -18,7 +18,7 @@ export const parseRss = (
   const worker = new Promise<[FeedType, Feed | RSS1 | RSS2]>(
     (resolve, reject) => {
       if (!input) {
-        reject("Input was undefined, null or empty");
+        reject(new Error("Input was undefined, null or empty"));
         return;
       }
 
@@ -102,7 +102,7 @@ export const parseRss = (
             resolveField = resolveRss1Field;
             break;
           default:
-            reject(`Type ${node.name} is not supported`);
+            reject(new Error(`Type ${node.name} is not supported`));
             break;
         }
         parser.onopentag = onOpenTag;
