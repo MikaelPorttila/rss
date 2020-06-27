@@ -8,29 +8,14 @@ import { parseRss } from "./parser.ts";
 import { FeedType, Feed, RSS2, RSS1 } from "../mod.ts";
 
 const decoder = new TextDecoder("utf-8");
-for (const fileInfo of Deno.readDirSync("./samples")) {
-  if (fileInfo.isFile) {
-    Deno.test(`Parse ${fileInfo.name}`, async () => {
-      const fileContent = await Deno.readFile(`./samples/${fileInfo.name}`);
-      const feed = decoder.decode(fileContent);
-      try {
-        const [feedType, result] = await parseRss(feed);
-        assert(!!feedType);
-        assert(!!result);
-      } catch (err) {
-        throw `Failed to parse ${fileInfo.name}`;
-      }
-    });
-  }
-}
 
 [undefined, null, ""].forEach((input: any) => {
-  Deno.test(`Parse input: ${input}`, () => {
+  Deno.test(`Parse bad input: ${input}`, () => {
     assertThrowsAsync(() => parseRss(input));
   });
 });
 
-Deno.test(`Parser should reject input which doesn't match feed types`, () => {
+Deno.test(`Parser unsupported format`, () => {
   assertThrowsAsync(() => parseRss("<test></test>"));
 });
 
@@ -72,12 +57,15 @@ Deno.test('Parse ATOM', async (): Promise<void> => {
   assert(!!result.categories, 'Feed is missing categories value');
   assertEquals(typeof(result.updated), typeof(new Date), 'Feed is missing icon value');
 
+  assert(!!result.author.email, 'Feed Author is missing email value');
+  assert(!!result.author.name, 'Feed Author is missing name value');
+  assert(!!result.author.uri, 'Feed Author is missing uri value');
+
   for(const category of result.categories) {
     assert(!!category.term, 'Category is missing term value');
   }
 
   for(const entry of result.entries) {
-    console.log('author value:', entry.author);
     assert(!!entry.author, 'Entry is missing author value');
     assert(!!entry.title, 'Entry is missing title value');
     assert(!!entry.published, 'Entry is missing published value');
@@ -90,5 +78,13 @@ Deno.test('Parse ATOM', async (): Promise<void> => {
     assert(!!entry.rights, 'Entry is missing rights value');
     assert(!!entry.categories, 'Entry is missing categories value');
     assert(!!entry.source, 'Entry is missing source value');
+    assert(!!entry.source.id, 'Entry source is missing id value');
+    assert(!!entry.source.title, 'Entry source is missing title value');
+    assert(!!entry.source.updated, 'Entry source is missing updated value');
+    assert(!!entry.rights.type, 'Entry rights is missing type value');
+    assert(!!entry.rights.value, 'Entry rights is missing value');
+    assert(!!entry.author.email, 'Entry Author is missing email value');
+    assert(!!entry.author.name, 'Entry Author is missing name value');
+    assert(!!entry.author.uri, 'Entry Author is missing uri value');
   }
 });
