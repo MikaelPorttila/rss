@@ -2,6 +2,9 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Example Feed</title>
   <link href="http://example.org/"/>
+  <icon>/icon.jpg</icon>
+  <category term="tech"/>
+  <category term="tech"/>
   <updated>2003-12-13T18:30:02Z</updated>
   <author>
     <name>John Doe</name>

@@ -40,11 +40,19 @@ export const parseRss = (
         stack[stack.length - 1] = text.trim();
       };
 
-      const onOpenTag = (): void => {
-        stack.push({});
+      const onOpenTag = (node: OpenTag): void => {
+
+        let obj; 
+        if(node.isSelfClosing) {
+          obj = {...node.attributes};
+        } 
+
+        stack.push(obj || {}); 
+
       };
 
       parser.onattribute = (attr: Attribute): void => {
+        //console.log(attr.name);
         stack[stack.length - 1][attr.name] = attr.value.trim();
       };
 

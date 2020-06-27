@@ -7,13 +7,17 @@ export interface Feed {
   updated: Date;
   links: Link[];
   entries: Entry[];
-  categories: string[];
+  categories: Category[];
 }
 
 interface Link {
   type: string;
   href: string;
   rel: string;
+}
+
+interface Category {
+  term: string;
 }
 
 interface Entry {

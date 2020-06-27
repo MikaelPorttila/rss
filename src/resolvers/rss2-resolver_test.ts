@@ -5,7 +5,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
   Deno.test(`When nodeName is ${field}`, () => {
     const [propertyName, isArray, isNumber, isDate] = resolveRss2Field(field);
 
-    assert(() => propertyName === field, "propertyName should be null");
+    assert(propertyName === field, "propertyName should be null");
     assertEquals(false, isArray, "isArray should be false");
     assertEquals(false, isNumber, "isNumber should be false");
     assertEquals(false, isDate, "isDate should be false");
