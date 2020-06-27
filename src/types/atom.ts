@@ -8,6 +8,7 @@ export interface Feed {
   links: Link[];
   entries: Entry[];
   categories: Category[];
+  author: Person;
 }
 
 interface Link {

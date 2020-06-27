@@ -35,6 +35,22 @@ export const resolveAtomField = (
   return [propertyName, isArrayNode, isNumber, isDate];
 };
 
+export const isAtomCDataField = (nodeName: string): boolean => {
+
+  let handleAsCData = false;
+
+  switch(nodeName) {
+    case Field.Title:
+    case Field.Summary:
+    case Field.Content:
+    case Field.Rights:
+      handleAsCData = true;
+    break;
+  }
+
+  return handleAsCData;
+}
+
 enum Field {
   Feed = "feed",
   Id = "id",
@@ -58,4 +74,5 @@ enum Field {
   Published = "published",
   Email = "email",
   Uri = "uri",
+  Content = "content"
 }

@@ -12,9 +12,9 @@ const readFile = async (fileName: string): Promise<string> => {
 }
 
 (async () => {
-  const xml = await readFile('./samples/atom.xml');
+  const xml = await readFile(`./samples/${Deno.args[0]}.xml`);
   const [feedType, result] = (await parseRss(xml)) as [FeedType, Feed];
 
   console.log("============ RESULT ============");
-  console.log(result);
+  console.log('Result', result);
 })();

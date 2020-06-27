@@ -8,6 +8,8 @@
   <updated>2003-12-13T18:30:02Z</updated>
   <author>
     <name>John Doe</name>
+    <email>JohnDoe@example.com</email>
+    <uri>http://example.com/~johndoe</uri>
   </author>
   <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>
   <entry>
@@ -19,6 +21,8 @@
     <summary>Some text.</summary>
     <author>
       <name>John Doe</name>
+      <email>example@example.com</email>
+      <uri>www.example.com</uri>
     </author>
     <content>Hello World</content>
     <category term="tech"/>
@@ -44,6 +48,8 @@
     <summary>Some text.</summary>
     <author>
       <name>Micke</name>
+      <email>example@example.com</email>
+      <uri>www.example.com</uri>
     </author>
     <category term="tech"/>
     <category term="sport"/>
@@ -70,6 +76,8 @@
     <category term="tech"/>
     <author>
       <name>John Doe</name>
+      <email>example@example.com</email>
+      <uri>www.example.com</uri>
     </author>
     <source>
     <id>http://example.org/</id>

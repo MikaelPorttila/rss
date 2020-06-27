@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <entry>
+    <title type="xhtml">
+      <div style="derp" title="höhö" xmlns="http://www.w3.org/1999/xhtml">
+        AT&amp;T bought <b>by SBC</b>!
+      </div>
+    </title>
+    <published>2003-12-13T18:30:02Z</published>
+    <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da354efa6a</id>
+  </entry>
+</feed>
