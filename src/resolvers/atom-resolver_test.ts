@@ -1,5 +1,5 @@
 import { assert, assertEquals } from "https://deno.land/std/testing/asserts.ts";
-import { resolveAtomField } from "./atom-resolver.ts";
+import { resolveAtomField, isAtomCDataField } from "./atom-resolver.ts";
 
 Deno.test("Atom Resolver", () => {
   [undefined, null].forEach((field: any) => {
@@ -37,5 +37,33 @@ Deno.test("Atom Resolver", () => {
       `isNumber should be false for field ${field}`,
     );
     assertEquals(true, isDate, `isDate should be true for field ${field}`);
+  });
+});
+
+Deno.test("Atom CData field checker", () => {
+  ["title", "summary", "content", "rights"].forEach((field) => {
+    assert(isAtomCDataField(field), `${field} was not marked as CData field`);
+  });
+
+  [    
+    "id",
+    "icon",
+    "updated",
+    "link",
+    "entry",
+    "category",
+    "type",
+    "href",
+    "rel",
+    "author",
+    "contributor",
+    "source",
+    "src",
+    "value",
+    "name",
+    "published",
+    "email",
+  ].forEach((field) => {
+    assert(!isAtomCDataField(field), `${field} was marked as CData field`);
   });
 });

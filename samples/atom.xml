@@ -13,7 +13,11 @@
   </author>
   <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>
   <entry>
-    <title>Atom-Powered Robots Run Amok</title>
+    <title type="xhtml">
+      <div xmlns="http://www.w3.org/1999/xhtml">
+        AT&amp;T bought <b>by SBC</b>!
+      </div>
+    </title>
     <link href="http://example.org/2003/12/12/atom01"/>
     <published>2003-12-13T18:30:02Z</published>
     <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da354efa6a</id>
@@ -40,7 +44,9 @@
     </rights>
   </entry>
   <entry>
-    <title>Atom-Powered Robots Run Amok</title>
+    <title type="html">
+      AT&amp;amp;T bought &amp;lt;b&amp;gt;by SBC&amp;lt;/b&amp;gt;
+    </title>
     <link href="http://example.org/2003/12/13/atom02"/>
     <published>2003-12-13T18:30:02Z</published>
     <id>urn:uuid:1225c695-cfb8-4abb-aaaa-80da344efa6a</id>

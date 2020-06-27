@@ -2,7 +2,7 @@
 
 export interface Feed {
   id: string;
-  title: string;
+  title: Text;
   icon: string;
   updated: Date;
   links: Link[];
@@ -30,16 +30,14 @@ interface Entry {
   links: Link[];
   author: Person;
   contributors: Person[];
-  summary: string;
-  rights: Rights;
+  summary: Text;
+  rights: Text;
   categories: string[];
   source: Source;
 }
 
-interface Content {
-  type: string;
+interface Content extends Text {
   src?: string;
-  value: string;
 }
 
 interface Person {
@@ -54,7 +52,7 @@ interface Source {
   updated: Date;
 }
 
-interface Rights {
+interface Text {
   type: string;
   value: string;
 }

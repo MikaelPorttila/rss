@@ -36,19 +36,15 @@ export const resolveAtomField = (
 };
 
 export const isAtomCDataField = (nodeName: string): boolean => {
-
-  let handleAsCData = false;
-
   switch(nodeName) {
     case Field.Title:
     case Field.Summary:
     case Field.Content:
     case Field.Rights:
-      handleAsCData = true;
-    break;
+      return true;
   }
 
-  return handleAsCData;
+  return false;
 }
 
 enum Field {
