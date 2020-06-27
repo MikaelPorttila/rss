@@ -4,7 +4,7 @@
   <link href="http://example.org/"/>
   <icon>/icon.jpg</icon>
   <category term="tech"/>
-  <category term="tech"/>
+  <category term="sport"/>
   <updated>2003-12-13T18:30:02Z</updated>
   <author>
     <name>John Doe</name>
@@ -13,22 +13,76 @@
   <entry>
     <title>Atom-Powered Robots Run Amok</title>
     <link href="http://example.org/2003/12/12/atom01"/>
+    <published>2003-12-13T18:30:02Z</published>
     <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da354efa6a</id>
     <updated>2003-12-13T18:30:02Z</updated>
     <summary>Some text.</summary>
+    <author>
+      <name>John Doe</name>
+    </author>
+    <content>Hello World</content>
+    <category term="tech"/>
+    <category term="sport"/>
+    <source>
+      <id>http://example.org/</id>
+      <title>Example, Inc.</title>
+      <updated>2003-12-13T18:30:02Z</updated>
+    </source>
+    <contributor>
+      <name>Micke</name>
+    </contributor>
+    <rights type="html">
+      &amp;copy; 2020 Micke
+    </rights>
   </entry>
   <entry>
     <title>Atom-Powered Robots Run Amok</title>
     <link href="http://example.org/2003/12/13/atom02"/>
+    <published>2003-12-13T18:30:02Z</published>
     <id>urn:uuid:1225c695-cfb8-4abb-aaaa-80da344efa6a</id>
     <updated>2003-12-13T18:30:02Z</updated>
     <summary>Some text.</summary>
+    <author>
+      <name>Micke</name>
+    </author>
+    <category term="tech"/>
+    <category term="sport"/>
+    <contributor>
+      <name>Jane Doe</name>
+    </contributor>
+    <source>
+      <id>http://example.org/</id>
+      <title>Example, Inc.</title>
+      <updated>2003-12-13T18:30:02Z</updated>
+    </source>
+    <content>Hello World</content>
+    <rights type="html">
+      &amp;copy; 2020 Micke
+    </rights>
   </entry>
   <entry>
     <title>Atom-Powered Robots Run Amok</title>
     <link href="http://example.org/2003/12/14/atom03"/>
     <id>urn:uuid:1225c696-cfb8-4ebb-aaaa-80da344efa6a</id>
+    <published>2003-12-13T18:30:02Z</published>
     <updated>2003-12-13T18:30:02Z</updated>
     <summary>Some text.</summary>
+    <category term="tech"/>
+    <author>
+      <name>John Doe</name>
+    </author>
+    <source>
+    <id>http://example.org/</id>
+    <title>Example, Inc.</title>
+    <updated>2003-12-13T18:30:02Z</updated>
+  </source>
+    <category term="" /> 
+    <rights type="html">
+      &amp;copy; 2020 Micke
+    </rights>
+    <contributor>
+      <name>Micke</name>
+    </contributor>
+    <content>Hello World</content>
   </entry>
 </feed>

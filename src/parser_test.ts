@@ -77,17 +77,18 @@ Deno.test('Parse ATOM', async (): Promise<void> => {
   }
 
   for(const entry of result.entries) {
-    assert(!entry.author, 'Entry is missing author value');
-    assert(!entry.title, 'Entry is missing title value');
-    assert(!entry.published, 'Entry is missing published value');
-    assert(!entry.updated, 'Entry is missing updated value');
-    assert(!entry.id, 'Entry is missing id value');
-    assert(!entry.content, 'Entry is missing content value');
-    assert(!entry.links, 'Entry is missing links value');
-    assert(!entry.contributors, 'Entry is missing contributors value');
-    assert(!entry.summary, 'Entry is missing summary value');
-    assert(!entry.rights, 'Entry is missing rights value');
-    assert(!entry.categories, 'Entry is missing categories value');
-    assert(!entry.source, 'Entry is missing source value');
+    console.log('author value:', entry.author);
+    assert(!!entry.author, 'Entry is missing author value');
+    assert(!!entry.title, 'Entry is missing title value');
+    assert(!!entry.published, 'Entry is missing published value');
+    assert(!!entry.updated, 'Entry is missing updated value');
+    assert(!!entry.id, 'Entry is missing id value');
+    assert(!!entry.content, 'Entry is missing content value');
+    assert(!!entry.links, 'Entry is missing links value');
+    assert(!!entry.contributors, 'Entry is missing contributors value');
+    assert(!!entry.summary, 'Entry is missing summary value');
+    assert(!!entry.rights, 'Entry is missing rights value');
+    assert(!!entry.categories, 'Entry is missing categories value');
+    assert(!!entry.source, 'Entry is missing source value');
   }
 });
