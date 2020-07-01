@@ -5,7 +5,7 @@ import {
   assertNotEquals,
 } from "https://deno.land/std/testing/asserts.ts";
 import { parseRss } from "./parser.ts";
-import { FeedType, Feed, RSS2, RSS1 } from "../mod.ts";
+import { FeedType, Feed, RSS2, RSS1, JsonFeed } from "../mod.ts";
 
 const decoder = new TextDecoder("utf-8");
 
@@ -44,6 +44,15 @@ Deno.test('Parse RSS2', async (): Promise<void> => {
   }
 });
 
+Deno.test('Parse RSS2 with convertToJsonFeed option', async () => {
+  const binaryString = await Deno.readFile('./samples/rss2.xml');
+  const fileContent = decoder.decode(binaryString);
+  const [feedType, result] = await parseRss(fileContent, { outputJsonFeed: true}) as [FeedType, JsonFeed];
+
+  assert(!!result, 'Result was undefined');
+  assertEquals(feedType, FeedType.JsonFeed);
+});
+
 Deno.test('Parse ATOM', async (): Promise<void> => {
   const binaryString = await Deno.readFile('./samples/atom.xml');
   const fileContent = decoder.decode(binaryString);
@@ -57,6 +66,7 @@ Deno.test('Parse ATOM', async (): Promise<void> => {
   assert(!!result.categories, 'Feed is missing categories value');
   assertEquals(typeof(result.updated), typeof(new Date), 'Feed is missing icon value');
 
+  assert(!!result.author, 'Feed is missing author');
   assert(!!result.author.email, 'Feed Author is missing email value');
   assert(!!result.author.name, 'Feed Author is missing name value');
   assert(!!result.author.uri, 'Feed Author is missing uri value');
@@ -87,4 +97,14 @@ Deno.test('Parse ATOM', async (): Promise<void> => {
     assert(!!entry.author.name, 'Entry Author is missing name value');
     assert(!!entry.author.uri, 'Entry Author is missing uri value');
   }
+});
+
+Deno.test('Parse ATOM with convertToJsonFeed option', async () => {
+  const binaryString = await Deno.readFile('./samples/atom.xml');
+  const fileContent = decoder.decode(binaryString);
+  const [feedType, result] = await parseRss(fileContent, { outputJsonFeed: true }) as [FeedType, JsonFeed];
+
+  assert(!!result, 'Result was undefined');
+  assertEquals(feedType, FeedType.JsonFeed);
+  assertEquals(result.items[0].title, '<div xmlns="http://www.w3.org/1999/xhtml">AT&T bought<b>by SBC</b>!</div>', 'Title was not mapped correctly')
 });

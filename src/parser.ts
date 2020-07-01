@@ -5,6 +5,7 @@ import {
   RSS1,
   FeedParseType,
   FeedType,
+  JsonFeed
 } from "./types/mod.ts";
 import {
   resolveAtomField,
@@ -12,11 +13,19 @@ import {
   resolveRss1Field,
   isAtomCDataField
 } from "./resolvers/mod.ts";
+import {
+  toJsonFeed
+} from './mapper.ts';
+
+export interface parseOptions {
+  outputJsonFeed?: boolean
+}
 
 export const parseRss = (
   input: string,
-): Promise<[FeedType, Feed | RSS1 | RSS2]> => {
-  const worker = new Promise<[FeedType, Feed | RSS1 | RSS2]>(
+  options?: parseOptions
+): Promise<[FeedType, Feed | RSS1 | RSS2 | JsonFeed ]> => {
+  const worker = new Promise<[FeedType, Feed | RSS1 | RSS2 | JsonFeed]>(
     (resolve, reject) => {
       if (!input) {
         reject(new Error("Input was undefined, null or empty"));
@@ -56,7 +65,6 @@ export const parseRss = (
       };
 
       const onOpenTag = (node: OpenTag): void => {
-
         if(cDataActive) {
           let attributes = Object
             .keys(node.attributes)
@@ -64,7 +72,7 @@ export const parseRss = (
             .join(' ')
             .trim();
 
-            if(attributes.length > 0){
+            if(attributes.length){
               cDataBuilder += `<${node.name} ${attributes}>`
             } else {
               cDataBuilder += `<${node.name}>`
@@ -74,8 +82,7 @@ export const parseRss = (
             return;
         }
 
-        const isCDataElement = isCDataField(node.name);
-        if(isCDataElement) {
+        if(isCDataField(node.name)) {
           cDataActive = true;
           cDataBuilder = '';
           cDataLevel = 0;
@@ -92,7 +99,7 @@ export const parseRss = (
       };
 
       parser.onclosetag = (nodeName: string) => {
-        if(cDataActive && cDataLevel > 0) {
+        if(cDataActive && cDataLevel) {
           cDataBuilder += `</${nodeName}>`
           cDataLevel--;
           return;      
@@ -108,7 +115,15 @@ export const parseRss = (
             oncdata: undefined,
             onattribute: undefined,
           });
-          resolve([feedType, node]);
+
+          if(options?.outputJsonFeed) {
+            const jsonFeed = toJsonFeed(feedType, node) as JsonFeed;
+            resolve([FeedType.JsonFeed, jsonFeed]);
+          }
+          else {
+            resolve([feedType, node]);
+          }
+          return;
         }
 
         if(cDataActive) {
@@ -136,16 +151,16 @@ export const parseRss = (
         const targetNode = stack[stack.length - 1];
         if (isArray) {
           if (!targetNode[propertyName]) {
-            targetNode[propertyName] = [];
+            targetNode[propertyName] = [node];
+          } else {
+            targetNode[propertyName].push(node);
           }
-          targetNode[propertyName].push(node);
         } else {
           targetNode[propertyName] = node;
         }
       };
 
       parser.onopentag = (node: OpenTag) => {
-        
         switch (node.name) {
           case FeedParseType.Atom:
             feedType = FeedType.Atom;
