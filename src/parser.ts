@@ -17,13 +17,13 @@ import {
   toJsonFeed
 } from './mapper.ts';
 
-export interface parseOptions {
+export interface Options {
   outputJsonFeed?: boolean
 }
 
-export const parseRss = (
+export const deserializeFeed = (
   input: string,
-  options?: parseOptions
+  options?: Options
 ): Promise<[FeedType, Feed | RSS1 | RSS2 | JsonFeed ]> => {
   const worker = new Promise<[FeedType, Feed | RSS1 | RSS2 | JsonFeed]>(
     (resolve, reject) => {

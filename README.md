@@ -1,26 +1,24 @@
 ![CI](https://github.com/MikaelPorttila/rss/workflows/CI/badge.svg?branch=master)
 
 ## About
-RSS Parser module for Deno.
-The project aims to provide a lightweight feed parser which supports both RSS and ATOM.
+RSS / ATOM Deserialization module for Deno.
+The project aims to provide a lightweight and easy-to-use feed deserializer with the option to output JSON Feed 1.0.
 
 ## Usage
 
 ``` typescript
 import { 
-    parseRss, 
-    FeedType, 
-    Feed, 
-    RSS2, 
-    RSS1, 
-    toJsonFeed 
+    deserializeFeed,
+    FeedType,
+    Feed,
+    RSS2,
+    Jsonfeed
 } from 'https://raw.githubusercontent.com/MikaelPorttila/rss/master/mod.ts';
 
 const response = await fetch('http://static.userland.com/gems/backend/rssTwoExample2.xml');
 const xml = await response.text();
 
-// Usage option 1:
-const [feedType, feed] = await parseRss(xml);
+const [feedType, feed] = await deserializeFeed(xml, { outputJsonFeed: true });
 
 switch(feedType) {
     case FeedType.Atom:
@@ -31,14 +29,11 @@ switch(feedType) {
         const rss2Feed = feed as RSS2;
         // ... your code
         break;
-    case FeedType.RSS1:
-        const rss1Feed = feed as RSS1;
+    case FeedType.Jsonfeed:
+        const jsonFeed = feed as JsonFeed;
         // ... your code
         break;
 }
-
-// Usage option 2: Let the parser convert the feed into JSON Feed 1.0
-const [feedType, jsonFeed] = await parseRss(xml, { outputJsonFeed: true });
 
 ```
 

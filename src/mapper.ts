@@ -93,8 +93,7 @@ const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
 };
 
 const mapAtomToJsonFeed = (atom: Feed): JsonFeed => {
-  const items: JsonFeedItem[] = atom.entries?.map((entry) => {
-
+  const items: JsonFeedItem[] = atom.entries.map((entry) => {
     let author;
     if(entry.author) {
       author = {
@@ -135,7 +134,7 @@ const mapAtomToJsonFeed = (atom: Feed): JsonFeed => {
     }
 
     return item;
-  }) || [];
+  });
 
   const author = atom.author
     ? {

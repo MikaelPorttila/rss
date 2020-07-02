@@ -1,5 +1,5 @@
 import { runBenchmarks, bench } from "https://deno.land/std/testing/bench.ts";
-import { parseRss } from "./mod.ts";
+import { deserializeFeed } from "./mod.ts";
 
 (async () => {
   let cache: any = {};
@@ -21,7 +21,7 @@ import { parseRss } from "./mod.ts";
       runs: 10000,
       func(b): void {
         b.start();
-        parseRss(sample).then(() => b.stop());
+        deserializeFeed(sample).then(() => b.stop());
       },
     });
   });
