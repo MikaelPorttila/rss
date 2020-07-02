@@ -3,7 +3,7 @@
 ## About
 RSS / ATOM Deserialization module for Deno.<br/>The project aims to provide a lightweight and easy-to-use feed deserializer with the option to output JSON Feed.
 
-[Check out the deserializer in this online showcase](https://www.mycompiler.io/view/BsLwcwN)
+[Check out the deserializer in this online showcase](https://repl.it/@MikaelPorttila/Deno-RSS-Module)
 
 ## Usage
 
