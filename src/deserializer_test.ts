@@ -4,32 +4,32 @@ import {
   assertThrowsAsync,
   assertNotEquals,
 } from "https://deno.land/std/testing/asserts.ts";
-import { deserializeFeed } from "./parser.ts";
+import { deserializeFeed } from "./deserializer.ts";
 import { FeedType, Feed, RSS2, JsonFeed } from "../mod.ts";
 
 const decoder = new TextDecoder("utf-8");
 
 [undefined, null, ""].forEach((input: any) => {
-  Deno.test(`Parse bad input: ${input}`, () => {
+  Deno.test(`Bad input: ${input}`, () => {
     assertThrowsAsync(() => deserializeFeed(input));
   });
 });
 
-Deno.test(`Parser unsupported format`, () => {
+Deno.test(`Unsupported format handling`, () => {
   assertThrowsAsync(() => deserializeFeed("<test></test>"));
 });
 
-Deno.test('Parse RSS2', async (): Promise<void> => {
+Deno.test('Deserialize RSS2', async (): Promise<void> => {
   const binaryString = await Deno.readFile('./samples/rss2.xml');
   const fileContent = decoder.decode(binaryString);
   const [feedType, result] = (await deserializeFeed(fileContent)) as [FeedType, RSS2];
 
   assertEquals(feedType, FeedType.Rss2);
-  assert(!!result, 'Parser returned undefined');
+  assert(!!result, 'Deserializer returned undefined');
   
   const { items, pubDate, ttl, copyright, link } = result.channel;
   assertNotEquals(ttl, undefined, 'Missing ttl');
-  assertEquals(typeof(ttl), typeof(2), 'ttl was not parsed into number');
+  assertEquals(typeof(ttl), typeof(2), 'ttl was not deserializes into number');
   assertEquals(typeof(pubDate), typeof(new Date()));
   assert(!!copyright, 'Channel is missing copyright value');
   assert(!!link, 'Channel is missing link value');
@@ -44,7 +44,7 @@ Deno.test('Parse RSS2', async (): Promise<void> => {
   }
 });
 
-Deno.test('Parse RSS2 with convertToJsonFeed option', async () => {
+Deno.test('Deserialize RSS2 with convertToJsonFeed option', async () => {
   const binaryString = await Deno.readFile('./samples/rss2.xml');
   const fileContent = decoder.decode(binaryString);
   const [feedType, result] = await deserializeFeed(fileContent, { outputJsonFeed: true}) as [FeedType, JsonFeed];
@@ -53,7 +53,7 @@ Deno.test('Parse RSS2 with convertToJsonFeed option', async () => {
   assertEquals(feedType, FeedType.JsonFeed);
 });
 
-Deno.test('Parse ATOM', async (): Promise<void> => {
+Deno.test('Deserialize ATOM', async (): Promise<void> => {
   const binaryString = await Deno.readFile('./samples/atom.xml');
   const fileContent = decoder.decode(binaryString);
   const [feedType, result] = (await deserializeFeed(fileContent)) as [FeedType, Feed];
@@ -99,7 +99,7 @@ Deno.test('Parse ATOM', async (): Promise<void> => {
   }
 });
 
-Deno.test('Parse ATOM with convertToJsonFeed option', async () => {
+Deno.test('Deserialize ATOM with convertToJsonFeed option', async () => {
   const binaryString = await Deno.readFile('./samples/atom.xml');
   const fileContent = decoder.decode(binaryString);
   const [feedType, result] = await deserializeFeed(fileContent, { outputJsonFeed: true }) as [FeedType, JsonFeed];

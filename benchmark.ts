@@ -17,7 +17,7 @@ import { deserializeFeed } from "./mod.ts";
   samples.forEach((feedSample) => {
     const sample = loadSample(feedSample);
     bench({
-      name: `Parse ${feedSample}`,
+      name: `Deserialize ${feedSample}`,
       runs: 10000,
       func(b): void {
         b.start();
