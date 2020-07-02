@@ -3,37 +3,44 @@
 export interface Feed {
   id: string;
   title: Text;
-  icon: string;
   updated: Date;
-  links: Link[];
+  icon?: string;
+  links?: Link[];
   entries: Entry[];
-  categories: Category[];
-  author: Person;
+  categories?: Category[];
+  contributors?: Person[];
+  generator?: string;
+  author?: Person;
+  logo?: string;
+  rights?: Text;
+  subtitle?: Text;
 }
 
 interface Link {
   type: string;
   href: string;
   rel: string;
+  length?: number
 }
 
 interface Category {
   term: string;
+  label?: string;
 }
 
 interface Entry {
   id: string;
-  published: Date;
+  title: Text;
   updated: Date;
-  title: string;
-  content: Content;
-  links: Link[];
-  author: Person;
-  contributors: Person[];
-  summary: Text;
-  rights: Text;
-  categories: string[];
-  source: Source;
+  published?: Date;
+  content?: Content;
+  links?: Link[];
+  author?: Person;
+  contributors?: Person[];
+  summary?: Text;
+  rights?: Text;
+  categories?: string[];
+  source?: Source;
 }
 
 interface Content extends Text {
@@ -42,14 +49,14 @@ interface Content extends Text {
 
 interface Person {
   name: string;
-  email: string;
-  uri: string;
+  email?: string;
+  uri?: string;
 }
 
 interface Source {
-  id: string;
-  title: string;
-  updated: Date;
+  id?: string;
+  title?: string;
+  updated?: Date;
 }
 
 interface Text {
