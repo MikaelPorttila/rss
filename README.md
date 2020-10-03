@@ -22,7 +22,7 @@ Convert feed to JSON Feed:
 import { 
     deserializeFeed,
     FeedType,
-    Jsonfeed
+    JsonFeed
 } from 'https://deno.land/x/rss/mod.ts';
 
 const response = await fetch('http://static.userland.com/gems/backend/rssTwoExample2.xml');
