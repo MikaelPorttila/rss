@@ -1,2 +1,2 @@
-// SAX XML Parser: https://github.com/Maxim-Mazurok/sax-ts
-export { SAXParser } from "https://unpkg.com/sax-ts@1.2.8/src/sax.ts";
+// Credit:
+export { SAXParser } from "https://deno.land/x/sax_ts@v1.2.10/src/sax.ts";
