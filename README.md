@@ -1,4 +1,5 @@
 ![CI](https://github.com/MikaelPorttila/rss/workflows/CI/badge.svg?branch=master)
+[![tag](https://img.shields.io/github/tag/MikaelPorttila/rss.svg)](https://github.com/MikaelPorttila/rss/releases)
 
 ## About
 RSS / ATOM Deserialization module for Deno.<br/>The project aims to provide a lightweight and easy-to-use feed deserializer with the option to output JSON Feed.
