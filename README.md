@@ -20,15 +20,11 @@ const [feedType, feed] = await deserializeFeed(xml);
 
 Convert feed to JSON Feed:
 ``` typescript
-import { 
-    deserializeFeed,
-    FeedType,
-    JsonFeed
-} from 'https://deno.land/x/rss/mod.ts';
+import { deserializeFeed } from 'https://deno.land/x/rss/mod.ts';
 
 const response = await fetch('http://static.userland.com/gems/backend/rssTwoExample2.xml');
 const xml = await response.text();
-const [feedType, feed] = await deserializeFeed(xml, { outputJsonFeed: true }) as [FeedType, JsonFeed];
+const [feedType, jsonFeed] = await deserializeFeed(xml, { outputJsonFeed: true });
 
 // Your code...
 ```
@@ -41,4 +37,3 @@ Rounds: 10000
 | Release | ATOM (4KB sample) | RSS 2.0 (4 KB sample) | RSS 1.0 (3 KB sample) |
 |---------|-------------------|-----------------------|-----------------------|
 | 0.1     | 0.454ms           | 0.490ms               | 0.182ms               |
-
