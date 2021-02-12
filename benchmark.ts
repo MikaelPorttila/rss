@@ -1,4 +1,4 @@
-import { runBenchmarks, bench } from "https://deno.land/std/testing/bench.ts";
+import { bench, runBenchmarks } from "./test_deps.ts";
 import { deserializeFeed } from "./mod.ts";
 
 (async () => {

@@ -3,7 +3,7 @@ import {
   assertEquals,
   assertThrowsAsync,
   assertNotEquals,
-} from "https://deno.land/std/testing/asserts.ts";
+} from "../test_deps.ts";
 import { Feed, RSS2, FeedType } from "./types/mod.ts";
 import { toJsonFeed } from "./mapper.ts";
 
