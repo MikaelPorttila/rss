@@ -11,12 +11,16 @@ const decoder = new TextDecoder("utf-8");
 
 [undefined, null, ""].forEach((input: any) => {
   Deno.test(`Bad input: ${input}`, () => {
-    assertThrowsAsync(() => deserializeFeed(input));
+    assertThrowsAsync(async () => {
+      await deserializeFeed(input);
+    });
   });
 });
 
 Deno.test(`Unsupported format handling`, () => {
-  assertThrowsAsync(() => deserializeFeed("<test></test>"));
+  assertThrowsAsync(async () => {
+    await deserializeFeed("<test></test>");
+  });
 });
 
 Deno.test('Deserialize RSS2', async (): Promise<void> => {
