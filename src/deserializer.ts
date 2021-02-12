@@ -1,4 +1,4 @@
-import { SAXParser } from "../dep.ts";
+import { SAXParser } from "../deps.ts";
 import {
   Feed,
   RSS2,

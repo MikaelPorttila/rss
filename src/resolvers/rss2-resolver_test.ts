@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "https://deno.land/std/testing/asserts.ts";
+import { assert, assertEquals } from "../../test_deps.ts";
 import { resolveRss2Field } from "./rss2-resolver.ts";
 
 Deno.test("RSS 2.0 resolver", () => {
