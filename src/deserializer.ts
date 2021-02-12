@@ -21,7 +21,7 @@ export interface Options {
   outputJsonFeed?: boolean
 }
 
-export const deserializeFeed = (
+export const deserializeFeed = ((
   input: string,
   options?: Options
 ): Promise<[FeedType, Feed | RSS1 | RSS2 | JsonFeed ]> => {
@@ -189,6 +189,16 @@ export const deserializeFeed = (
   );
 
   return worker;
+}) as {
+  (input: string): Promise<[Exclude<FeedType, FeedType.JsonFeed>, Feed | RSS1 | RSS2 ]>;
+  (
+    input: string,
+    options: Options & { outputJsonFeed: true },
+  ): Promise<[FeedType.JsonFeed, JsonFeed ]>;
+  (
+    input: string,
+    options?: Options,
+  ): Promise<[Exclude<FeedType, FeedType.JsonFeed>, Feed | RSS1 | RSS2 ]>;
 };
 
 interface Attribute {

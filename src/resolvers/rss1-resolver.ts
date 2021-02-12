@@ -26,13 +26,13 @@ export const resolveRss1Field = (
 };
 
 enum Field {
-  Channel = "channel",
-  Title = "title",
-  Link = "link",
-  Description = "description",
-  Item = "item",
-  Image = "image",
-  TextInput = "textinput",
   About = "rdf:about",
+  Channel = "channel",
+  Description = "description",
+  Image = "image",
+  Item = "item",
+  Link = "link",
   Resource = "rdf:resource",
+  TextInput = "textinput",
+  Title = "title",
 }
