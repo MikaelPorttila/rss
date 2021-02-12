@@ -1,8 +1,6 @@
 import {
   assert,
-  assertEquals,
-  assertThrowsAsync,
-  assertNotEquals,
+  assertEquals
 } from "../test_deps.ts";
 import { Feed, RSS2, FeedType } from "./types/mod.ts";
 import { toJsonFeed } from "./mapper.ts";

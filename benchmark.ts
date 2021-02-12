@@ -2,7 +2,7 @@ import { bench, runBenchmarks } from "./test_deps.ts";
 import { deserializeFeed } from "./mod.ts";
 
 (async () => {
-  let cache: any = {};
+  let cache: { [id: string]: string } = {};
   const loadSample = (sampleName: string): string => {
     let cacheResult = cache[sampleName];
     if (!cacheResult) {

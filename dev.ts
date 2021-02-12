@@ -13,7 +13,7 @@ const readFile = async (fileName: string): Promise<string> => {
 
 (async () => {
   const xml = await readFile(`./samples/${Deno.args[0]}.xml`);
-  const [feedType, result] = (await deserializeFeed(xml)) as [FeedType, Feed];
+  const [feedType, result] = await deserializeFeed(xml);
 
   console.log("============ RESULT ============");
   console.log('Result', result);
