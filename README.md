@@ -9,13 +9,17 @@ RSS / ATOM Deserialization module for Deno.<br/>The project aims to provide a li
 ## Usage
 
 ``` typescript
-import { deserializeFeed } from 'https://deno.land/x/rss/mod.ts';
+import { deserializeFeed,  } from 'https://deno.land/x/rss/mod.ts';
 
 const response = await fetch('http://static.userland.com/gems/backend/rssTwoExample2.xml');
 const xml = await response.text();
-const [feedType, feed] = await deserializeFeed(xml);
+const { feed, feedType } = await deserializeFeed(xml);
 
-// Your code...
+	switch(feedType) {
+		case FeedType.Rss2:
+			// Your code...
+		break;
+	}
 ```
 
 Convert feed to JSON Feed:
@@ -24,7 +28,7 @@ import { deserializeFeed } from 'https://deno.land/x/rss/mod.ts';
 
 const response = await fetch('http://static.userland.com/gems/backend/rssTwoExample2.xml');
 const xml = await response.text();
-const [feedType, jsonFeed] = await deserializeFeed(xml, { outputJsonFeed: true });
+const { feed } = await deserializeFeed(xml, { outputJsonFeed: true });
 
 // Your code...
 ```

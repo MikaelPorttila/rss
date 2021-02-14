@@ -1,7 +1,5 @@
 import {
 	deserializeFeed,
-	Feed,
-	FeedType
 } from "./mod.ts";
 
 const readFile = async (fileName: string): Promise<string> => {
@@ -13,8 +11,8 @@ const readFile = async (fileName: string): Promise<string> => {
 
 (async () => {
 	const xml = await readFile(`./samples/${Deno.args[0]}.xml`);
-	const [feedType, result] = await deserializeFeed(xml);
+	const { feed } = await deserializeFeed(xml);
 
 	console.log("============ RESULT ============");
-	console.log('Result', result);
+	console.log('Result', feed);
 })();
