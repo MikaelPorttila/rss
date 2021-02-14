@@ -6,6 +6,8 @@ import {
 } from "../test_deps.ts";
 import { deserializeFeed } from "./deserializer.ts";
 import { FeedType, Feed, RSS2, JsonFeed } from "../mod.ts";
+import { } from './types/mod.ts';
+import { DeserializationResult } from './types/deserialization-result.ts';
 
 const decoder = new TextDecoder("utf-8");
 
@@ -26,12 +28,12 @@ Deno.test(`Unsupported format handling`, () => {
 Deno.test('Deserialize RSS2', async (): Promise<void> => {
 	const binaryString = await Deno.readFile('./samples/rss2.xml');
 	const fileContent = decoder.decode(binaryString);
-	const [feedType, result] = (await deserializeFeed(fileContent)) as [FeedType, RSS2];
+	const { feed, feedType } = (await deserializeFeed(fileContent)) as DeserializationResult<RSS2>;
 
 	assertEquals(feedType, FeedType.Rss2);
-	assert(!!result, 'Deserializer returned undefined');
+	assert(!!feed, 'Deserializer returned undefined');
 
-	const { items, pubDate, ttl, copyright, link } = result.channel;
+	const { items, pubDate, ttl, copyright, link } = feed.channel;
 	assertNotEquals(ttl, undefined, 'Missing ttl');
 	assertEquals(typeof (ttl), typeof (2), 'ttl was not deserializes into number');
 	assertEquals(typeof (pubDate), typeof (new Date()));
@@ -51,35 +53,35 @@ Deno.test('Deserialize RSS2', async (): Promise<void> => {
 Deno.test('Deserialize RSS2 with convertToJsonFeed option', async () => {
 	const binaryString = await Deno.readFile('./samples/rss2.xml');
 	const fileContent = decoder.decode(binaryString);
-	const [feedType, result] = await deserializeFeed(fileContent, { outputJsonFeed: true });
+	const { feed, feedType } = await deserializeFeed(fileContent, { outputJsonFeed: true });
 
-	assert(!!result, 'Result was undefined');
+	assert(!!feed, 'Result was undefined');
 	assertEquals(feedType, FeedType.JsonFeed);
 });
 
 Deno.test('Deserialize ATOM', async (): Promise<void> => {
 	const binaryString = await Deno.readFile('./samples/atom.xml');
 	const fileContent = decoder.decode(binaryString);
-	const [feedType, result] = (await deserializeFeed(fileContent)) as [FeedType, Feed];
+	const { feed, feedType } = (await deserializeFeed(fileContent)) as DeserializationResult<Feed>;
 
-	assert(!!result, 'Feed was undefined');
-	assert(!!result.id, 'Feed is missing id value');
-	assert(!!result.title, 'Feed is missing title value');
-	assert(!!result.icon, 'Feed is missing icon value');
-	assert(!!result.entries, 'Feed is missing entries value');
-	assert(!!result.categories, 'Feed is missing categories value');
-	assertEquals(typeof (result.updated), typeof (new Date), 'Feed is missing icon value');
+	assert(!!feed, 'Feed was undefined');
+	assert(!!feed.id, 'Feed is missing id value');
+	assert(!!feed.title, 'Feed is missing title value');
+	assert(!!feed.icon, 'Feed is missing icon value');
+	assert(!!feed.entries, 'Feed is missing entries value');
+	assert(!!feed.categories, 'Feed is missing categories value');
+	assertEquals(typeof (feed.updated), typeof (new Date), 'Feed is missing icon value');
 
-	assert(!!result.author, 'Feed is missing author');
-	assert(!!result.author.email, 'Feed Author is missing email value');
-	assert(!!result.author.name, 'Feed Author is missing name value');
-	assert(!!result.author.uri, 'Feed Author is missing uri value');
+	assert(!!feed.author, 'Feed is missing author');
+	assert(!!feed.author.email, 'Feed Author is missing email value');
+	assert(!!feed.author.name, 'Feed Author is missing name value');
+	assert(!!feed.author.uri, 'Feed Author is missing uri value');
 
-	for (const category of result.categories) {
+	for (const category of feed.categories) {
 		assert(!!category.term, 'Category is missing term value');
 	}
 
-	for (const entry of result.entries) {
+	for (const entry of feed.entries) {
 		assert(!!entry.author, 'Entry is missing author value');
 		assert(!!entry.title, 'Entry is missing title value');
 		assert(!!entry.published, 'Entry is missing published value');
@@ -106,9 +108,9 @@ Deno.test('Deserialize ATOM', async (): Promise<void> => {
 Deno.test('Deserialize ATOM with convertToJsonFeed option', async () => {
 	const binaryString = await Deno.readFile('./samples/atom.xml');
 	const fileContent = decoder.decode(binaryString);
-	const [feedType, result] = await deserializeFeed(fileContent, { outputJsonFeed: true });
+	const { feed, feedType } = await deserializeFeed(fileContent, { outputJsonFeed: true });
 
-	assert(!!result, 'Result was undefined');
+	assert(!!feed, 'Result was undefined');
 	assertEquals(feedType, FeedType.JsonFeed);
-	assertEquals(result.items[0].title, '<div xmlns="http://www.w3.org/1999/xhtml">AT&T bought<b>by SBC</b>!</div>', 'Title was not mapped correctly')
+	assertEquals(feed.items[0].title, '<div xmlns="http://www.w3.org/1999/xhtml">AT&T bought<b>by SBC</b>!</div>', 'Title was not mapped correctly')
 });
