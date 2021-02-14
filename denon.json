@@ -1,9 +1,0 @@
-{
-    "allow": [
-        "read"
-    ],
-    "scripts": {
-        "start": "deno run dev.ts rss2",
-        "test": "deno test"
-    }
-}
