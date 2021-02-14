@@ -5,7 +5,8 @@ export type {
 	RSS1,
 	RSS2,
 	Feed,
-	JsonFeed
+	JsonFeed,
+	DeserializationResult
 } from "./src/types/mod.ts";
 export {
 	deserializeFeed
