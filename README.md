@@ -15,11 +15,11 @@ const response = await fetch('http://static.userland.com/gems/backend/rssTwoExam
 const xml = await response.text();
 const { feed, feedType } = await deserializeFeed(xml);
 
-	switch(feedType) {
-		case FeedType.Rss2:
-			// Your code...
-		break;
-	}
+switch(feedType) {
+	case FeedType.Rss2:
+		// Your code...
+	break;
+}
 ```
 
 Convert feed to JSON Feed:
