@@ -32,11 +32,11 @@ Deno.test(`Call signatures compile without error`, async () => {
 		const xml = await Deno.readTextFile('./samples/rss2.xml');
 
 		const result1 = await deserializeFeed(xml);
-		const resul2 = await deserializeFeed(xml, { outputJsonFeed: true });
-		const resul3 = await deserializeFeed(xml, { outputJsonFeed: false });
+		const result2 = await deserializeFeed(xml, { outputJsonFeed: true });
+		const result3 = await deserializeFeed(xml, { outputJsonFeed: false });
 
 		const options: Options = {};
-		const resul4 = await deserializeFeed(xml, options);
+		const result4 = await deserializeFeed(xml, options);
 	}
 });
 
