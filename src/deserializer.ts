@@ -24,7 +24,7 @@ export interface Options {
 export const deserializeFeed = ((
 	input: string,
 	options?: Options
-) => new Promise<DeserializationResult<RSS2 | RSS1 | Feed | JsonFeed>>(
+) => new Promise<DeserializationResult<Feed | RSS1 | RSS2 | JsonFeed>>(
 	(resolve, reject) => {
 		if (!input) {
 			reject(new Error("Input was undefined, null or empty"));
@@ -115,10 +115,10 @@ export const deserializeFeed = ((
 					onattribute: undefined,
 				});
 
-				const result = new DeserializationResult(
-					options?.outputJsonFeed ? toJsonFeed(feedType, node) : node,
-					options?.outputJsonFeed ? FeedType.JsonFeed : feedType
-				);
+				const result: DeserializationResult<Feed | RSS1 | RSS2 | JsonFeed> = {
+					feed: options?.outputJsonFeed ? toJsonFeed(feedType, node) : node,
+					feedType: options?.outputJsonFeed ? FeedType.JsonFeed : feedType,
+				};
 
 				resolve(result);
 				return;
