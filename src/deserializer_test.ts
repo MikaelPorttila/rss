@@ -24,20 +24,20 @@ Deno.test(`Unsupported format handling`, () => {
 });
 
 Deno.test(`Call signatures compile without error`, async () => {
-	const xml = await Deno.readTextFile('./samples/rss2.xml');
+/* because this is a test only for the compiler, the condition is false, so
+ * that none of the code will be executed, but it will still be type-checked
+ */
+	let n = 0;
+	if (n > 0) {
+		const xml = await Deno.readTextFile('./samples/rss2.xml');
 
-	const result1 = await deserializeFeed(xml);
-	const result2 = await deserializeFeed(xml, { outputJsonFeed: true });
-	const result3 = await deserializeFeed(xml, { outputJsonFeed: false });
+		const result1 = await deserializeFeed(xml);
+		const resul2 = await deserializeFeed(xml, { outputJsonFeed: true });
+		const resul3 = await deserializeFeed(xml, { outputJsonFeed: false });
 
-	const options: Options = {};
-	const result4 = await deserializeFeed(xml, options);
-
-	options.outputJsonFeed = true;
-	const result5 = await deserializeFeed(xml, options);
-
-	options.outputJsonFeed = false;
-	const result6 = await deserializeFeed(xml, options);
+		const options: Options = {};
+		const resul4 = await deserializeFeed(xml, options);
+	}
 });
 
 Deno.test('Deserialize RSS2', async (): Promise<void> => {
