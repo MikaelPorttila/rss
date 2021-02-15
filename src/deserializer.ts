@@ -185,8 +185,10 @@ export const deserializeFeed = ((
 		parser.write(input).close();
 	}
 )) as {
-	(input: string): Promise<DeserializationResult<RSS2 | RSS1 | Feed>>;
-	(input: string, options: Options & { outputJsonFeed: true }): Promise<DeserializationResult<JsonFeed>>
+	(input: string): Promise<DeserializationResult<Feed | RSS1 | RSS2>>;
+	(input: string, options: Options & { outputJsonFeed: false }): Promise<DeserializationResult<Feed | RSS1 | RSS2>>;
+	(input: string, options: Options & { outputJsonFeed: true }): Promise<DeserializationResult<JsonFeed>>;
+	(input: string, options?: Options): Promise<DeserializationResult<Feed | JsonFeed | RSS1 | RSS2>>;
 };
 
 interface Attribute {
