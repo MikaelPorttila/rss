@@ -1,22 +1,20 @@
 import { SAXParser } from "../deps.ts";
 import {
+	DeserializationResult,
 	Feed,
-	RSS2,
-	RSS1,
 	FeedParseType,
 	FeedType,
 	JsonFeed,
-	DeserializationResult
+	RSS1,
+	RSS2,
 } from "./types/mod.ts";
 import {
+	isAtomCDataField,
 	resolveAtomField,
-	resolveRss2Field,
 	resolveRss1Field,
-	isAtomCDataField
+	resolveRss2Field,
 } from "./resolvers/mod.ts";
-import {
-	toJsonFeed
-} from './mapper.ts';
+import { toJsonFeed } from './mapper.ts';
 export interface Options {
 	outputJsonFeed?: boolean
 }
@@ -24,7 +22,7 @@ export interface Options {
 export const deserializeFeed = ((
 	input: string,
 	options?: Options
-) => new Promise<DeserializationResult<RSS2 | RSS1 | Feed | JsonFeed>>(
+) => new Promise<DeserializationResult<Feed | RSS1 | RSS2 | JsonFeed>>(
 	(resolve, reject) => {
 		if (!input) {
 			reject(new Error("Input was undefined, null or empty"));
@@ -115,10 +113,10 @@ export const deserializeFeed = ((
 					onattribute: undefined,
 				});
 
-				const result = new DeserializationResult(
-					options?.outputJsonFeed ? toJsonFeed(feedType, node) : node,
-					options?.outputJsonFeed ? FeedType.JsonFeed : feedType
-				);
+				const result: DeserializationResult<Feed | RSS1 | RSS2 | JsonFeed> = {
+					feed: options?.outputJsonFeed ? toJsonFeed(feedType, node) : node,
+					feedType: options?.outputJsonFeed ? FeedType.JsonFeed : feedType,
+				};
 
 				resolve(result);
 				return;
@@ -185,8 +183,10 @@ export const deserializeFeed = ((
 		parser.write(input).close();
 	}
 )) as {
-	(input: string): Promise<DeserializationResult<RSS2 | RSS1 | Feed>>;
-	(input: string, options: Options & { outputJsonFeed: true }): Promise<DeserializationResult<JsonFeed>>
+	(input: string): Promise<DeserializationResult<Feed | RSS1 | RSS2>>;
+	(input: string, options: Options & { outputJsonFeed: false }): Promise<DeserializationResult<Feed | RSS1 | RSS2>>;
+	(input: string, options: Options & { outputJsonFeed: true }): Promise<DeserializationResult<JsonFeed>>;
+	(input: string, options?: Options): Promise<DeserializationResult<Feed | JsonFeed | RSS1 | RSS2>>;
 };
 
 interface Attribute {
