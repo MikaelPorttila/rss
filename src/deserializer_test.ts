@@ -5,9 +5,7 @@ import {
 	assertNotEquals,
 } from "../test_deps.ts";
 import { deserializeFeed } from "./deserializer.ts";
-import { FeedType, Feed, RSS2, JsonFeed } from "../mod.ts";
-import { } from './types/mod.ts';
-import { DeserializationResult } from './types/deserialization-result.ts';
+import { DeserializationResult, Feed, FeedType, RSS2, Options } from "../mod.ts";
 
 const decoder = new TextDecoder("utf-8");
 
@@ -23,6 +21,23 @@ Deno.test(`Unsupported format handling`, () => {
 	assertThrowsAsync(async () => {
 		await deserializeFeed("<test></test>");
 	});
+});
+
+Deno.test(`Call signatures compile without error`, async () => {
+	const xml = await Deno.readTextFile('./samples/rss2.xml');
+
+	const result1 = await deserializeFeed(xml);
+	const result2 = await deserializeFeed(xml, { outputJsonFeed: true });
+	const result3 = await deserializeFeed(xml, { outputJsonFeed: false });
+
+	const options: Options = {};
+	const result4 = await deserializeFeed(xml, options);
+
+	options.outputJsonFeed = true;
+	const result5 = await deserializeFeed(xml, options);
+
+	options.outputJsonFeed = false;
+	const result6 = await deserializeFeed(xml, options);
 });
 
 Deno.test('Deserialize RSS2', async (): Promise<void> => {
