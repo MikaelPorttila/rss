@@ -5,7 +5,8 @@ import {
 	assertNotEquals,
 } from "../test_deps.ts";
 import { deserializeFeed } from "./deserializer.ts";
-import { DeserializationResult, Feed, FeedType, RSS2, Options } from "../mod.ts";
+import { FeedType } from "../mod.ts";
+import type { DeserializationResult, Feed, RSS2, Options } from "../mod.ts";
 
 const decoder = new TextDecoder("utf-8");
 

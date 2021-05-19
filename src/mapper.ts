@@ -1,12 +1,13 @@
-import {
+import type {
 	Feed,
 	RSS2,
 	RSS1,
 	JsonFeed,
 	JsonFeedItem,
-	JsonFeedAuthor,
-	FeedType,
+	JsonFeedAuthor
 } from "./types/mod.ts";
+
+import { FeedType } from "./types/mod.ts";
 
 export const toJsonFeed = (
 	feedType: FeedType,
