@@ -1,13 +1,14 @@
 import { SAXParser } from "../deps.ts";
-import {
+import type {
 	DeserializationResult,
 	Feed,
-	FeedParseType,
-	FeedType,
 	JsonFeed,
 	RSS1,
 	RSS2,
 } from "./types/mod.ts";
+
+import { FeedParseType, FeedType } from "./types/mod.ts";
+
 import {
 	isAtomCDataField,
 	resolveAtomField,

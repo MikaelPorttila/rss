@@ -2,7 +2,8 @@ import {
 	assert,
 	assertEquals
 } from "../test_deps.ts";
-import { Feed, RSS2, FeedType } from "./types/mod.ts";
+import type { Feed, RSS2 } from "./types/mod.ts";
+import { FeedType } from "./types/mod.ts";
 import { toJsonFeed } from "./mapper.ts";
 
 const date = new Date(1989, 1, 1);
