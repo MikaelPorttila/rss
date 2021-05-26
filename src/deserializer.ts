@@ -114,10 +114,14 @@ export const deserializeFeed = ((
 					onattribute: undefined,
 				});
 
-				const result: DeserializationResult<Feed | RSS1 | RSS2 | JsonFeed> = {
+				const result: DeserializationResult<Feed | RSS1 | RSS2 | JsonFeed> & { originalFeedType?: FeedType } = {
 					feed: options?.outputJsonFeed ? toJsonFeed(feedType, node) : node,
 					feedType: options?.outputJsonFeed ? FeedType.JsonFeed : feedType,
 				};
+			
+				if(options?.outputJsonFeed) {
+					result.originalFeedType = feedType
+				}
 
 				resolve(result);
 				return;
@@ -186,7 +190,7 @@ export const deserializeFeed = ((
 )) as {
 	(input: string): Promise<DeserializationResult<Feed | RSS1 | RSS2>>;
 	(input: string, options: Options & { outputJsonFeed: false }): Promise<DeserializationResult<Feed | RSS1 | RSS2>>;
-	(input: string, options: Options & { outputJsonFeed: true }): Promise<DeserializationResult<JsonFeed>>;
+	(input: string, options: Options & { outputJsonFeed: true }): Promise<DeserializationResult<JsonFeed> & { originalFeedType: FeedType }>;
 	(input: string, options?: Options): Promise<DeserializationResult<Feed | JsonFeed | RSS1 | RSS2>>;
 };
 
