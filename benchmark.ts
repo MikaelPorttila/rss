@@ -6,9 +6,8 @@ import { deserializeFeed } from "./mod.ts";
 	const loadSample = (sampleName: string): string => {
 		let cacheResult = cache[sampleName];
 		if (!cacheResult) {
-			const decoder = new TextDecoder("utf-8");
-			const result = Deno.readFileSync(`./samples/${sampleName}.xml`);
-			cacheResult = cache[sampleName] = decoder.decode(result);
+			const result = 	Deno.readTextFileSync(`./samples/${sampleName}.xml`);
+			cacheResult = cache[sampleName] = result
 		}
 		return cacheResult;
 	};

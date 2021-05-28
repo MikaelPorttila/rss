@@ -98,18 +98,16 @@ const mapAtomToJsonFeed = (atom: Feed): JsonFeed => {
 		let author;
 		let url: string | undefined;
 
-		if (isValidHttpURL(entry.id)) {
-			url = entry.id;
-		}
-
-		// Recommended but not required field for links in ATOM spec if ID isn't used for that.
-		if (entry["href"]) {
-			url = entry["href"] as string;
-		}
-
 		// All google feeds use this field to provide the correct url.
 		if (entry["feedburner:origlink"]) {
 			url = entry["feedburner:origlink"] as string;
+
+			// Recommended but not required link field in ATOM spec.
+		} else if (entry.href) {
+			url = entry.href;
+
+		} else if (isValidHttpURL(entry.id)) {
+			url = entry.id;
 		}
 
 		if (entry.author) {
