@@ -41,6 +41,8 @@ interface Entry {
 	rights?: Text;
 	categories?: string[];
 	source?: Source;
+	href?: string;
+	[key: string]: any;
 }
 
 interface Content extends Text {
