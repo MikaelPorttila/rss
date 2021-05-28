@@ -1,7 +1,8 @@
 {
 	"deno.enable": true,
-	"deno.import_intellisense_origins": {
-		"https://deno.land": true
+	"deno.suggest.autoImports": true,
+	"deno.suggest.imports.hosts": {
+		"https://deno.land/": true
 	},
 	"editor.renderWhitespace": "all"
 }

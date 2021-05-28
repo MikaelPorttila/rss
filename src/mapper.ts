@@ -1,19 +1,18 @@
 import type {
 	Feed,
-	RSS2,
-	RSS1,
 	JsonFeed,
+	JsonFeedAuthor,
 	JsonFeedItem,
-	JsonFeedAuthor
+	RSS1,
+	RSS2,
 } from "./types/mod.ts";
-
+import { isValidHttpURL } from "./util.ts";
 import { FeedType } from "./types/mod.ts";
 
 export const toJsonFeed = (
 	feedType: FeedType,
 	feed: Feed | RSS2 | RSS1,
 ): JsonFeed | null => {
-
 	if (!feed) {
 		return null;
 	}
@@ -62,7 +61,7 @@ const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
 			attachments,
 			url: rssItem.link,
 			date_published: rssItem.pubDate,
-			date_modified: rssItem.pubDate
+			date_modified: rssItem.pubDate,
 		} as JsonFeedItem;
 	}) || [];
 
@@ -71,14 +70,15 @@ const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
 
 	if (channel.managingEditor || channel.webMaster) {
 		author = {
-			url: channel.managingEditor || channel.webMaster
+			url: channel.managingEditor || channel.webMaster,
 		};
 	}
 
 	if (channel.cloud) {
 		hubs = [{
 			type: channel.cloud.protocol,
-			url: `${channel.cloud.domain}${channel.cloud.port ? ':' + channel.cloud.port : ''}${channel.cloud.path}`
+			url: `${channel.cloud.domain}${channel.cloud.port ? ":" + channel.cloud.port : ""
+				}${channel.cloud.path}`,
 		}];
 	}
 
@@ -89,13 +89,29 @@ const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
 		home_page_url: channel.link,
 		items,
 		author,
-		hubs
+		hubs,
 	} as JsonFeed;
 };
 
 const mapAtomToJsonFeed = (atom: Feed): JsonFeed => {
 	const items: JsonFeedItem[] = atom.entries.map((entry) => {
 		let author;
+		let url: string | undefined;
+
+		if (isValidHttpURL(entry.id)) {
+			url = entry.id;
+		}
+
+		// Recommended but not required field for links in ATOM spec if ID isn't used for that.
+		if (entry["href"]) {
+			url = entry["href"] as string;
+		}
+
+		// All google feeds use this field to provide the correct url.
+		if (entry["feedburner:origlink"]) {
+			url = entry["feedburner:origlink"] as string;
+		}
+
 		if (entry.author) {
 			author = {
 				name: entry.author.name,
@@ -108,18 +124,19 @@ const mapAtomToJsonFeed = (atom: Feed): JsonFeed => {
 			.map((link) => ({
 				url: link.href,
 				mime_type: link.type,
-				size_in_bytes: link.length
+				size_in_bytes: link.length,
 			}));
 
 		const item: JsonFeedItem = {
 			id: entry.id,
-			title: entry.title?.value,
+			title: entry.title?.value ?? entry.title,
 			date_published: entry.published,
 			date_modified: entry.updated,
 			summary: entry.summary?.value,
 			tags: entry.categories,
 			author,
-			attachments
+			url,
+			attachments,
 		};
 
 		if (entry.content) {
@@ -146,7 +163,7 @@ const mapAtomToJsonFeed = (atom: Feed): JsonFeed => {
 
 	const feed = {
 		icon: atom.icon,
-		title: atom.title?.value,
+		title: atom.title?.value ?? atom.title,
 		items,
 		author,
 	} as JsonFeed;
