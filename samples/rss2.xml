@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:dc="http://purl.org/dc/elements/1.1/" 
-    xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:content="http://purl.org/rss/1.0/modules/content/"
     xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title><![CDATA[Lorem ipsum feed for an interval of 1 minutes with 20 item(s)]]></title>
@@ -54,6 +54,25 @@
         <item>
             <title><![CDATA[Lorem ipsum 2020-06-22T19:54:00Z]]></title>
             <description><![CDATA[Culpa mollit cillum enim mollit duis.]]></description>
+            <link>http://example.com/test/1592855640</link>
+            <guid isPermaLink="true">http://example.com/test/1592855640</guid>
+            <dc:creator><![CDATA[John Smith]]></dc:creator>
+            <pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
+        </item>
+				<item>
+            <title><![CDATA[Lorem ipsum 2020-06-22T19:54:00Z]]></title>
+            <description>
+							<p>Hello World!</p>
+							<a href="https://github.org"><em>Read more...</em></a>
+						</description>
+            <link>http://example.com/test/1592855640</link>
+            <guid isPermaLink="true">http://example.com/test/1592855640</guid>
+            <dc:creator><![CDATA[John Smith]]></dc:creator>
+            <pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
+        </item>
+				<item>
+            <title><![CDATA[Lorem ipsum 2020-06-22T19:54:00Z]]></title>
+            <description><![CDATA[Culpa mollit cillum enim mollit duis.]]> </description>
             <link>http://example.com/test/1592855640</link>
             <guid isPermaLink="true">http://example.com/test/1592855640</guid>
             <dc:creator><![CDATA[John Smith]]></dc:creator>
