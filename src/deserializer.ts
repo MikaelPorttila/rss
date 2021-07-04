@@ -30,6 +30,8 @@ export const deserializeFeed = ((
 			return;
 		}
 
+		input =  input.replaceAll(/<description>(?!(<![CDATA))/, '<description><![CDATA[');		
+		
 		let cDataLevel: number;
 		let cDataBuilder: string;
 		let cDataActive: boolean;
