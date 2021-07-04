@@ -30,6 +30,11 @@ export const deserializeFeed = ((
 			return;
 		}
 
+		//	Handle invalid feed documents by converting the description field to CDATA.
+		input = input
+			.replaceAll(/<description>(?!(\s*<!\[CDATA))/g, `<description><![CDATA[`)
+			.replaceAll(/(?<!\]\]>\s*)<\/description>/g, `]]></description>`);
+
 		let cDataLevel: number;
 		let cDataBuilder: string;
 		let cDataActive: boolean;
@@ -118,7 +123,7 @@ export const deserializeFeed = ((
 					feed: options?.outputJsonFeed ? toJsonFeed(feedType, node) : node,
 					feedType: options?.outputJsonFeed ? FeedType.JsonFeed : feedType,
 				};
-			
+
 				if(options?.outputJsonFeed) {
 					result.originalFeedType = feedType
 				}
