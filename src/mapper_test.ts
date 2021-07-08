@@ -225,7 +225,23 @@ Deno.test("Mapper RSS2 -> JSON Feed", () => {
 					length: 1337,
 					type: "enclosure.type",
 				},
-			}],
+			},
+			{
+				guid: "item.guid2",
+				title: "item.title",
+				description: "item.description",
+				'dc:creator': ['dccreator1', 'dccreator2'],
+				link: "item.link",
+				comments: "item.comments",
+				categories: ["item.link.category1", "item.link.category2"],
+				pubDate: new Date(1989, 1, 1),
+				enclosure: {
+					url: "enclosure.url",
+					length: 1337,
+					type: "enclosure.type",
+				},
+			}
+		],
 			cloud: {
 				domain: "cloud.domain",
 				port: 1337,
@@ -286,6 +302,12 @@ Deno.test("Mapper RSS2 -> JSON Feed", () => {
 		undefined,
 		"Author avatar should be undefined",
 	);
+
+	const item2 = jsonFeed.items[1];
+	assertEquals(item2.authors?.length, 2, `Item Author count expected to be 2 but was actually ${item2.authors?.length}`);
+	assertEquals(item2.authors?.[0].name, 'dccreator1', `Creator1 was not mapped correctly, Expected creator1 but was actually ${item2.authors?.[0].name}`);
+	assertEquals(item2.authors?.[1].name, 'dccreator2', `Creator2 was not mapped correctly, Expected creator2 but was actually ${item2.authors?.[1].name}`);
+
 	assertEquals(item.author.url, undefined, "Author url should be undefined");
 
 	assert(!!item.attachments, "Enclosure was not mapped");

@@ -9,14 +9,14 @@
         <generator>RSS for Deno</generator>
         <lastBuildDate>Mon, 22 Jun 2020 20:03:04 GMT</lastBuildDate>
         <pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
-        <copyright><![CDATA[Michael Bertolacci, licensed under a Creative Commons Attribution 3.0 Unported License.]]></copyright>
+        <copyright><![CDATA[MIT]]></copyright>
         <ttl>100</ttl>
         <item>
             <title><![CDATA[Lorem ipsum 2020-06-22T20:03:00Z]]></title>
             <description><![CDATA[Non sit sunt cupidatat consequat esse eiusmod adipisicing enim aliquip nisi exercitation.]]></description>
             <link>http://example.com/test/1592856180</link>
             <guid isPermaLink="true">http://example.com/test/1592856180</guid>
-            <dc:creator><![CDATA[John Smith]]></dc:creator>
+            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
             <pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
         </item>
         <item>
@@ -24,7 +24,7 @@
             <description><![CDATA[Ullamco excepteur ad quis ullamco dolor reprehenderit ut mollit qui duis.]]></description>
             <link>http://example.com/test/1592856000</link>
             <guid isPermaLink="true">http://example.com/test/1592856000</guid>
-            <dc:creator><![CDATA[John Smith]]></dc:creator>
+            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
             <pubDate>Mon, 22 Jun 2020 20:00:00 GMT</pubDate>
         </item>
         <item>
@@ -32,7 +32,7 @@
             <description><![CDATA[Labore elit fugiat aliquip ipsum laboris do sunt exercitation.]]></description>
             <link>http://example.com/test/1592855940</link>
             <guid isPermaLink="true">http://example.com/test/1592855940</guid>
-            <dc:creator><![CDATA[John Smith]]></dc:creator>
+            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
             <pubDate>Mon, 22 Jun 2020 19:59:00 GMT</pubDate>
         </item>
         <item>
@@ -40,7 +40,7 @@
             <description><![CDATA[Reprehenderit amet incididunt sunt esse ut deserunt commodo magna ex cillum incididunt deserunt quis laborum.]]></description>
             <link>http://example.com/test/1592855880</link>
             <guid isPermaLink="true">http://example.com/test/1592855880</guid>
-            <dc:creator><![CDATA[John Smith]]></dc:creator>
+            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
             <pubDate>Mon, 22 Jun 2020 19:58:00 GMT</pubDate>
         </item>
         <item>
@@ -48,7 +48,7 @@
             <description><![CDATA[Quis esse commodo ea esse deserunt voluptate anim Lorem non irure Lorem Lorem reprehenderit velit.]]></description>
             <link>http://example.com/test/1592855820</link>
             <guid isPermaLink="true">http://example.com/test/1592855820</guid>
-            <dc:creator><![CDATA[John Smith]]></dc:creator>
+            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
             <pubDate>Mon, 22 Jun 2020 19:57:00 GMT</pubDate>
         </item>
         <item>
@@ -56,27 +56,46 @@
             <description><![CDATA[Culpa mollit cillum enim mollit duis.]]></description>
             <link>http://example.com/test/1592855640</link>
             <guid isPermaLink="true">http://example.com/test/1592855640</guid>
-            <dc:creator><![CDATA[John Smith]]></dc:creator>
+            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
             <pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
         </item>
 				<item>
-            <title><![CDATA[Lorem ipsum 2020-06-22T19:54:00Z]]></title>
-            <description>
-							<p>Hello World!</p>
-							<a href="https://github.org"><em>Read more...</em></a>
-						</description>
-            <link>http://example.com/test/1592855640</link>
-            <guid isPermaLink="true">http://example.com/test/1592855640</guid>
-            <dc:creator><![CDATA[John Smith]]></dc:creator>
-            <pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
+					<title><![CDATA[Lorem ipsum 2020-06-22T19:54:00Z]]></title>
+					<description>
+						<p>Hello World!</p>
+						<a href="https://github.org"><em>Read more...</em></a>
+					</description>
+					<link>http://example.com/test/1592855640</link>
+					<guid isPermaLink="true">http://example.com/test/1592855640</guid>
+					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
+					<pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
         </item>
 				<item>
-            <title><![CDATA[Lorem ipsum 2020-06-22T19:54:00Z]]></title>
-            <description><![CDATA[Culpa mollit cillum enim mollit duis.]]> </description>
-            <link>http://example.com/test/1592855640</link>
-            <guid isPermaLink="true">http://example.com/test/1592855640</guid>
-            <dc:creator><![CDATA[John Smith]]></dc:creator>
-            <pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
-        </item>
+					<title><![CDATA[Lorem ipsum 2020-06-22T19:54:00Z]]></title>
+					<description><![CDATA[Culpa mollit cillum enim mollit duis.]]> </description>
+					<link>http://example.com/test/1592855640</link>
+					<guid isPermaLink="true">http://example.com/test/1592855640</guid>
+					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
+					<pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
+				</item>
+				<item>
+					<title>Item with element with missing end tags</title>
+					<link />
+					<guid isPermaLink="true">itemWithMissingEndTags</guid>
+					<atom:link href="https://github.com/MikaelPorttila/rss/1/RSS2" rel="standout"/>
+					<description />
+					<dc:creator>Deno RSS</dc:creator>
+					<pubDate>Thu, 08 Jul 2021 10:53:40 +0000</pubDate>
+				</item>
+				<item>
+					<title>Item with multiple dublin core creators</title>
+					<link />
+					<guid isPermaLink="true">itemWithMultipleDCCreators</guid>
+					<atom:link href="https://github.com/MikaelPorttila/rss/1/RSS2" rel="standout"/>
+					<description />
+					<dc:creator>Deno RSS</dc:creator>
+					<dc:creator>Deno RSS 2</dc:creator>
+					<pubDate>Thu, 08 Jul 2021 10:53:40 +0000</pubDate>
+				</item>
     </channel>
 </rss>

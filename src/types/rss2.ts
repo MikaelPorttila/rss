@@ -38,6 +38,7 @@ interface Item {
 	guid?: string;
 	pubDate?: Date;
 	source?: Source;
+	'dc:creator'?: string[];
 }
 
 interface Enclosure {
