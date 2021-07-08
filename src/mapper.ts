@@ -35,12 +35,19 @@ export const toJsonFeed = (
 
 const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
 	const items = rss.channel.items.map((rssItem) => {
-		let author, attachments;
+		let authors, author, attachments;
 
 		if (rssItem.author) {
 			author = {
 				name: rssItem.author,
 			};
+			authors = [author];
+		}
+		else if (rssItem['dc:creator']) {
+			author = {
+				name: rssItem['dc:creator'][0],
+			};
+			authors = rssItem['dc:creator'].map(creator => ({name: creator}));
 		}
 
 		if (rssItem.enclosure) {
@@ -58,6 +65,7 @@ const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
 			external_url: rssItem.link,
 			content_html: rssItem.link,
 			author,
+			authors,
 			attachments,
 			url: rssItem.link,
 			date_published: rssItem.pubDate,

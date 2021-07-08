@@ -40,6 +40,9 @@ export const resolveRss2Field = (
 			propertyName = "categories";
 			isArray = true;
 			break;
+		case Field.DCCreator:
+			isArray = true;
+			break;
 		case Field.isPermaLink:
 			propertyName = "isPermaLink";
 			break;
@@ -84,4 +87,5 @@ enum Field {
 	Url = "url",
 	WebMaster = "webmaster",
 	Width = "width",
+	DCCreator = "dc:creator"
 }

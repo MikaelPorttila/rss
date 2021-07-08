@@ -39,6 +39,7 @@ export const deserializeFeed = ((
 		let cDataBuilder: string;
 		let cDataActive: boolean;
 		let feedType: FeedType;
+		let currentElement;
 		const stack: any[] = [{}];
 		const parser = new SAXParser(false, {
 			trim: true,
@@ -124,7 +125,7 @@ export const deserializeFeed = ((
 					feedType: options?.outputJsonFeed ? FeedType.JsonFeed : feedType,
 				};
 
-				if(options?.outputJsonFeed) {
+				if (options?.outputJsonFeed) {
 					result.originalFeedType = feedType
 				}
 
@@ -162,7 +163,14 @@ export const deserializeFeed = ((
 					targetNode[propertyName].push(node);
 				}
 			} else {
-				targetNode[propertyName] = node;
+				const isEmpty =
+					(typeof node === 'object') &&
+					Object.keys(node).length === 0 &&
+					!(node instanceof Date);
+
+				if (!isEmpty) {
+					targetNode[propertyName] = node;
+				}
 			}
 		};
 

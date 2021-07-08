@@ -28,6 +28,10 @@ export interface JsonFeedItem {
 	image?: string;
 	banner_image?: string;
 	date_modified?: Date;
+	authors?: JsonFeedAuthor[];
+	/**
+	 * @deprecated Please use the new JsonFeed 1.1 authors field instead.
+	 */
 	author?: JsonFeedAuthor;
 	tags?: string[];
 	attachments?: Attachment[];
