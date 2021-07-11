@@ -15,7 +15,9 @@ interface Channel {
 	managingEditor?: string;
 	webMaster?: string;
 	pubDate?: Date;
+	pubDateRaw?: string;
 	lastBuildDate?: Date;
+	lastBuildDateRaw?: string;
 	category?: string[];
 	generator?: string;
 	docs?: string;
@@ -37,6 +39,7 @@ interface Item {
 	enclosure?: Enclosure;
 	guid?: string;
 	pubDate?: Date;
+	pubDateRaw?: string;
 	source?: Source;
 	'dc:creator'?: string[];
 }

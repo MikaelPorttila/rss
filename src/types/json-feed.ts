@@ -24,10 +24,12 @@ export interface JsonFeedItem {
 	url?: string;
 	external_url?: string;
 	date_published?: Date;
+	date_publishedRaw?: string;
 	summary?: string;
 	image?: string;
 	banner_image?: string;
 	date_modified?: Date;
+	date_modifiedRaw?: string;
 	authors?: JsonFeedAuthor[];
 	/**
 	 * @deprecated Please use the new JsonFeed 1.1 authors field instead.

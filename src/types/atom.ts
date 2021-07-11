@@ -4,6 +4,7 @@ export interface Feed {
 	id: string;
 	title: Text;
 	updated: Date;
+	updatedRaw: string;
 	icon?: string;
 	links?: Link[];
 	entries: Entry[];
@@ -32,7 +33,9 @@ interface Entry {
 	id: string;
 	title: Text;
 	updated: Date;
+	updatedRaw: string;
 	published?: Date;
+	publishedRaw?: string;
 	content?: Content;
 	links?: Link[];
 	author?: Person;
@@ -59,6 +62,7 @@ interface Source {
 	id?: string;
 	title?: string;
 	updated?: Date;
+	updatedRaw?: Date;
 }
 
 interface Text {

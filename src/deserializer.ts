@@ -39,7 +39,6 @@ export const deserializeFeed = ((
 		let cDataBuilder: string;
 		let cDataActive: boolean;
 		let feedType: FeedType;
-		let currentElement;
 		const stack: any[] = [{}];
 		const parser = new SAXParser(false, {
 			trim: true,
@@ -149,13 +148,15 @@ export const deserializeFeed = ((
 				isDate,
 			] = resolveField(nodeName);
 
+			const targetNode = stack[stack.length - 1];
+
 			if (isNumber) {
 				node = parseInt(node);
 			} else if (isDate) {
+				targetNode[propertyName + 'Raw'] = node;
 				node = new Date(node);
 			}
 
-			const targetNode = stack[stack.length - 1];
 			if (isArray) {
 				if (!targetNode[propertyName]) {
 					targetNode[propertyName] = [node];

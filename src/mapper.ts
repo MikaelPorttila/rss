@@ -69,7 +69,9 @@ const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
 			attachments,
 			url: rssItem.link,
 			date_published: rssItem.pubDate,
+			date_publishedRaw: rssItem.pubDateRaw,
 			date_modified: rssItem.pubDate,
+			date_modifiedRaw: rssItem.pubDateRaw,
 		} as JsonFeedItem;
 	}) || [];
 
@@ -137,7 +139,9 @@ const mapAtomToJsonFeed = (atom: Feed): JsonFeed => {
 			id: entry.id,
 			title: entry.title?.value ?? entry.title,
 			date_published: entry.published,
+			date_publishedRaw: entry.publishedRaw,
 			date_modified: entry.updated,
+			date_modifiedRaw: entry.updatedRaw,
 			summary: entry.summary?.value,
 			tags: entry.categories,
 			author,
