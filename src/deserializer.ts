@@ -98,7 +98,12 @@ export const deserializeFeed = ((
 				return;
 			}
 
-			stack[stack.length - 1][attr.name] = attr.value.trim();
+			try {
+				stack[stack.length - 1][attr.name] = attr.value.trim();
+			}
+			catch {
+				console.error(`Failed to assign property ${attr.name} with the value ${attr?.value?.trim()}`);
+			}
 		};
 
 		parser.onclosetag = (nodeName: string) => {
@@ -169,8 +174,14 @@ export const deserializeFeed = ((
 					Object.keys(node).length === 0 &&
 					!(node instanceof Date);
 
-				if (!isEmpty) {
-					targetNode[propertyName] = node;
+
+				try {
+					if (!isEmpty) {
+						targetNode[propertyName] = node;
+					}
+				}
+				catch {
+					console.error(`Failed to add property ${propertyName} on node`, targetNode);
 				}
 			}
 		};
