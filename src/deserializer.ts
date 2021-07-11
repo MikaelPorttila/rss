@@ -39,7 +39,6 @@ export const deserializeFeed = ((
 		let cDataBuilder: string;
 		let cDataActive: boolean;
 		let feedType: FeedType;
-		let currentElement;
 		const stack: any[] = [{}];
 		const parser = new SAXParser(false, {
 			trim: true,
@@ -99,7 +98,12 @@ export const deserializeFeed = ((
 				return;
 			}
 
-			stack[stack.length - 1][attr.name] = attr.value.trim();
+			try {
+				stack[stack.length - 1][attr.name] = attr.value.trim();
+			}
+			catch {
+				console.error(`Failed to assign property ${attr.name} with the value ${attr?.value?.trim()}`);
+			}
 		};
 
 		parser.onclosetag = (nodeName: string) => {
@@ -149,13 +153,15 @@ export const deserializeFeed = ((
 				isDate,
 			] = resolveField(nodeName);
 
+			const targetNode = stack[stack.length - 1];
+
 			if (isNumber) {
 				node = parseInt(node);
 			} else if (isDate) {
+				targetNode[propertyName + 'Raw'] = node;
 				node = new Date(node);
 			}
 
-			const targetNode = stack[stack.length - 1];
 			if (isArray) {
 				if (!targetNode[propertyName]) {
 					targetNode[propertyName] = [node];
@@ -168,8 +174,14 @@ export const deserializeFeed = ((
 					Object.keys(node).length === 0 &&
 					!(node instanceof Date);
 
-				if (!isEmpty) {
-					targetNode[propertyName] = node;
+
+				try {
+					if (!isEmpty) {
+						targetNode[propertyName] = node;
+					}
+				}
+				catch {
+					console.error(`Failed to add property ${propertyName} on node`, targetNode);
 				}
 			}
 		};

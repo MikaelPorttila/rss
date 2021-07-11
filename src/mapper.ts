@@ -34,7 +34,7 @@ export const toJsonFeed = (
 };
 
 const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
-	const items = rss.channel.items.map((rssItem) => {
+	const items = rss.channel?.items?.map((rssItem) => {
 		let authors, author, attachments;
 
 		if (rssItem.author) {
@@ -45,9 +45,9 @@ const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
 		}
 		else if (rssItem['dc:creator']) {
 			author = {
-				name: rssItem['dc:creator'][0],
+				name: rssItem['dc:creator']?.[0],
 			};
-			authors = rssItem['dc:creator'].map(creator => ({name: creator}));
+			authors = rssItem['dc:creator']?.map(creator => ({name: creator}));
 		}
 
 		if (rssItem.enclosure) {
@@ -69,20 +69,22 @@ const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
 			attachments,
 			url: rssItem.link,
 			date_published: rssItem.pubDate,
+			date_publishedRaw: rssItem.pubDateRaw,
 			date_modified: rssItem.pubDate,
+			date_modifiedRaw: rssItem.pubDateRaw,
 		} as JsonFeedItem;
 	}) || [];
 
 	const channel = rss.channel;
 	let author, hubs;
 
-	if (channel.managingEditor || channel.webMaster) {
+	if (channel && (channel.managingEditor || channel.webMaster)) {
 		author = {
 			url: channel.managingEditor || channel.webMaster,
 		};
 	}
 
-	if (channel.cloud) {
+	if (channel?.cloud) {
 		hubs = [{
 			type: channel.cloud.protocol,
 			url: `${channel.cloud.domain}${channel.cloud.port ? ":" + channel.cloud.port : ""
@@ -91,10 +93,10 @@ const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
 	}
 
 	return {
-		title: channel.title,
-		description: channel.description,
-		icon: channel.image?.url,
-		home_page_url: channel.link,
+		title: channel?.title,
+		description: channel?.description,
+		icon: channel?.image?.url,
+		home_page_url: channel?.link,
 		items,
 		author,
 		hubs,
@@ -137,7 +139,9 @@ const mapAtomToJsonFeed = (atom: Feed): JsonFeed => {
 			id: entry.id,
 			title: entry.title?.value ?? entry.title,
 			date_published: entry.published,
+			date_publishedRaw: entry.publishedRaw,
 			date_modified: entry.updated,
+			date_modifiedRaw: entry.updatedRaw,
 			summary: entry.summary?.value,
 			tags: entry.categories,
 			author,

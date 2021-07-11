@@ -3,6 +3,7 @@ import type { Feed, RSS2 } from "./types/mod.ts";
 import { FeedType } from "./types/mod.ts";
 import { toJsonFeed } from "./mapper.ts";
 
+const dateRaw = 'Mon, 22 Jun 2020 20:00:00 GMT';
 const date = new Date(1989, 1, 1);
 
 Deno.test("Mapper ATOM -> JSON Feed", () => {
@@ -23,11 +24,14 @@ Deno.test("Mapper ATOM -> JSON Feed", () => {
 			type: ""
 		}],
 		updated: date,
+		updatedRaw: dateRaw,
 		entries: [
 			{
 				id: "entry.id",
 				updated: date,
+				updatedRaw: dateRaw,
 				published: date,
+				publishedRaw: dateRaw,
 				href: "https://example.com",
 				links: [
 					{
@@ -54,6 +58,7 @@ Deno.test("Mapper ATOM -> JSON Feed", () => {
 			{
 				id: "entry.id2",
 				updated: date,
+				updatedRaw: 'Mon, 22 Jun 2020 20:00:00 GMT',
 				title: {
 					type: "text",
 					value: "text2",
@@ -79,6 +84,7 @@ Deno.test("Mapper ATOM -> JSON Feed", () => {
 
 	const jsonFeed = toJsonFeed(FeedType.Atom, atom);
 	assert(!!jsonFeed, "toJsonFeed result was undefined");
+	if (!jsonFeed) return;
 	assertEquals(jsonFeed.version, undefined, "version should be undefined");
 	assertEquals(jsonFeed.title, "title.value", "Atom title was not mapped");
 	assertEquals(jsonFeed.icon, "icon", "Atom icon was not mapped");
@@ -86,6 +92,7 @@ Deno.test("Mapper ATOM -> JSON Feed", () => {
 	assertEquals(jsonFeed.feed_url, "links.href.alternateOrEmpty");
 
 	assert(!!jsonFeed.author, "Atom author was not mapped");
+	if (!jsonFeed.author) return;
 	assertEquals(
 		jsonFeed.author.name,
 		"author.name",
@@ -127,8 +134,18 @@ Deno.test("Mapper ATOM -> JSON Feed", () => {
 		"Atom entry updated was not mapped",
 	);
 	assertEquals(
+		jsonFeed.items[0].date_modifiedRaw,
+		'Mon, 22 Jun 2020 20:00:00 GMT',
+		"Atom entry updated was not mapped",
+	);
+	assertEquals(
 		jsonFeed.items[0].date_published,
 		new Date(1989, 1, 1),
+		"Atom entry published was not mapped",
+	);
+	assertEquals(
+		jsonFeed.items[0].date_publishedRaw,
+		'Mon, 22 Jun 2020 20:00:00 GMT',
 		"Atom entry published was not mapped",
 	);
 	assert(
@@ -136,17 +153,17 @@ Deno.test("Mapper ATOM -> JSON Feed", () => {
 		"Atom entry category was not mapped",
 	);
 	assertEquals(
-		jsonFeed.items[0].tags.length,
+		jsonFeed.items[0].tags?.length,
 		2,
 		"Atom entry category length was mismatching",
 	);
 	assertEquals(
-		jsonFeed.items[0].tags[0],
+		jsonFeed.items[0].tags?.[0],
 		"entry.category1",
 		"Atom entry category 1 was not mapped",
 	);
 	assertEquals(
-		jsonFeed.items[0].tags[1],
+		jsonFeed.items[0].tags?.[1],
 		"entry.category2",
 		"Atom entry category 2 was not mapped",
 	);
@@ -167,31 +184,31 @@ Deno.test("Mapper ATOM -> JSON Feed", () => {
 	);
 	assert(!!jsonFeed.items[0].attachments, "Atom enclosure link was not mapped");
 	assert(
-		!!jsonFeed.items[0].attachments[0],
+		!!jsonFeed.items[0].attachments?.[0],
 		"Atom enclosure link was not mapped",
 	);
 	assertEquals(
-		jsonFeed.items[0].attachments[0].url,
+		jsonFeed.items[0].attachments?.[0].url,
 		"link.href.enclosure",
 		"Atom enclosure link href was not mapped",
 	);
 	assertEquals(
-		jsonFeed.items[0].attachments[0].size_in_bytes,
+		jsonFeed.items[0].attachments?.[0].size_in_bytes,
 		1337,
 		"Atom enclosure link size was not mapped",
 	);
 	assertEquals(
-		jsonFeed.items[0].attachments[0].mime_type,
+		jsonFeed.items[0].attachments?.[0].mime_type,
 		"image/test",
 		"Atom enclosure link type was not mapped",
 	);
 	assertEquals(
-		jsonFeed.items[0].attachments[0].title,
+		jsonFeed.items[0].attachments?.[0].title,
 		undefined,
 		"Attachment title was not undefined",
 	);
 	assertEquals(
-		jsonFeed.items[0].attachments[0].duration_in_seconds,
+		jsonFeed.items[0].attachments?.[0].duration_in_seconds,
 		undefined,
 		"Attachment title was not undefined",
 	);
@@ -220,6 +237,7 @@ Deno.test("Mapper RSS2 -> JSON Feed", () => {
 				comments: "item.comments",
 				categories: ["item.link.category1", "item.link.category2"],
 				pubDate: new Date(1989, 1, 1),
+				pubDateRaw: dateRaw,
 				enclosure: {
 					url: "enclosure.url",
 					length: 1337,
@@ -255,6 +273,7 @@ Deno.test("Mapper RSS2 -> JSON Feed", () => {
 	const jsonFeed = toJsonFeed(FeedType.Rss2, rss);
 	// Channel
 	assert(!!jsonFeed, "toJsonFeed result was undefined");
+	if (!jsonFeed) return;
 	assertEquals(jsonFeed.title, "title", "RSS title was not mapped");
 	assertEquals(
 		jsonFeed.description,
@@ -267,7 +286,7 @@ Deno.test("Mapper RSS2 -> JSON Feed", () => {
 		"author field is undefined, RSS webMaster or managingEditor was not mapped",
 	);
 	assertEquals(
-		jsonFeed.author.url,
+		jsonFeed.author?.url,
 		"managingEditor",
 		"RSS webMaster or managingEditor was not mapped",
 	);
@@ -276,8 +295,8 @@ Deno.test("Mapper RSS2 -> JSON Feed", () => {
 	assertEquals(jsonFeed.home_page_url, "link", "RSS link was not mapped");
 	// hub
 	assert(!!jsonFeed.hubs, "RSS cloud was not mapped");
-	assertEquals(jsonFeed.hubs[0].type, "cloud.protocol");
-	assertEquals(jsonFeed.hubs[0].url, "cloud.domain:1337/cloud.path");
+	assertEquals(jsonFeed.hubs?.[0].type, "cloud.protocol");
+	assertEquals(jsonFeed.hubs?.[0].url, "cloud.domain:1337/cloud.path");
 	// Items
 	assert(!!jsonFeed.items, "RSS Items were not mapped");
 	const item = jsonFeed.items[0];
@@ -290,15 +309,20 @@ Deno.test("Mapper RSS2 -> JSON Feed", () => {
 		new Date(1989, 1, 1),
 		"Item PubDate was not mapped",
 	);
+	assertEquals(
+		item.date_publishedRaw,
+		'Mon, 22 Jun 2020 20:00:00 GMT',
+		"Item PubDate was not mapped",
+	);
 
 	assert(!!item.author, "RSS Item author was not mapped");
 	assertEquals(
-		item.author.name,
+		item.author?.name,
 		"item.author",
 		"RSS Item author was not mapped",
 	);
 	assertEquals(
-		item.author.avatar,
+		item.author?.avatar,
 		undefined,
 		"Author avatar should be undefined",
 	);
@@ -308,9 +332,10 @@ Deno.test("Mapper RSS2 -> JSON Feed", () => {
 	assertEquals(item2.authors?.[0].name, 'dccreator1', `Creator1 was not mapped correctly, Expected creator1 but was actually ${item2.authors?.[0].name}`);
 	assertEquals(item2.authors?.[1].name, 'dccreator2', `Creator2 was not mapped correctly, Expected creator2 but was actually ${item2.authors?.[1].name}`);
 
-	assertEquals(item.author.url, undefined, "Author url should be undefined");
+	assertEquals(item.author?.url, undefined, "Author url should be undefined");
 
 	assert(!!item.attachments, "Enclosure was not mapped");
+	if (!item.attachments) return;
 	const attachment = item.attachments[0];
 	assertEquals(
 		attachment.url,
