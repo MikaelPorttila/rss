@@ -1,6 +1,6 @@
 // https://validator.w3.org/feed/docs/atom.html
 
-export interface Atom {
+export interface Feed {
 	id: string;
 	title: Text;
 	updated: Date;

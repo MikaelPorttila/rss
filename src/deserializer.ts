@@ -1,7 +1,7 @@
 import { SAXParser } from "../deps.ts";
 import type {
 	DeserializationResult,
-	Feed,
+	Atom,
 	JsonFeed,
 	RSS1,
 	RSS2,
@@ -20,10 +20,12 @@ export interface Options {
 	outputJsonFeed?: boolean
 }
 
+
+
 export const deserializeFeed = ((
 	input: string,
 	options?: Options
-) => new Promise<DeserializationResult<Feed | RSS1 | RSS2 | JsonFeed>>(
+) => new Promise<DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed>>(
 	(resolve, reject) => {
 		if (!input) {
 			reject(new Error("Input was undefined, null or empty"));
@@ -124,7 +126,7 @@ export const deserializeFeed = ((
 					onattribute: undefined,
 				});
 
-				const result: DeserializationResult<Feed | RSS1 | RSS2 | JsonFeed> & { originalFeedType?: FeedType } = {
+				const result: DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed> & { originalFeedType?: FeedType } = {
 					feed: options?.outputJsonFeed ? toJsonFeed(feedType, node) : node,
 					feedType: options?.outputJsonFeed ? FeedType.JsonFeed : feedType,
 				};
@@ -213,10 +215,10 @@ export const deserializeFeed = ((
 		parser.write(input).close();
 	}
 )) as {
-	(input: string): Promise<DeserializationResult<Feed | RSS1 | RSS2>>;
-	(input: string, options: Options & { outputJsonFeed: false }): Promise<DeserializationResult<Feed | RSS1 | RSS2>>;
+	(input: string): Promise<DeserializationResult<Atom | RSS1 | RSS2>>;
+	(input: string, options: Options & { outputJsonFeed: false }): Promise<DeserializationResult<Atom | RSS1 | RSS2>>;
 	(input: string, options: Options & { outputJsonFeed: true }): Promise<DeserializationResult<JsonFeed> & { originalFeedType: FeedType }>;
-	(input: string, options?: Options): Promise<DeserializationResult<Feed | JsonFeed | RSS1 | RSS2>>;
+	(input: string, options?: Options): Promise<DeserializationResult<Atom | JsonFeed | RSS1 | RSS2>>;
 };
 
 interface Attribute {

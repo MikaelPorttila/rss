@@ -6,7 +6,7 @@ import {
 } from "../test_deps.ts";
 import { deserializeFeed } from "./deserializer.ts";
 import { FeedType } from "../mod.ts";
-import type { DeserializationResult, Feed, Options, RSS2 } from "../mod.ts";
+import type { DeserializationResult, Atom, Options, RSS2 } from "../mod.ts";
 
 const decoder = new TextDecoder("utf-8");
 
@@ -103,7 +103,7 @@ Deno.test("Deserialize ATOM", async (): Promise<void> => {
 	const binaryString = await Deno.readFile("./samples/atom.xml");
 	const fileContent = decoder.decode(binaryString);
 	const { feed, feedType } =
-		(await deserializeFeed(fileContent)) as DeserializationResult<Feed>;
+		(await deserializeFeed(fileContent)) as DeserializationResult<Atom>;
 
 	assert(!!feed, "Feed was undefined");
 	assert(!!feed.id, "Feed is missing id value");

@@ -1,5 +1,5 @@
 import type {
-	Feed,
+	Atom,
 	JsonFeed,
 	JsonFeedAuthor,
 	JsonFeedItem,
@@ -11,7 +11,7 @@ import { FeedType } from "./types/mod.ts";
 
 export const toJsonFeed = (
 	feedType: FeedType,
-	feed: Feed | RSS2 | RSS1,
+	feed: Atom | RSS2 | RSS1,
 ): JsonFeed | null => {
 	if (!feed) {
 		return null;
@@ -20,7 +20,7 @@ export const toJsonFeed = (
 	let result: JsonFeed | null = null;
 	switch (feedType) {
 		case FeedType.Atom:
-			result = mapAtomToJsonFeed(feed as Feed);
+			result = mapAtomToJsonFeed(feed as Atom);
 			break;
 		case FeedType.Rss2:
 			result = mapRss2ToJsonFeed(feed as RSS2);
@@ -103,7 +103,7 @@ const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
 	} as JsonFeed;
 };
 
-const mapAtomToJsonFeed = (atom: Feed): JsonFeed => {
+const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
 	const items: JsonFeedItem[] = atom.entries.map((entry) => {
 		let author;
 		let url: string | undefined;

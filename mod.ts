@@ -1,7 +1,7 @@
 export type {
 	RSS1,
 	RSS2,
-	Feed,
+	Atom,
 	JsonFeed,
 	DeserializationResult
 } from "./src/types/mod.ts";
