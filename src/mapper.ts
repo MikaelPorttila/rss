@@ -5,6 +5,8 @@ import type {
 	JsonFeedItem,
 	RSS1,
 	RSS2,
+	Feed,
+	FeedEntry
 } from "./types/mod.ts";
 import { isValidHttpURL } from "./util.ts";
 import { FeedType } from "./types/mod.ts";
@@ -27,6 +29,30 @@ export const toJsonFeed = (
 			break;
 		case FeedType.Rss1:
 			//const rss1 = feed as RSS1;
+			break;
+	}
+
+	return result;
+};
+
+export const toFeed = (
+	feedType: FeedType,
+	feed: Atom | RSS2 | RSS1 | JsonFeed,
+): Feed | null => {
+	if (!feed) {
+		return null;
+	}
+
+	let result: Feed | null = null;
+	switch (feedType) {
+		case FeedType.Atom:
+			result = mapAtomToFeed(feed as Atom);
+			break;
+		case FeedType.Rss2:
+			result = mapRss2ToFeed(feed as RSS2);
+			break;
+		case FeedType.JsonFeed:
+			result = mapJsonFeedToFeed(feed as JsonFeed);
 			break;
 	}
 
@@ -192,4 +218,57 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
 	}
 
 	return feed;
+};
+
+const mapRss2ToFeed = (rss: RSS2): Feed => {
+	const entries = rss.channel?.items?.map((item) => {
+		return {
+			id: item.guid,
+			summary: item.description,
+			link: item.link,
+			published: item.pubDate,
+			publishedRaw: item.pubDateRaw,
+			title: item.title ? {
+				type: 'text',
+				value: item.title
+			} : undefined,
+			description: item.description ? {
+				type: 'text',
+				value: item.description
+			}: undefined,
+			creators: item["dc:creator"] ?
+				item["dc:creator"]
+				: undefined
+		} as FeedEntry;
+	});
+
+	let result = {
+		type: FeedType.Rss2,
+		entries
+	}  as Feed;
+
+	if (rss.channel) {
+		result.uri = rss.channel.link;
+		result.published = rss.channel.pubDate;
+		result.publishedRaw = rss.channel.pubDateRaw;
+		result.updateDate = rss.channel.lastBuildDate;
+		result.updateDateRaw = rss.channel.lastBuildDateRaw;
+		result.generator = rss.channel.generator as string;
+		result.ttl = rss.channel.ttl;
+		result.title = { type: 'text', value: rss.channel.title };
+		result.description = rss.channel.description;
+		result.copyright = rss.channel.copyright;
+	}
+
+	return result;
+};
+
+const mapAtomToFeed = (rss: Atom): Feed => {
+	return {
+		type: FeedType.Atom
+	} as Feed;
+};
+
+const mapJsonFeedToFeed = (rss: JsonFeed): Feed => {
+	return {} as Feed;
 };

@@ -5,8 +5,8 @@ import type {
 	JsonFeed,
 	RSS1,
 	RSS2,
+	Feed
 } from "./types/mod.ts";
-
 import { FeedParseType, FeedType } from "./types/mod.ts";
 
 import {
@@ -15,12 +15,23 @@ import {
 	resolveRss1Field,
 	resolveRss2Field,
 } from "./resolvers/mod.ts";
-import { toJsonFeed } from './mapper.ts';
+import { toFeed, toJsonFeed } from './mapper.ts';
 export interface Options {
 	outputJsonFeed?: boolean
 }
 
+export const parseFeed = (
+	input: string
+): Promise<Feed> => new Promise<Feed>(async (resolve, reject) => {
+	if (!input) {
+		reject(new Error("Input was undefined, null or empty"));
+		return;
+	}
 
+	const { feed, feedType } = await deserializeFeed(input);
+	const result = toFeed(feedType, feed) as Feed;
+	resolve(result);
+});
 
 export const deserializeFeed = ((
 	input: string,

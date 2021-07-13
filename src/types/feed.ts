@@ -1,71 +1,66 @@
-// https://validator.w3.org/feed/docs/atom.html
+import { FeedType } from "./feed-type.ts";
 
 export interface Feed {
-	id: string;
-	title: Text;
-	updated: Date;
-	updatedRaw: string;
-	icon?: string;
-	links?: Link[];
-	entries: Entry[];
-	categories?: Category[];
-	contributors?: Person[];
-	generator?: string;
-	author?: Person;
-	logo?: string;
-	rights?: Text;
-	subtitle?: Text;
+	version?: string,
+	type: FeedType,
+	title: TextField,
+	description: string,
+	id: string,
+	generator: string,
+	icon: string,
+	uri: string,
+	published?: Date,
+	publishedRaw?: string,
+	updateDate?: Date,
+	updateDateRaw?: string,
+	copyright?: string,
+	author: Author
+	ttl?: number,
+	categories: Category[],
+	entries: FeedEntry[]
 }
 
-interface Link {
-	type: string;
-	href: string;
-	rel: string;
-	length?: number
+export interface FeedEntry {
+	title?: TextField,
+	description?: TextField,
+	summary?: string,
+	link: string,
+	id: string;
+	author?: Author,
+	creators?: string[]
+	published: Date,
+	publishedRaw: string,
+	categories?: Category[],
+	content?: string,
+	source: {
+		id: string,
+		title: string,
+		updated: Date,
+		updatedRaw: Date,
+	},
+	contributor: string[],
+	rights: TextField,
+	attachments?: Attachment[]
+}
+
+interface Attachment {
+	url?: string,
+	mimeType?: string,
+	sizeInBytes?: number
+}
+
+interface TextField {
+	type?: string,
+	value?: string
+}
+
+interface Author {
+	name?: string,
+	email?: string,
+	uri?: string,
+	avatar?: string
 }
 
 interface Category {
 	term: string;
-	label?: string;
-}
-
-interface Entry {
-	id: string;
-	title: Text;
-	updated: Date;
-	updatedRaw: string;
-	published?: Date;
-	publishedRaw?: string;
-	content?: Content;
-	links?: Link[];
-	author?: Person;
-	contributors?: Person[];
-	summary?: Text;
-	rights?: Text;
-	categories?: string[];
-	source?: Source;
-	href?: string;
-	[key: string]: any;
-}
-
-interface Content extends Text {
-	src?: string;
-}
-
-interface Person {
-	name: string;
-	email?: string;
-	uri?: string;
-}
-
-interface Source {
-	id?: string;
-	title?: string;
-	updated?: Date;
-	updatedRaw?: Date;
-}
-
-interface Text {
-	type: string;
-	value: string;
 }

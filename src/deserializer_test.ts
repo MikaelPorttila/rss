@@ -4,11 +4,13 @@ import {
 	assertNotEquals,
 	assertThrowsAsync,
 } from "../test_deps.ts";
-import { deserializeFeed } from "./deserializer.ts";
-import { FeedType } from "../mod.ts";
+import { deserializeFeed, parseFeed } from "./deserializer.ts";
+import { Feed, FeedType } from "../mod.ts";
 import type { DeserializationResult, Atom, Options, RSS2 } from "../mod.ts";
 
-const decoder = new TextDecoder("utf-8");
+const rss2TestSample = await Deno.readTextFile("./samples/rss2.xml");
+const atomTestSample = await Deno.readTextFile("./samples/atom.xml");
+
 
 [undefined, null, ""].forEach((input: any) => {
 	Deno.test(`Bad input: ${input}`, () => {
@@ -30,22 +32,18 @@ Deno.test(`Call signatures compile without error`, async () => {
    */
 	let n = 0;
 	if (n > 0) {
-		const xml = await Deno.readTextFile("./samples/rss2.xml");
-
-		const result1 = await deserializeFeed(xml);
-		const result2 = await deserializeFeed(xml, { outputJsonFeed: true });
-		const result3 = await deserializeFeed(xml, { outputJsonFeed: false });
+		const result1 = await deserializeFeed(rss2TestSample);
+		const result2 = await deserializeFeed(rss2TestSample, { outputJsonFeed: true });
+		const result3 = await deserializeFeed(rss2TestSample, { outputJsonFeed: false });
 
 		const options: Options = {};
-		const result4 = await deserializeFeed(xml, options);
+		const result4 = await deserializeFeed(rss2TestSample, options);
 	}
 });
 
 Deno.test("Deserialize RSS2", async (): Promise<void> => {
-	const binaryString = await Deno.readFile("./samples/rss2.xml");
-	const fileContent = decoder.decode(binaryString);
 	const { feed, feedType } =
-		(await deserializeFeed(fileContent)) as DeserializationResult<RSS2>;
+		(await deserializeFeed(rss2TestSample)) as DeserializationResult<RSS2>;
 
 	assertEquals(feedType, FeedType.Rss2);
 	assert(!!feed, "Deserializer returned undefined");
@@ -89,9 +87,7 @@ Deno.test("Deserialize RSS2", async (): Promise<void> => {
 });
 
 Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
-	const binaryString = await Deno.readFile("./samples/rss2.xml");
-	const fileContent = decoder.decode(binaryString);
-	const { feed, feedType } = await deserializeFeed(fileContent, {
+	const { feed, feedType } = await deserializeFeed(rss2TestSample, {
 		outputJsonFeed: true,
 	});
 
@@ -100,10 +96,8 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
 });
 
 Deno.test("Deserialize ATOM", async (): Promise<void> => {
-	const binaryString = await Deno.readFile("./samples/atom.xml");
-	const fileContent = decoder.decode(binaryString);
 	const { feed, feedType } =
-		(await deserializeFeed(fileContent)) as DeserializationResult<Atom>;
+		(await deserializeFeed(atomTestSample)) as DeserializationResult<Atom>;
 
 	assert(!!feed, "Feed was undefined");
 	assert(!!feed.id, "Feed is missing id value");
@@ -151,11 +145,7 @@ Deno.test("Deserialize ATOM", async (): Promise<void> => {
 });
 
 Deno.test("Deserialize ATOM with convertToJsonFeed option", async () => {
-	const binaryString = await Deno.readFile("./samples/atom.xml");
-	const fileContent = decoder.decode(binaryString);
-	const { feed, feedType } = await deserializeFeed(fileContent, {
-		outputJsonFeed: true,
-	});
+	const { feed, feedType } = await deserializeFeed(atomTestSample, { outputJsonFeed: true });
 
 	assert(!!feed, "Result was undefined");
 	assertEquals(feedType, FeedType.JsonFeed);
@@ -167,11 +157,70 @@ Deno.test("Deserialize ATOM with convertToJsonFeed option", async () => {
 });
 
 Deno.test("Returns correct original feedType with outputJsonFeed option", async () => {
-	const atom = await Deno.readTextFile("./samples/atom.xml");
-	const atomJsonFeed = await deserializeFeed(atom, { outputJsonFeed: true });
+	const atomJsonFeed = await deserializeFeed(atomTestSample, { outputJsonFeed: true });
 	assertEquals(FeedType.Atom, atomJsonFeed.originalFeedType);
-
-	const rss2 = await Deno.readTextFile("./samples/rss2.xml");
-	const rssJsonFeed = await deserializeFeed(rss2, { outputJsonFeed: true });
+	const rssJsonFeed = await deserializeFeed(rss2TestSample, { outputJsonFeed: true });
 	assertEquals(FeedType.Rss2, rssJsonFeed.originalFeedType);
 });
+
+/*
+	Parse Feed Tests
+*/
+
+[
+	{
+		name: 'RSS',
+		source: await parseFeed(rss2TestSample),
+		tests: [
+			{ name: 'Root', getValue: (src) => src, assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }] },
+			{ name: 'Type', getValue: (src) => src.type, assert: [{ fn: assertEquals, expect: FeedType.Rss2 }] },
+			{ name: 'Title', getValue: (src) => src.title, assert: [{ fn: assertNotEquals, expect: undefined }] },
+			{ name: 'Title:Type', getValue: (src) => src.title.type, assert: [{ fn: assertEquals, expect: 'text' }] },
+			{ name: 'Title:Value', getValue: (src) => src.title.value, assert: [{ fn: assertEquals, expect: 'RSS2:Title:CData' }] },
+			{ name: 'Description', getValue: (src) => src.description, assert: [{ fn: assertEquals, expect: 'RSS2:Description:CData' }] },
+			{ name: 'Uri', getValue: (src) => src.uri, assert: [{ fn: assertEquals, expect: 'https://RSS2-link.com/' }] },
+			{ name: 'PubDate', getValue: (src) => src.published, assert: [{ fn: assertEquals, expect: new Date('Mon, 22 Jun 2020 20:03:00 GMT') }] },
+			{ name: 'PubDateRaw', getValue: (src) => src.publishedRaw, assert: [{ fn: assertEquals, expect: 'Mon, 22 Jun 2020 20:03:00 GMT' }] },
+			{ name: 'LastBuildDate', getValue: (src) => src.updateDate, assert: [{ fn: assertEquals, expect: new Date('Mon, 22 Jun 2020 20:03:04 GMT') }] },
+,			{ name: 'LastBuildDateRaw', getValue: (src) => src.updateDateRaw, assert: [{ fn: assertEquals, expect: 'Mon, 22 Jun 2020 20:03:04 GMT' }] },
+			{ name: 'Generator', getValue: (src) => src.generator, assert: [{ fn: assertEquals, expect: 'RSS2:Generator' }] },
+			{ name: 'Copyright', getValue: (src) => src.copyright, assert: [{ fn: assertEquals, expect: 'RSS2:Copyright' }] },
+			{ name: 'Ttl', getValue: (src) => src.ttl, assert: [{ fn: assertEquals, expect: 100 }] },
+			{ name: 'Items', getValue: (src) => src.entries, assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]},
+			{ name: 'Items:Length', getValue: (src) => src.entries.length, assert: [{ fn: assertEquals, expect: 10 }]},
+			{ name: 'Items:[0]:Title:Type', getValue: (src) => src.entries[0].title?.type, assert: [{ fn: assertEquals, expect: 'text' }]},
+			{ name: 'Items:[0]:Title:Value', getValue: (src) => src.entries[0].title?.value, assert: [{ fn: assertEquals, expect: 'RSS2:Item:0:Title:CData' }]},
+			{ name: 'Items:[0]:Guid', getValue: (src) => src.entries[0].id, assert: [{ fn: assertEquals, expect: 'https://RSS2-entry-0-link.com/0' }]},
+			{ name: 'Items:[0]:DC:Creator', getValue: (src) => src.entries[0].creators?.length, assert: [{ fn: assertEquals, expect: 1 }]},
+			{ name: 'Items:[0]:DC:Creator', getValue: (src) => src.entries[0].creators?.[0], assert: [{ fn: assertEquals, expect: 'RSS2:Item:0:DC:Creator' }]},
+			{ name: 'Items:[0]:Description:Type', getValue: (src) => src.entries[0].description?.type, assert: [{ fn: assertEquals, expect: 'text' }]},
+			{ name: 'Items:[0]:Description:Value', getValue: (src) => src.entries[0].description?.value, assert: [{ fn: assertEquals, expect: 'RSS2:Item:0:Description:CData' }]},
+			{ name: 'Items:[0]:Link', getValue: (src) => src.entries[0].link, assert: [{ fn: assertEquals, expect: 'https://RSS2-entry-0-link.com/0' }]},
+			{ name: 'Items:[0]:PubDate', getValue: (src) => src.entries[0].published, assert: [{ fn: assertEquals, expect: new Date('Mon, 22 Jun 2020 20:03:00 GMT') }]},
+			{ name: 'Items:[0]:PubDateRaw', getValue: (src) => src.entries[0].publishedRaw, assert: [{ fn: assertEquals, expect: 'Mon, 22 Jun 2020 20:03:00 GMT' }]},
+		] as TestDefinition[]
+	},
+	{
+		name: 'Atom',
+		source: await parseFeed(atomTestSample),
+		tests: [
+			{ name: 'Type', getValue: (src) => src.type, assert: [{ fn: assertEquals, expect: FeedType.Atom }] }
+		] as TestDefinition[]
+	}
+].forEach((workspace) => {
+	workspace.tests.forEach((test) => {
+		Deno.test(`parseFeed:${workspace.name}:${test.name}`, () => {
+			const target = test.getValue(workspace.source);
+			test.assert.forEach((x) => x.fn(target, x.expect));
+		});
+	})
+});
+
+interface TestDefinition {
+	name: string;
+	getValue(arg0: Feed): any;
+	assert: [{
+		fn: any;
+		expect: any;
+	}];
+}
