@@ -164,7 +164,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
 });
 
 /*
-	Parse Feed Tests
+	(New) Parse Feed Tests
 */
 
 [
@@ -178,7 +178,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
 			{ name: 'Title:Type', getValue: (src) => src.title.type, assert: [{ fn: assertEquals, expect: 'text' }] },
 			{ name: 'Title:Value', getValue: (src) => src.title.value, assert: [{ fn: assertEquals, expect: 'RSS2:Title:CData' }] },
 			{ name: 'Description', getValue: (src) => src.description, assert: [{ fn: assertEquals, expect: 'RSS2:Description:CData' }] },
-			{ name: 'Uri', getValue: (src) => src.uri, assert: [{ fn: assertEquals, expect: 'https://RSS2-link.com/' }] },
+			{ name: 'Uri', getValue: (src) => src.links[0], assert: [{ fn: assertEquals, expect: 'https://RSS2-link.com/' }] },
 			{ name: 'PubDate', getValue: (src) => src.published, assert: [{ fn: assertEquals, expect: new Date('Mon, 22 Jun 2020 20:03:00 GMT') }] },
 			{ name: 'PubDateRaw', getValue: (src) => src.publishedRaw, assert: [{ fn: assertEquals, expect: 'Mon, 22 Jun 2020 20:03:00 GMT' }] },
 			{ name: 'LastBuildDate', getValue: (src) => src.updateDate, assert: [{ fn: assertEquals, expect: new Date('Mon, 22 Jun 2020 20:03:04 GMT') }] },
@@ -192,7 +192,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
 			{ name: 'Items:[0]:Title:Value', getValue: (src) => src.entries[0].title?.value, assert: [{ fn: assertEquals, expect: 'RSS2:Item:0:Title:CData' }]},
 			{ name: 'Items:[0]:Guid', getValue: (src) => src.entries[0].id, assert: [{ fn: assertEquals, expect: 'https://RSS2-entry-0-link.com/0' }]},
 			{ name: 'Items:[0]:DC:Creator', getValue: (src) => src.entries[0].creators?.length, assert: [{ fn: assertEquals, expect: 1 }]},
-			{ name: 'Items:[0]:DC:Creator', getValue: (src) => src.entries[0].creators?.[0], assert: [{ fn: assertEquals, expect: 'RSS2:Item:0:DC:Creator' }]},
+			{ name: 'Items:[0]:DC:Creator:Length', getValue: (src) => src.entries[0].creators?.[0], assert: [{ fn: assertEquals, expect: 'RSS2:Item:0:DC:Creator' }]},
 			{ name: 'Items:[0]:Description:Type', getValue: (src) => src.entries[0].description?.type, assert: [{ fn: assertEquals, expect: 'text' }]},
 			{ name: 'Items:[0]:Description:Value', getValue: (src) => src.entries[0].description?.value, assert: [{ fn: assertEquals, expect: 'RSS2:Item:0:Description:CData' }]},
 			{ name: 'Items:[0]:Link', getValue: (src) => src.entries[0].link, assert: [{ fn: assertEquals, expect: 'https://RSS2-entry-0-link.com/0' }]},
@@ -204,7 +204,14 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
 		name: 'Atom',
 		source: await parseFeed(atomTestSample),
 		tests: [
-			{ name: 'Type', getValue: (src) => src.type, assert: [{ fn: assertEquals, expect: FeedType.Atom }] }
+			{ name: 'Root', getValue: (src) => src, assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }] },
+			{ name: 'Type', getValue: (src) => src.type, assert: [{ fn: assertEquals, expect: FeedType.Atom }] },
+			{ name: 'Title', getValue: (src) => src.title, assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }] },
+			{ name: 'Title:Type', getValue: (src) => src.title.type, assert: [{ fn: assertEquals, expect: 'text' }] },
+			{ name: 'Title:Value', getValue: (src) => src.title.value, assert: [{ fn: assertEquals, expect: 'ATOM:Title' }] },
+			{ name: 'Link', getValue: (src) => src.links, assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }] },
+			{ name: 'Link:length', getValue: (src) => src.links.length, assert: [{ fn: assertEquals, expect: 1 }] },
+			{ name: 'Link:Href', getValue: (src) => src.links[0], assert: [{ fn: assertEquals, expect: 'https://AtomLink.org/' }] },
 		] as TestDefinition[]
 	}
 ].forEach((workspace) => {

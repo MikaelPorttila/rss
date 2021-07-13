@@ -221,8 +221,9 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
 };
 
 const mapRss2ToFeed = (rss: RSS2): Feed => {
-	const entries = rss.channel?.items?.map((item) => {
-		return {
+	const result = {
+		type: FeedType.Rss2,
+		entries: rss.channel?.items?.map((item) => ({
 			id: item.guid,
 			summary: item.description,
 			link: item.link,
@@ -239,16 +240,11 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
 			creators: item["dc:creator"] ?
 				item["dc:creator"]
 				: undefined
-		} as FeedEntry;
-	});
-
-	let result = {
-		type: FeedType.Rss2,
-		entries
+		} as FeedEntry))
 	}  as Feed;
 
 	if (rss.channel) {
-		result.uri = rss.channel.link;
+		result.links = rss.channel.link ? [rss.channel.link] : [];
 		result.published = rss.channel.pubDate;
 		result.publishedRaw = rss.channel.pubDateRaw;
 		result.updateDate = rss.channel.lastBuildDate;
@@ -263,10 +259,28 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
 	return result;
 };
 
-const mapAtomToFeed = (rss: Atom): Feed => {
-	return {
-		type: FeedType.Atom
-	} as Feed;
+const mapAtomToFeed = (atom: Atom): Feed => {
+	const result = {
+		type: FeedType.Atom,
+		id: atom.id,
+		generator: atom.generator,
+		links: atom.links?.map(x => x.href) ?? [],
+		title: atom.title ?
+			{
+				type: atom.title.type || 'text',
+				value: atom.title.value
+			}
+			: undefined,
+		author: atom.author ?
+			{
+				name: atom.author.name,
+				email: atom.author.email,
+				uri: atom.author.uri
+			}
+			: undefined
+	} as Feed
+
+	return result;
 };
 
 const mapJsonFeedToFeed = (rss: JsonFeed): Feed => {

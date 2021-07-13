@@ -8,7 +8,7 @@ export interface Feed {
 	id: string,
 	generator: string,
 	icon: string,
-	uri: string,
+	links: string[],
 	published?: Date,
 	publishedRaw?: string,
 	updateDate?: Date,
