@@ -229,12 +229,14 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
 			link: item.link,
 			published: item.pubDate,
 			publishedRaw: item.pubDateRaw,
+			updated: item.pubDate,
+			updatedRaw: item.pubDateRaw,
 			title: item.title ? {
-				type: 'text',
+				type: undefined,
 				value: item.title
 			} : undefined,
 			description: item.description ? {
-				type: 'text',
+				type: undefined,
 				value: item.description
 			}: undefined,
 			creators: item["dc:creator"] ?
@@ -251,7 +253,7 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
 		result.updateDateRaw = rss.channel.lastBuildDateRaw;
 		result.generator = rss.channel.generator as string;
 		result.ttl = rss.channel.ttl;
-		result.title = { type: 'text', value: rss.channel.title };
+		result.title = { type: undefined, value: rss.channel.title };
 		result.description = rss.channel.description;
 		result.copyright = rss.channel.copyright;
 	}
@@ -265,6 +267,13 @@ const mapAtomToFeed = (atom: Atom): Feed => {
 		id: atom.id,
 		generator: atom.generator,
 		links: atom.links?.map(x => x.href) ?? [],
+		icon: atom.icon,
+		updateDate: atom.updated,
+		updateDateRaw: atom.updatedRaw,
+		categories: atom.categories?.map((category) => ({
+			term: category.term,
+			label: category.label
+		})) ?? undefined,
 		title: atom.title ?
 			{
 				type: atom.title.type || 'text',
@@ -277,7 +286,19 @@ const mapAtomToFeed = (atom: Atom): Feed => {
 				email: atom.author.email,
 				uri: atom.author.uri
 			}
-			: undefined
+			: undefined,
+		entries: atom.entries?.map((entry) => ({
+			title: entry.title ? {
+				type: entry.title.type || 'text',
+				value: entry.title.value
+			} : undefined,
+			published: entry.published,
+			publishedRaw: entry.publishedRaw,
+			id: entry.id,
+			updated: entry.updated,
+			updatedRaw: entry.updatedRaw,
+			link: entry?.links?.[0]?.href ?? undefined
+		} as FeedEntry))
 	} as Feed
 
 	return result;

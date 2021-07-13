@@ -3,8 +3,8 @@
   <title>ATOM:Title</title>
   <link href="https://AtomLink.org/"/>
   <icon>/AtomIcon.jpg</icon>
-  <category term="tech"/>
-  <category term="sport"/>
+  <category term="ATOM:Category:0:Term"/>
+  <category term="ATOM:Category:1:Term"/>
   <updated>2003-12-13T18:30:02Z</updated>
   <author>
     <name>John Doe</name>
@@ -15,10 +15,10 @@
   <entry>
     <title type="xhtml">
       <div xmlns="http://www.w3.org/1999/xhtml">
-        AT&amp;T bought <b>by SBC</b>!
+        HTML&amp;Test Brough to you by <b>Test</b>!
       </div>
     </title>
-    <link href="http://example.org/2003/12/12/atom01"/>
+    <link href="https://AtomLink.org/Entry/0/link"/>
     <published>2003-12-13T18:30:02Z</published>
     <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da354efa6a</id>
     <updated>2003-12-13T18:30:02Z</updated>
@@ -86,10 +86,10 @@
       <uri>www.example.com</uri>
     </author>
     <source>
-    <id>http://example.org/</id>
-    <title>Example, Inc.</title>
-    <updated>2003-12-13T18:30:02Z</updated>
-  </source>
+			<id>http://example.org/</id>
+			<title>Example, Inc.</title>
+			<updated>2003-12-13T18:30:02Z</updated>
+		</source>
     <category term="" />
     <rights type="html">
       &amp;copy; 2020 Micke
