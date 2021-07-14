@@ -222,41 +222,47 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
 
 const mapRss2ToFeed = (rss: RSS2): Feed => {
 	const result = {
-		type: FeedType.Rss2,
-		entries: rss.channel?.items?.map((item) => ({
-			id: item.guid,
-			summary: item.description,
-			link: item.link,
-			published: item.pubDate,
-			publishedRaw: item.pubDateRaw,
-			updated: item.pubDate,
-			updatedRaw: item.pubDateRaw,
-			title: item.title ? {
-				type: undefined,
-				value: item.title
-			} : undefined,
-			description: item.description ? {
-				type: undefined,
-				value: item.description
-			}: undefined,
-			creators: item["dc:creator"] ?
-				item["dc:creator"]
-				: undefined
-		} as FeedEntry))
+		type: FeedType.Rss2
 	}  as Feed;
 
 	if (rss.channel) {
 		result.links = rss.channel.link ? [rss.channel.link] : [];
 		result.published = rss.channel.pubDate;
+		result.language = rss.channel.language;
 		result.publishedRaw = rss.channel.pubDateRaw;
 		result.updateDate = rss.channel.lastBuildDate;
 		result.updateDateRaw = rss.channel.lastBuildDateRaw;
 		result.generator = rss.channel.generator as string;
-		result.ttl = rss.channel.ttl;
+		result.ttl = rss.channel.ttl || 60;
 		result.title = { type: undefined, value: rss.channel.title };
 		result.description = rss.channel.description;
 		result.copyright = rss.channel.copyright;
 	}
+
+	result.entries = rss.channel?.items?.map((item) => ({
+		id: item.guid,
+		summary: item.description,
+		link: item.link,
+		published: item.pubDate,
+		publishedRaw: item.pubDateRaw,
+		updated: item.pubDate,
+		updatedRaw: item.pubDateRaw,
+		categories: item.categories?.map((category) => ({
+			term: category,
+			label: category
+		})) ?? undefined,
+		title: item.title ? {
+			type: undefined,
+			value: item.title
+		} : undefined,
+		description: item.description ? {
+			type: undefined,
+			value: item.description
+		}: undefined,
+		creators: item["dc:creator"] ?
+			item["dc:creator"]
+			: undefined
+	} as FeedEntry))
 
 	return result;
 };
@@ -297,7 +303,26 @@ const mapAtomToFeed = (atom: Atom): Feed => {
 			id: entry.id,
 			updated: entry.updated,
 			updatedRaw: entry.updatedRaw,
-			link: entry?.links?.[0]?.href ?? undefined
+			link: entry.links?.[0]?.href ?? undefined,
+			summary: entry.summary,
+			source: entry.source ?
+			{
+				id: entry.source.id,
+				title: entry.source.title,
+				updated: entry.source.updated,
+				updatedRaw: entry.source.updatedRaw
+			} : undefined,
+			author: entry.author ?
+			{
+				email: entry.author.email,
+				name: entry.author.name,
+				uri: entry.author.uri
+			} : undefined,
+			contributors: entry.contributors?.map(x => ({
+				name: x.name,
+				email: x.email,
+				uri: x.uri
+			})) ?? undefined
 		} as FeedEntry))
 	} as Feed
 

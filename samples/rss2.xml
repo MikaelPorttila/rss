@@ -7,6 +7,7 @@
         <description><![CDATA[RSS2:Description:CData]]></description>
         <link>https://RSS2-link.com/</link>
         <generator>RSS2:Generator</generator>
+				<language>RSS2:Language</language>
         <lastBuildDate>Mon, 22 Jun 2020 20:03:04 GMT</lastBuildDate>
         <pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
         <copyright><![CDATA[RSS2:Copyright]]></copyright>
@@ -18,6 +19,11 @@
             <guid isPermaLink="true">https://RSS2-entry-0-link.com/0</guid>
             <dc:creator><![CDATA[RSS2:Item:0:DC:Creator]]></dc:creator>
             <pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
+						<category>RSS2:Item:0:Category:0</category>
+						<category>RSS2:Item:0:Category:1</category>
+						<category>RSS2:Item:0:Category:2</category>
+						<category>RSS2:Item:0:Category:3</category>
+						<category>RSS2:Item:0:Category:4</category>
         </item>
         <item>
             <title><![CDATA[RSS2:Item:1:Title:CData]]></title>

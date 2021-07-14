@@ -169,7 +169,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
 
 [
 	{
-		name: 'RSS',
+		name: 'RSS2',
 		source: await parseFeed(rss2TestSample),
 		tests: [
 			{ name: 'Root', getValue: (src) => src, assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }] },
@@ -178,6 +178,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
 			{ name: 'Title:Type', getValue: (src) => src.title.type, assert: [{ fn: assertEquals, expect: undefined }] },
 			{ name: 'Title:Value', getValue: (src) => src.title.value, assert: [{ fn: assertEquals, expect: 'RSS2:Title:CData' }] },
 			{ name: 'Description', getValue: (src) => src.description, assert: [{ fn: assertEquals, expect: 'RSS2:Description:CData' }] },
+			{ name: 'Language', getValue: (src) => src.language, assert: [{ fn: assertEquals, expect: 'RSS2:Language' }] },
 			{ name: 'Uri', getValue: (src) => src.links[0], assert: [{ fn: assertEquals, expect: 'https://RSS2-link.com/' }] },
 			{ name: 'PubDate', getValue: (src) => src.published, assert: [{ fn: assertEquals, expect: new Date('Mon, 22 Jun 2020 20:03:00 GMT') }] },
 			{ name: 'PubDateRaw', getValue: (src) => src.publishedRaw, assert: [{ fn: assertEquals, expect: 'Mon, 22 Jun 2020 20:03:00 GMT' }] },
@@ -200,6 +201,10 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
 			{ name: 'Items:[0]:PubDateRaw', getValue: (src) => src.entries[0].publishedRaw, assert: [{ fn: assertEquals, expect: 'Mon, 22 Jun 2020 20:03:00 GMT' }]},
 			{ name: 'Items:[0]:PubDate->Updated', getValue: (src) => src.entries[0].updated, assert: [{ fn: assertEquals, expect: new Date('Mon, 22 Jun 2020 20:03:00 GMT') }]},
 			{ name: 'Items:[0]:PubDateRaw->UpdatedRaw', getValue: (src) => src.entries[0].updatedRaw, assert: [{ fn: assertEquals, expect: 'Mon, 22 Jun 2020 20:03:00 GMT' }]},
+			{ name: 'Items:[0]:Category', getValue: (src) => src.entries[0].categories, assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]},
+			{ name: 'Items:[0]:Category:Length', getValue: (src) => src.entries[0].categories?.length, assert: [{ fn: assertEquals, expect: 5 }]},
+			{ name: 'Items:[0]:Category[0]:Term', getValue: (src) => src.entries[0].categories?.[0].term, assert: [{ fn: assertEquals, expect: 'RSS2:Item:0:Category:0' }]},
+			{ name: 'Items:[0]:Category[0]:Label', getValue: (src) => src.entries[0].categories?.[0].label, assert: [{ fn: assertEquals, expect: 'RSS2:Item:0:Category:0' }]},
 		] as TestDefinition[]
 	},
 	{

@@ -2,11 +2,12 @@ import { FeedType } from "./feed-type.ts";
 
 export interface Feed {
 	version?: string;
+	id: string;
 	type: FeedType;
 	title: TextField;
 	description: string;
-	id: string;
-	generator: string;
+	generator?: string;
+	language?: string;
 	icon: string;
 	links: string[];
 	published?: Date;
@@ -34,13 +35,13 @@ export interface FeedEntry {
 	updatedRaw: string;
 	categories?: Category[];
 	content?: string;
-	source: {
+	source?: {
 		id: string;
 		title: string;
 		updated: Date;
 		updatedRaw: Date;
 	};
-	contributor: string[];
+	contributors?: Person[];
 	rights: TextField;
 	attachments?: Attachment[];
 }
@@ -72,4 +73,10 @@ enum ContentType {
 	Text = 'text',
 	Html = 'html',
 	XHtml = 'xhtml'
+}
+
+interface Person {
+	name: string;
+	email?: string;
+	uri?: string;
 }
