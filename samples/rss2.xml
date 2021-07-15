@@ -45,7 +45,8 @@
 				<hour>23</hour>
 			</skipHours>
 			<docs>https://RSS2-docs.com/</docs>
-
+			<managingEditor>mail@wRSS2-managingEditor.com</managingEditor>
+			<webMaster>mail@RSS2-webMaster.com</webMaster>
 			<pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
 			<copyright><![CDATA[RSS2:Copyright]]></copyright>
 			<ttl>100</ttl>
@@ -56,6 +57,7 @@
 					<guid isPermaLink="true">https://RSS2-entry-0-link.com/0</guid>
 					<dc:creator><![CDATA[RSS2:Item:0:DC:Creator]]></dc:creator>
 					<pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
+					<comments>https://RSS2-entry-0-comment.com/0</comments>
 					<category>RSS2:Item:0:Category:0</category>
 					<category>RSS2:Item:0:Category:1</category>
 					<category>RSS2:Item:0:Category:2</category>

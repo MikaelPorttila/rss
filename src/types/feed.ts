@@ -21,6 +21,8 @@ export interface Feed {
 	entries: FeedEntry[];
 	skipHours?: number[];
 	skipDays?: string[];
+	webMasterMail?: string;
+	managingEditorMail?: string;
 }
 
 export interface FeedEntry {
@@ -37,6 +39,7 @@ export interface FeedEntry {
 	updatedRaw: string;
 	categories?: Category[];
 	content?: string;
+	comments?: string;
 	source?: {
 		id: string;
 		title: string;
