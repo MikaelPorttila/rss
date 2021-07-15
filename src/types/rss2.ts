@@ -25,8 +25,12 @@ interface Channel {
 	ttl?: number;
 	image?: Image;
 	textInput?: any; // TODO: Fix
-	skipHours?: number;
-	skipDays?: Days;
+	skipHours?: {
+		hour?: number[];
+	};
+	skipDays?: {
+		day?: string[];
+	};
 }
 
 interface Item {

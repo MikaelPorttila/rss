@@ -12,11 +12,9 @@ export const resolveRss2Field = (
 			break;
 		case Field.SkipHours:
 			propertyName = "skipHours";
-			isNumber = true;
 			break;
 		case Field.SkipDays:
 			propertyName = "skipDays";
-			isNumber = true;
 			break;
 		case Field.PubDate:
 			propertyName = "pubDate";
@@ -51,6 +49,12 @@ export const resolveRss2Field = (
 		case Field.Width:
 		case Field.Height:
 			isNumber = true;
+			break;
+		case Field.Hour:
+			isArray = true;
+			break;
+		case Field.Day:
+			isArray = true;
 			break;
 	}
 
@@ -87,5 +91,7 @@ enum Field {
 	Url = "url",
 	WebMaster = "webmaster",
 	Width = "width",
-	DCCreator = "dc:creator"
+	DCCreator = "dc:creator",
+	Hour = "hour",
+	Day = "day",
 }

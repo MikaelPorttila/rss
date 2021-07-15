@@ -19,6 +19,8 @@ export interface Feed {
 	ttl?: number;
 	categories: Category[];
 	entries: FeedEntry[];
+	skipHours?: number[];
+	skipDays?: string[];
 }
 
 export interface FeedEntry {

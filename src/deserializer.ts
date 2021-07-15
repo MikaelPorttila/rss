@@ -186,8 +186,6 @@ export const deserializeFeed = ((
 					(typeof node === 'object') &&
 					Object.keys(node).length === 0 &&
 					!(node instanceof Date);
-
-
 				try {
 					if (!isEmpty) {
 						targetNode[propertyName] = node;

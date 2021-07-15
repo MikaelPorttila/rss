@@ -237,6 +237,8 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
 		result.title = { type: undefined, value: rss.channel.title };
 		result.description = rss.channel.description;
 		result.copyright = rss.channel.copyright;
+		result.skipDays = rss.channel?.skipDays?.day;
+		result.skipHours = rss.channel.skipHours?.hour;
 	}
 
 	result.entries = rss.channel?.items?.map((item) => ({

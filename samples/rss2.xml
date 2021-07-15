@@ -3,105 +3,142 @@
     xmlns:content="http://purl.org/rss/1.0/modules/content/"
     xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title><![CDATA[RSS2:Title:CData]]></title>
-        <description><![CDATA[RSS2:Description:CData]]></description>
-        <link>https://RSS2-link.com/</link>
-        <generator>RSS2:Generator</generator>
-				<language>RSS2:Language</language>
-        <lastBuildDate>Mon, 22 Jun 2020 20:03:04 GMT</lastBuildDate>
-        <pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
-        <copyright><![CDATA[RSS2:Copyright]]></copyright>
-        <ttl>100</ttl>
-        <item>
-            <title><![CDATA[RSS2:Item:0:Title:CData]]></title>
-            <description><![CDATA[RSS2:Item:0:Description:CData]]></description>
-            <link>https://RSS2-entry-0-link.com/0</link>
-            <guid isPermaLink="true">https://RSS2-entry-0-link.com/0</guid>
-            <dc:creator><![CDATA[RSS2:Item:0:DC:Creator]]></dc:creator>
-            <pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
-						<category>RSS2:Item:0:Category:0</category>
-						<category>RSS2:Item:0:Category:1</category>
-						<category>RSS2:Item:0:Category:2</category>
-						<category>RSS2:Item:0:Category:3</category>
-						<category>RSS2:Item:0:Category:4</category>
-        </item>
-        <item>
-            <title><![CDATA[RSS2:Item:1:Title:CData]]></title>
-            <description><![CDATA[Ullamco excepteur ad quis ullamco dolor reprehenderit ut mollit qui duis.]]></description>
-            <link>http://example.com/test/1592856000</link>
-            <guid isPermaLink="true">https://example.com/test/1592856000</guid>
-            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
-            <pubDate>Mon, 22 Jun 2020 20:00:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[RSS2:Item:2:Title:CData]]></title>
-            <description><![CDATA[Labore elit fugiat aliquip ipsum laboris do sunt exercitation.]]></description>
-            <link>http://example.com/test/1592855940</link>
-            <guid isPermaLink="true">http://example.com/test/1592855940</guid>
-            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
-            <pubDate>Mon, 22 Jun 2020 19:59:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[RSS2:Item:3:Title:CData]]></title>
-            <description><![CDATA[Reprehenderit amet incididunt sunt esse ut deserunt commodo magna ex cillum incididunt deserunt quis laborum.]]></description>
-            <link>http://example.com/test/1592855880</link>
-            <guid isPermaLink="true">http://example.com/test/1592855880</guid>
-            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
-            <pubDate>Mon, 22 Jun 2020 19:58:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[RSS2:Item:4:Title:CData]]></title>
-            <description><![CDATA[Quis esse commodo ea esse deserunt voluptate anim Lorem non irure Lorem Lorem reprehenderit velit.]]></description>
-            <link>http://example.com/test/1592855820</link>
-            <guid isPermaLink="true">http://example.com/test/1592855820</guid>
-            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
-            <pubDate>Mon, 22 Jun 2020 19:57:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[RSS2:Item:5:Title:CData]]></title>
-            <description><![CDATA[Culpa mollit cillum enim mollit duis.]]></description>
-            <link>http://example.com/test/1592855640</link>
-            <guid isPermaLink="true">http://example.com/test/1592855640</guid>
-            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
-            <pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
-        </item>
-				<item>
-					<title><![CDATA[RSS2:Item:6:Title:CData]]></title>
-					<description>
-						<p>Hello World!</p>
-						<a href="https://github.org"><em>Read more...</em></a>
-					</description>
+			<title><![CDATA[RSS2:Title:CData]]></title>
+			<description><![CDATA[RSS2:Description:CData]]></description>
+			<link>https://RSS2-link.com/</link>
+			<generator>RSS2:Generator</generator>
+			<language>RSS2:Language</language>
+			<lastBuildDate>Mon, 22 Jun 2020 20:03:04 GMT</lastBuildDate>
+			<skipDays>
+				<day>Monday</day>
+				<day>Tuesday</day>
+				<day>Wednesday</day>
+				<day>Thursday</day>
+				<day>Friday</day>
+				<day>Saturday</day>
+				<day>Sunday</day>
+			</skipDays>
+			<skipHours>
+				<hour>0</hour>
+				<hour>1</hour>
+				<hour>2</hour>
+				<hour>3</hour>
+				<hour>4</hour>
+				<hour>5</hour>
+				<hour>6</hour>
+				<hour>7</hour>
+				<hour>8</hour>
+				<hour>9</hour>
+				<hour>10</hour>
+				<hour>11</hour>
+				<hour>12</hour>
+				<hour>13</hour>
+				<hour>14</hour>
+				<hour>15</hour>
+				<hour>16</hour>
+				<hour>17</hour>
+				<hour>18</hour>
+				<hour>19</hour>
+				<hour>20</hour>
+				<hour>21</hour>
+				<hour>22</hour>
+				<hour>23</hour>
+			</skipHours>
+			<docs>https://RSS2-docs.com/</docs>
+
+			<pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
+			<copyright><![CDATA[RSS2:Copyright]]></copyright>
+			<ttl>100</ttl>
+			<item>
+					<title><![CDATA[RSS2:Item:0:Title:CData]]></title>
+					<description><![CDATA[RSS2:Item:0:Description:CData]]></description>
+					<link>https://RSS2-entry-0-link.com/0</link>
+					<guid isPermaLink="true">https://RSS2-entry-0-link.com/0</guid>
+					<dc:creator><![CDATA[RSS2:Item:0:DC:Creator]]></dc:creator>
+					<pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
+					<category>RSS2:Item:0:Category:0</category>
+					<category>RSS2:Item:0:Category:1</category>
+					<category>RSS2:Item:0:Category:2</category>
+					<category>RSS2:Item:0:Category:3</category>
+					<category>RSS2:Item:0:Category:4</category>
+			</item>
+			<item>
+					<title><![CDATA[RSS2:Item:1:Title:CData]]></title>
+					<description><![CDATA[Ullamco excepteur ad quis ullamco dolor reprehenderit ut mollit qui duis.]]></description>
+					<link>http://example.com/test/1592856000</link>
+					<guid isPermaLink="true">https://example.com/test/1592856000</guid>
+					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
+					<pubDate>Mon, 22 Jun 2020 20:00:00 GMT</pubDate>
+			</item>
+			<item>
+					<title><![CDATA[RSS2:Item:2:Title:CData]]></title>
+					<description><![CDATA[Labore elit fugiat aliquip ipsum laboris do sunt exercitation.]]></description>
+					<link>http://example.com/test/1592855940</link>
+					<guid isPermaLink="true">http://example.com/test/1592855940</guid>
+					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
+					<pubDate>Mon, 22 Jun 2020 19:59:00 GMT</pubDate>
+			</item>
+			<item>
+					<title><![CDATA[RSS2:Item:3:Title:CData]]></title>
+					<description><![CDATA[Reprehenderit amet incididunt sunt esse ut deserunt commodo magna ex cillum incididunt deserunt quis laborum.]]></description>
+					<link>http://example.com/test/1592855880</link>
+					<guid isPermaLink="true">http://example.com/test/1592855880</guid>
+					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
+					<pubDate>Mon, 22 Jun 2020 19:58:00 GMT</pubDate>
+			</item>
+			<item>
+					<title><![CDATA[RSS2:Item:4:Title:CData]]></title>
+					<description><![CDATA[Quis esse commodo ea esse deserunt voluptate anim Lorem non irure Lorem Lorem reprehenderit velit.]]></description>
+					<link>http://example.com/test/1592855820</link>
+					<guid isPermaLink="true">http://example.com/test/1592855820</guid>
+					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
+					<pubDate>Mon, 22 Jun 2020 19:57:00 GMT</pubDate>
+			</item>
+			<item>
+					<title><![CDATA[RSS2:Item:5:Title:CData]]></title>
+					<description><![CDATA[Culpa mollit cillum enim mollit duis.]]></description>
 					<link>http://example.com/test/1592855640</link>
 					<guid isPermaLink="true">http://example.com/test/1592855640</guid>
 					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
 					<pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
-        </item>
-				<item>
-					<title><![CDATA[RSS2:Item:7:Title:CData]]></title>
-					<description><![CDATA[Culpa mollit cillum enim mollit duis.]]> </description>
-					<link>http://example.com/test/1592855640</link>
-					<guid isPermaLink="true">http://example.com/test/1592855640</guid>
-					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
-					<pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
-				</item>
-				<item>
-					<title>RSS2:Item:8:Title</title>
-					<link />
-					<guid isPermaLink="true">itemWithMissingEndTags</guid>
-					<atom:link href="https://github.com/MikaelPorttila/rss/1/RSS2" rel="standout"/>
-					<description />
-					<dc:creator>Deno RSS</dc:creator>
-					<pubDate>Thu, 08 Jul 2021 10:53:40 +0000</pubDate>
-				</item>
-				<item>
-					<title>RSS2:Item:9:Title</title>
-					<link />
-					<guid isPermaLink="true">itemWithMultipleDCCreators</guid>
-					<atom:link href="https://github.com/MikaelPorttila/rss/1/RSS2" rel="standout"/>
-					<description />
-					<dc:creator>Deno RSS</dc:creator>
-					<dc:creator>Deno RSS 2</dc:creator>
-					<pubDate>Thu, 08 Jul 2021 10:53:40 +0000</pubDate>
-				</item>
+			</item>
+			<item>
+				<title><![CDATA[RSS2:Item:6:Title:CData]]></title>
+				<description>
+					<p>Hello World!</p>
+					<a href="https://github.org"><em>Read more...</em></a>
+				</description>
+				<link>http://example.com/test/1592855640</link>
+				<guid isPermaLink="true">http://example.com/test/1592855640</guid>
+				<dc:creator><![CDATA[DENO RSS]]></dc:creator>
+				<pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
+			</item>
+			<item>
+				<title><![CDATA[RSS2:Item:7:Title:CData]]></title>
+				<description><![CDATA[Culpa mollit cillum enim mollit duis.]]> </description>
+				<link>http://example.com/test/1592855640</link>
+				<guid isPermaLink="true">http://example.com/test/1592855640</guid>
+				<dc:creator><![CDATA[DENO RSS]]></dc:creator>
+				<pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
+			</item>
+			<item>
+				<title>RSS2:Item:8:Title</title>
+				<link />
+				<guid isPermaLink="true">itemWithMissingEndTags</guid>
+				<atom:link href="https://github.com/MikaelPorttila/rss/1/RSS2" rel="standout"/>
+				<description />
+				<dc:creator>Deno RSS</dc:creator>
+				<pubDate>Thu, 08 Jul 2021 10:53:40 +0000</pubDate>
+			</item>
+			<item>
+				<title>RSS2:Item:9:Title</title>
+				<link />
+				<guid isPermaLink="true">itemWithMultipleDCCreators</guid>
+				<atom:link href="https://github.com/MikaelPorttila/rss/1/RSS2" rel="standout"/>
+				<description />
+				<dc:creator>Deno RSS</dc:creator>
+				<dc:creator>Deno RSS 2</dc:creator>
+				<pubDate>Thu, 08 Jul 2021 10:53:40 +0000</pubDate>
+			</item>
     </channel>
 </rss>
