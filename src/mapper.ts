@@ -241,6 +241,13 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
 		result.skipHours = rss.channel.skipHours?.hour;
 		result.webMasterMail = rss.channel.webMaster;
 		result.managingEditorMail = rss.channel.managingEditor;
+		result.image = rss.channel.image ? {
+			link: rss.channel.image.link,
+			title : rss.channel.image.title,
+			url: rss.channel.image.url,
+			height: rss.channel.image.height,
+			width: rss.channel.image.width
+		}: undefined;
 	}
 
 	result.entries = rss.channel?.items?.map((item) => ({
@@ -279,6 +286,10 @@ const mapAtomToFeed = (atom: Atom): Feed => {
 		generator: atom.generator,
 		links: atom.links?.map(x => x.href) ?? [],
 		icon: atom.icon,
+		image: atom.logo ? {
+			link: atom.logo,
+			url: atom.logo
+		} : undefined,
 		updateDate: atom.updated,
 		updateDateRaw: atom.updatedRaw,
 		categories: atom.categories?.map((category) => ({

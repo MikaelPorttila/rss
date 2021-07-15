@@ -23,6 +23,7 @@ export interface Feed {
 	skipDays?: string[];
 	webMasterMail?: string;
 	managingEditorMail?: string;
+	image?: FeedImage;
 }
 
 export interface FeedEntry {
@@ -49,6 +50,14 @@ export interface FeedEntry {
 	contributors?: Person[];
 	rights: TextField;
 	attachments?: Attachment[];
+}
+
+interface FeedImage {
+	url: string;
+	title: string;
+	link: string;
+	width?: number;
+	height?: number;
 }
 
 interface Attachment {

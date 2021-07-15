@@ -6,6 +6,7 @@
   <category term="ATOM:Category:0:Term"/>
   <category term="ATOM:Category:1:Term"/>
   <updated>2003-12-13T18:30:02Z</updated>
+	<logo>Atom-Logo.com</logo>
   <author>
     <name>John Doe</name>
     <email>JohnDoe@example.com</email>

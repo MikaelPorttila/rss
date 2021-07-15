@@ -50,6 +50,13 @@
 			<pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
 			<copyright><![CDATA[RSS2:Copyright]]></copyright>
 			<ttl>100</ttl>
+			<image>
+				<url>RSS2-image.com</url>
+				<title>RSS2:Image</title>
+				<link>RSS2-image2.com</link>
+				<height>69</height>
+				<width>420</width>
+			</image>
 			<item>
 					<title><![CDATA[RSS2:Item:0:Title:CData]]></title>
 					<description><![CDATA[RSS2:Item:0:Description:CData]]></description>
