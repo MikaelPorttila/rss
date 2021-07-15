@@ -70,6 +70,9 @@
 					<category>RSS2:Item:0:Category:2</category>
 					<category>RSS2:Item:0:Category:3</category>
 					<category>RSS2:Item:0:Category:4</category>
+					<media:content height="1337" medium="image" url="https://RSS2-media-content.com/" width="1337"/>
+					<media:credit>RSS2:Media:Credit</media:credit>
+					<media:description>RSS2:Media:Description</media:description>
 			</item>
 			<item>
 					<title><![CDATA[RSS2:Item:1:Title:CData]]></title>

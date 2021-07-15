@@ -273,7 +273,10 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
 		}: undefined,
 		creators: item["dc:creator"] ?
 			item["dc:creator"]
-			: undefined
+			: undefined,
+		mediaCredit: item["media:credit"],
+		mediaDescription: item["media:description"],
+		mediaContent: item["media:content"] ? {...item["media:content"]} : undefined
 	} as FeedEntry))
 
 	return result;
@@ -284,6 +287,7 @@ const mapAtomToFeed = (atom: Atom): Feed => {
 		type: FeedType.Atom,
 		id: atom.id,
 		generator: atom.generator,
+		description: atom.subtitle,
 		links: atom.links?.map(x => x.href) ?? [],
 		icon: atom.icon,
 		image: atom.logo ? {

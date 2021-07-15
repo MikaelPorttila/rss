@@ -5,7 +5,7 @@ export interface Feed {
 	id: string;
 	type: FeedType;
 	title: TextField;
-	description: string;
+	description?: string;
 	generator?: string;
 	language?: string;
 	icon: string;
@@ -50,6 +50,9 @@ export interface FeedEntry {
 	contributors?: Person[];
 	rights: TextField;
 	attachments?: Attachment[];
+	mediaContent?: FeedMedia;
+	mediaCredit?: string;
+	mediaDescription?: string;
 }
 
 interface FeedImage {
@@ -64,6 +67,13 @@ interface Attachment {
 	url?: string;
 	mimeType?: string;
 	sizeInBytes?: number;
+}
+
+interface FeedMedia {
+	url?: string;
+	width?: number;
+	height?: number;
+	medium?: string;
 }
 
 interface TextField {

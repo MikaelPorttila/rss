@@ -14,7 +14,7 @@ export interface Atom {
 	author?: Person;
 	logo?: string;
 	rights?: Text;
-	subtitle?: Text;
+	subtitle?: string;
 }
 
 interface Link {

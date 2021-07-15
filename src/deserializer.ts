@@ -81,9 +81,10 @@ export const deserializeFeed = ((
 		};
 
 		const onOpenTag = (node: OpenTag): void => {
+			const attributeNames = Object.keys(node.attributes);
+
 			if (cDataActive) {
-				let attributes = Object
-					.keys(node.attributes)
+				const attributes = attributeNames
 					.map((key) => `${key}="${(node.attributes as any)[key]}"`)
 					.join(' ')
 					.trim();
@@ -103,7 +104,29 @@ export const deserializeFeed = ((
 				cDataBuilder = '';
 				cDataLevel = 0;
 			}
-			stack.push({ ...node.attributes });
+
+			const attributes = attributeNames.reduce((builder, attrName) => {
+				const [
+					attributeName,
+					isArray,
+					isNumber,
+					isDate,
+				] = resolveField(attrName);
+				const val = (node.attributes as any)[attributeName];
+				if (isNumber) {
+					builder[attrName] = parseInt(val);
+				} else if(isDate) {
+					builder[attrName + 'Raw'] = val;
+					builder[attrName] = new Date(val);
+				}
+				else {
+					builder[attrName] = val;
+				}
+
+				return builder;
+			}, {} as any);
+
+			stack.push(attributes);
 		};
 
 		parser.onattribute = (attr: Attribute): void => {
@@ -112,7 +135,25 @@ export const deserializeFeed = ((
 			}
 
 			try {
-				stack[stack.length - 1][attr.name] = attr.value.trim();
+				const [
+					attributeName,
+					isArray,
+					isNumber,
+					isDate,
+				] = resolveField(attr.name);
+
+				const node = stack[stack.length - 1];
+				const value: any = attr.value.trim();
+
+				if (isNumber) {
+					node[attributeName] = parseInt(value);
+				} else if (isDate) {
+					node[attributeName + 'Raw'] = value;
+					node[attributeName] = new Date(value);
+				}
+				else {
+					node[attributeName] = value;
+				}
 			}
 			catch {
 				console.error(`Failed to assign property ${attr.name} with the value ${attr?.value?.trim()}`);

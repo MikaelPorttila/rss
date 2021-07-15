@@ -46,6 +46,14 @@ interface Item {
 	pubDateRaw?: string;
 	source?: Source;
 	'dc:creator'?: string[];
+	'media:content'?: {
+		width?: number;
+		height?: number;
+		medium?: string;
+		url?: string;
+	};
+	'media:credit'?: string;
+	'media:description'?: string;
 }
 
 interface Enclosure {
