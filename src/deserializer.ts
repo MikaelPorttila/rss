@@ -134,6 +134,12 @@ export const deserializeFeed = ((
 				return;
 			}
 
+			if (!resolveField) {
+				return;
+			}
+
+			let attributeName, value, node;
+
 			try {
 				const [
 					attributeName,
@@ -142,8 +148,8 @@ export const deserializeFeed = ((
 					isDate,
 				] = resolveField(attr.name);
 
-				const node = stack[stack.length - 1];
-				const value: any = attr.value.trim();
+				node = stack[stack.length - 1];
+				value = attr.value.trim();
 
 				if (isNumber) {
 					node[attributeName] = parseInt(value);
@@ -155,8 +161,8 @@ export const deserializeFeed = ((
 					node[attributeName] = value;
 				}
 			}
-			catch {
-				console.error(`Failed to assign property ${attr.name} with the value ${attr?.value?.trim()}`);
+			catch(ex) {
+				console.error(`Failed to assign property ${attributeName} with the value ${value} on ${node}, ex: ${ex}`);
 			}
 		};
 

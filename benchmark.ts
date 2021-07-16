@@ -1,29 +1,39 @@
 import { bench, runBenchmarks } from "./test_deps.ts";
-import { deserializeFeed } from "./mod.ts";
+import { deserializeFeed, parseFeed } from "./mod.ts";
 
-(async () => {
-	let cache: { [id: string]: string } = {};
-	const loadSample = (sampleName: string): string => {
-		let cacheResult = cache[sampleName];
-		if (!cacheResult) {
-			const result = 	Deno.readTextFileSync(`./samples/${sampleName}.xml`);
-			cacheResult = cache[sampleName] = result
-		}
-		return cacheResult;
-	};
-
-	const samples = ["rss1", "rss2", "atom"];
-	samples.forEach((feedSample) => {
-		const sample = loadSample(feedSample);
-		bench({
-			name: `Deserialize ${feedSample}`,
-			runs: 10000,
-			func(b): void {
-				b.start();
-				deserializeFeed(sample).then(() => b.stop());
-			},
-		});
+[
+	{
+		name: 'RSS1',
+		source: Deno.readTextFileSync(`./samples/rss1.xml`)
+	},
+	{
+		name: 'RSS2',
+		source: Deno.readTextFileSync(`./samples/rss2.xml`)
+	},
+	{
+		name: 'ATOM',
+		source: Deno.readTextFileSync(`./samples/atom.xml`)
+	}
+].forEach((feed) => {
+	bench({
+		name: `Deserialize ${feed.name}`,
+		runs: 10000,
+		func(b): void {
+			b.start();
+			deserializeFeed(feed.source).then(() => b.stop());
+		},
 	});
 
-	runBenchmarks();
-})();
+	if (feed.name !== 'RSS1') {
+		bench({
+			name: `parseFeed ${feed.name}`,
+			runs: 10000,
+			func(c): void {
+				c.start();
+				parseFeed(feed.source).then(() => c.stop());
+			},
+		});
+	}
+});
+
+await runBenchmarks();

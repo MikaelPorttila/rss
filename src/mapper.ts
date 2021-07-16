@@ -283,6 +283,56 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
 };
 
 const mapAtomToFeed = (atom: Atom): Feed => {
+
+	const entries = atom.entries?.map((entry) => {
+
+		let url;
+		if (entry["feedburner:origlink"]) {
+			url = entry["feedburner:origlink"] as string;
+		}
+		else if(entry.links?.[0]?.href) {
+			url = entry.links?.[0]?.href;
+		}
+		else if (entry.href) {
+			url = entry.href;
+		} else if (isValidHttpURL(entry.id)) {
+			url = entry.id;
+		}
+
+		return {
+			title: entry.title ? {
+				type: entry.title.type || 'text',
+				value: entry.title.value
+			} : undefined,
+			published: entry.published,
+			publishedRaw: entry.publishedRaw,
+			id: entry.id,
+			updated: entry.updated,
+			updatedRaw: entry.updatedRaw,
+			link: url,
+			summary: entry.summary,
+			source: entry.source ?
+			{
+				id: entry.source.id,
+				title: entry.source.title,
+				updated: entry.source.updated,
+				updatedRaw: entry.source.updatedRaw
+			} : undefined,
+			author: entry.author ?
+			{
+				email: entry.author.email,
+				name: entry.author.name,
+				uri: entry.author.uri
+			} : undefined,
+			contributors: entry.contributors?.map(x => ({
+				name: x.name,
+				email: x.email,
+				uri: x.uri
+			})) ?? undefined
+		} as FeedEntry;
+	});
+
+
 	const result = {
 		type: FeedType.Atom,
 		id: atom.id,
@@ -313,37 +363,7 @@ const mapAtomToFeed = (atom: Atom): Feed => {
 				uri: atom.author.uri
 			}
 			: undefined,
-		entries: atom.entries?.map((entry) => ({
-			title: entry.title ? {
-				type: entry.title.type || 'text',
-				value: entry.title.value
-			} : undefined,
-			published: entry.published,
-			publishedRaw: entry.publishedRaw,
-			id: entry.id,
-			updated: entry.updated,
-			updatedRaw: entry.updatedRaw,
-			link: entry.links?.[0]?.href ?? undefined,
-			summary: entry.summary,
-			source: entry.source ?
-			{
-				id: entry.source.id,
-				title: entry.source.title,
-				updated: entry.source.updated,
-				updatedRaw: entry.source.updatedRaw
-			} : undefined,
-			author: entry.author ?
-			{
-				email: entry.author.email,
-				name: entry.author.name,
-				uri: entry.author.uri
-			} : undefined,
-			contributors: entry.contributors?.map(x => ({
-				name: x.name,
-				email: x.email,
-				uri: x.uri
-			})) ?? undefined
-		} as FeedEntry))
+		entries
 	} as Feed
 
 	return result;
