@@ -285,18 +285,18 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
 const mapAtomToFeed = (atom: Atom): Feed => {
 
 	const entries = atom.entries?.map((entry) => {
-
-		let url;
+		let link;
 		if (entry["feedburner:origlink"]) {
-			url = entry["feedburner:origlink"] as string;
+			link = entry["feedburner:origlink"] as string;
 		}
 		else if(entry.links?.[0]?.href) {
-			url = entry.links?.[0]?.href;
+			link = entry.links?.[0]?.href;
 		}
 		else if (entry.href) {
-			url = entry.href;
-		} else if (isValidHttpURL(entry.id)) {
-			url = entry.id;
+			link = entry.href;
+		}
+		else if (isValidHttpURL(entry.id)) {
+			link = entry.id;
 		}
 
 		return {
@@ -309,7 +309,7 @@ const mapAtomToFeed = (atom: Atom): Feed => {
 			id: entry.id,
 			updated: entry.updated,
 			updatedRaw: entry.updatedRaw,
-			link: url,
+			link,
 			summary: entry.summary,
 			source: entry.source ?
 			{
