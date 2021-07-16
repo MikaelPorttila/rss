@@ -18,12 +18,12 @@ export interface Feed {
 	author: Author;
 	ttl?: number;
 	categories: Category[];
-	entries: FeedEntry[];
 	skipHours?: number[];
 	skipDays?: string[];
 	webMasterMail?: string;
 	managingEditorMail?: string;
 	image?: FeedImage;
+	entries: FeedEntry[];
 }
 
 export interface FeedEntry {

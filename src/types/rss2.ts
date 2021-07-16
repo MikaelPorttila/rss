@@ -1,11 +1,13 @@
 // https://validator.w3.org/feed/docs/rss2.html#requiredChannelElements
 
+import { DublinCore } from "./dublin-core.ts";
+
 export interface RSS2 {
 	version: number;
 	channel: Channel;
 }
 
-interface Channel {
+interface Channel extends DublinCore {
 	title: string;
 	link: string;
 	description: string;
@@ -33,7 +35,7 @@ interface Channel {
 	};
 }
 
-interface Item {
+interface Item extends DublinCore {
 	title?: string;
 	description?: string;
 	link?: string;
@@ -45,7 +47,6 @@ interface Item {
 	pubDate?: Date;
 	pubDateRaw?: string;
 	source?: Source;
-	'dc:creator'?: string[];
 	'media:content'?: {
 		width?: number;
 		height?: number;
@@ -75,7 +76,7 @@ interface Cloud {
 	protocol?: string;
 }
 
-interface Image {
+interface Image extends DublinCore {
 	url: string;
 	title: string;
 	link: string;
