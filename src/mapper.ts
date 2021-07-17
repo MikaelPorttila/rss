@@ -10,6 +10,10 @@ import type {
 } from "./types/mod.ts";
 import { isValidHttpURL } from "./util.ts";
 import { FeedType } from "./types/mod.ts";
+import {
+	DublinCoreFields,
+	DublinCoreFieldArray
+} from "./types/dublin-core.ts";
 
 export const toJsonFeed = (
 	feedType: FeedType,
@@ -69,11 +73,11 @@ const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
 			};
 			authors = [author];
 		}
-		else if (rssItem['dc:creator']) {
+		else if (rssItem[DublinCoreFields.Creator]) {
 			author = {
-				name: rssItem['dc:creator']?.[0],
+				name: rssItem[DublinCoreFields.Creator]?.[0],
 			};
-			authors = rssItem['dc:creator']?.map(creator => ({name: creator}));
+			authors = rssItem[DublinCoreFields.Creator]?.map(creator => ({name: creator}));
 		}
 
 		if (rssItem.enclosure) {
@@ -134,11 +138,8 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
 		let author;
 		let url: string | undefined;
 
-		// All google feeds use this field to provide the correct url.
 		if (entry["feedburner:origlink"]) {
-			url = entry["feedburner:origlink"] as string;
-
-			// Recommended but not required link field in ATOM spec.
+			url = entry["feedburner:origlink"];
 		} else if (entry.href) {
 			url = entry.href;
 
@@ -248,46 +249,63 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
 			height: rss.channel.image.height,
 			width: rss.channel.image.width
 		}: undefined;
+		result.dc = {};
+		copyDublinCoreValues(rss.channel, result.dc);
 	}
 
-	result.entries = rss.channel?.items?.map((item) => ({
-		id: item.guid,
-		summary: item.description,
-		link: item.link,
-		published: item.pubDate,
-		publishedRaw: item.pubDateRaw,
-		updated: item.pubDate,
-		updatedRaw: item.pubDateRaw,
-		comments: item.comments,
-		categories: item.categories?.map((category) => ({
-			term: category,
-			label: category
-		})) ?? undefined,
-		title: item.title ? {
-			type: undefined,
-			value: item.title
-		} : undefined,
-		description: item.description ? {
-			type: undefined,
-			value: item.description
-		}: undefined,
-		creators: item["dc:creator"] ?
-			item["dc:creator"]
-			: undefined,
-		mediaCredit: item["media:credit"],
-		mediaDescription: item["media:description"],
-		mediaContent: item["media:content"] ? {...item["media:content"]} : undefined
-	} as FeedEntry))
+	result.entries = rss.channel?.items?.map((item) => {
+		const title = item[DublinCoreFields.Title] || item.title;
+		const description = item[DublinCoreFields.Description] || item.description;
+		const creator = item[DublinCoreFields.Creator];
+
+		const entryResult = {
+			id: item.guid,
+			summary: item.description,
+			link: item.link,
+			published: item.pubDate,
+			publishedRaw: item.pubDateRaw,
+			updated: item.pubDate,
+			updatedRaw: item.pubDateRaw,
+			comments: item.comments,
+			categories: item.categories?.map((category) => ({
+				term: category,
+				label: category
+			})) ?? undefined,
+			title: title ? {
+				type: undefined,
+				value: title
+			} : undefined,
+			description: description ? {
+				type: undefined,
+				value: description
+			}: undefined,
+			mediaCredit: item["media:credit"],
+			mediaDescription: item["media:description"],
+			mediaContent: item["media:content"] ? {...item["media:content"]} : undefined,
+			creators: creator
+		} as FeedEntry;
+		entryResult.dc = {};
+		copyDublinCoreValues(item, entryResult.dc);
+		return entryResult;
+	})
 
 	return result;
 };
 
-const mapAtomToFeed = (atom: Atom): Feed => {
+const copyDublinCoreValues = (source: any, target: any): void => {
+	DublinCoreFieldArray.forEach((field: string) => {
+		const val = source[field];
+		if (val) {
+			target[field] = val;
+		}
+	});
+}
 
+const mapAtomToFeed = (atom: Atom): Feed => {
 	const entries = atom.entries?.map((entry) => {
 		let link;
 		if (entry["feedburner:origlink"]) {
-			link = entry["feedburner:origlink"] as string;
+			link = entry["feedburner:origlink"];
 		}
 		else if(entry.links?.[0]?.href) {
 			link = entry.links?.[0]?.href;
@@ -301,7 +319,7 @@ const mapAtomToFeed = (atom: Atom): Feed => {
 
 		return {
 			title: entry.title ? {
-				type: entry.title.type || 'text',
+				type: entry.title.type,
 				value: entry.title.value
 			} : undefined,
 			published: entry.published,
@@ -352,7 +370,7 @@ const mapAtomToFeed = (atom: Atom): Feed => {
 		})) ?? undefined,
 		title: atom.title ?
 			{
-				type: atom.title.type || 'text',
+				type: atom.title.type,
 				value: atom.title.value
 			}
 			: undefined,

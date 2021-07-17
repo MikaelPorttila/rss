@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:content="http://purl.org/rss/1.0/modules/content/"
+    xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+			<title><![CDATA[RSS2:Title:CData]]></title>
+			<description><![CDATA[RSS2:Description:CData]]></description>
+			<link>https://RSS2-link.com/</link>
+			<generator>RSS2:Generator</generator>
+			<language>RSS2:Language</language>
+			<lastBuildDate>Mon, 22 Jun 2020 20:03:04 GMT</lastBuildDate>
+			<ttl>100</ttl>
+			<image>
+				<url>RSS2-image.com</url>
+				<title>RSS2:Image</title>
+				<link>RSS2-image2.com</link>
+				<height>69</height>
+				<width>420</width>
+			</image>
+			<item>
+					<title><![CDATA[RSS2:Item:0:Title:CData]]></title>
+					<description><![CDATA[RSS2:Item:0:Description:CData]]></description>
+					<link>https://RSS2-entry-0-link.com/0</link>
+					<guid isPermaLink="true">https://RSS2-entry-0-link.com/0</guid>
+					<dc:creator><![CDATA[RSS2:Item:0:DC:Creator]]></dc:creator>
+					<pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
+					<comments>https://RSS2-entry-0-comment.com/0</comments>
+					<category>RSS2:Item:0:Category:0</category>
+					<category>RSS2:Item:0:Category:1</category>
+					<category>RSS2:Item:0:Category:2</category>
+					<category>RSS2:Item:0:Category:3</category>
+					<category>RSS2:Item:0:Category:4</category>
+					<media:content height="1337" medium="image" url="https://RSS2-media-content.com/" width="1337"/>
+					<media:credit>RSS2:Media:Credit</media:credit>
+					<media:description>RSS2:Media:Description</media:description>
+			</item>
+    </channel>
+</rss>

@@ -9,6 +9,7 @@ import { Feed, FeedType } from "../mod.ts";
 import type { DeserializationResult, Atom, Options, RSS2 } from "../mod.ts";
 
 const rss2TestSample = await Deno.readTextFile("./samples/rss2.xml");
+const rss2DublinCoreTestSample = await Deno.readTextFile("./samples/rss2_dublin-core.xml");
 const atomTestSample = await Deno.readTextFile("./samples/atom.xml");
 
 
@@ -228,6 +229,13 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
 		] as TestDefinition[]
 	},
 	{
+		name: 'RSS2:DublinCore',
+		source: await parseFeed(rss2DublinCoreTestSample),
+		tests: [
+
+		] as TestDefinition[]
+	},
+	{
 		name: 'Atom',
 		source: await parseFeed(atomTestSample),
 		tests: [
@@ -237,7 +245,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
 			{ name: 'Updated', getValue: (src) => src.updateDate, assert: [{ fn: assertEquals, expect: new Date('2003-12-13T18:30:02Z') }] },
 			{ name: 'UpdatedRaw', getValue: (src) => src.updateDateRaw, assert: [{ fn: assertEquals, expect: '2003-12-13T18:30:02Z' }] },
 			{ name: 'Title', getValue: (src) => src.title, assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }] },
-			{ name: 'Title:Type', getValue: (src) => src.title.type, assert: [{ fn: assertEquals, expect: 'text' }] },
+			{ name: 'Title:Type', getValue: (src) => src.title.type, assert: [{ fn: assertEquals, expect: undefined }] },
 			{ name: 'Title:Value', getValue: (src) => src.title.value, assert: [{ fn: assertEquals, expect: 'ATOM:Title' }] },
 			{ name: 'Category', getValue: (src) => src.categories, assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }] },
 			{ name: 'Category:Length', getValue: (src) => src.categories.length, assert: [{ fn: assertEquals, expect: 2 }] },
@@ -258,6 +266,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
 			{ name: 'Entry:[0]:Title:Type', getValue: (src) => src.entries[0].title?.type, assert: [{ fn: assertEquals, expect: 'xhtml' }] },
 			{ name: 'Entry:[0]:Title:Value', getValue: (src) => src.entries[0].title?.value, assert: [{ fn: assertEquals, expect: `<div xmlns="http://www.w3.org/1999/xhtml">HTML&Test Brough to you by<b>Test</b>!</div>` }] },
 			{ name: 'Entry:[0]:Link', getValue: (src) => src.entries[0].link, assert: [{ fn: assertEquals, expect: 'https://AtomLink.org/Entry/0/link' }] },
+			{ name: 'Entry:[1]:Feedburner:OrigLink', getValue: (src) => src.entries[1].link, assert: [{ fn: assertEquals, expect: 'https://AtomFeedburner.org/Entry/1' }] },
 			{ name: 'Entry:[0]:Published', getValue: (src) => src.entries[0].published, assert: [{ fn: assertEquals, expect: new Date('2003-12-13T18:30:02Z') }] },
 			{ name: 'Entry:[0]:PublishedRaw', getValue: (src) => src.entries[0].publishedRaw, assert: [{ fn: assertEquals, expect: '2003-12-13T18:30:02Z' }] },
 			{ name: 'Entry:[0]:Updated', getValue: (src) => src.entries[0].updated, assert: [{ fn: assertEquals, expect: new Date('2003-12-13T18:30:02Z') }] },

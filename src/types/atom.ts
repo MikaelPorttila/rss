@@ -45,7 +45,7 @@ interface Entry {
 	categories?: string[];
 	source?: Source;
 	href?: string;
-	[key: string]: any;
+	'feedburner:origlink'?: string;
 }
 
 interface Content extends Text {

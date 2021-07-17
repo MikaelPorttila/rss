@@ -1,3 +1,4 @@
+import { DublinCore } from "./dublin-core.ts";
 import { FeedType } from "./feed-type.ts";
 
 export interface Feed {
@@ -8,7 +9,7 @@ export interface Feed {
 	description?: string;
 	generator?: string;
 	language?: string;
-	icon: string;
+	icon?: string;
 	links: string[];
 	published?: Date;
 	publishedRaw?: string;
@@ -24,6 +25,7 @@ export interface Feed {
 	managingEditorMail?: string;
 	image?: FeedImage;
 	entries: FeedEntry[];
+	dc: DublinCore;
 }
 
 export interface FeedEntry {
@@ -53,6 +55,7 @@ export interface FeedEntry {
 	mediaContent?: FeedMedia;
 	mediaCredit?: string;
 	mediaDescription?: string;
+	dc: DublinCore;
 }
 
 interface FeedImage {
@@ -81,10 +84,7 @@ interface TextField {
 	value?: string;
 }
 
-interface Author {
-	name?: string;
-	email?: string;
-	uri?: string;
+interface Author extends Person {
 	avatar?: string;
 }
 
