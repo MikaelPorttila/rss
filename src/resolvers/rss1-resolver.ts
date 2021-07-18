@@ -1,3 +1,5 @@
+import { DublinCoreFields } from "../types/dublin-core.ts";
+
 export const resolveRss1Field = (
 	nodeName: string,
 ): [string, boolean, boolean, boolean] => {
@@ -19,6 +21,13 @@ export const resolveRss1Field = (
 			break;
 		case Field.Resource:
 			propertyName = "resource";
+			break;
+		case DublinCoreFields.Date:
+		case DublinCoreFields.Created:
+		case DublinCoreFields.DateSubmitted:
+		case DublinCoreFields.Copyrighted:
+		case DublinCoreFields.DateAccepted:
+			isDate = true;
 			break;
 	}
 

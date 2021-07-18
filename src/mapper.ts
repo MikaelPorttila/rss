@@ -47,20 +47,16 @@ export const toFeed = (
 		return null;
 	}
 
-	let result: Feed | null = null;
 	switch (feedType) {
 		case FeedType.Atom:
-			result = mapAtomToFeed(feed as Atom);
-			break;
+			return mapAtomToFeed(feed as Atom);
 		case FeedType.Rss2:
-			result = mapRss2ToFeed(feed as RSS2);
-			break;
+			return mapRss2ToFeed(feed as RSS2);
 		case FeedType.JsonFeed:
-			result = mapJsonFeedToFeed(feed as JsonFeed);
-			break;
+			return mapJsonFeedToFeed(feed as JsonFeed);
+		default:
+			return null;
 	}
-
-	return result;
 };
 
 const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
@@ -227,16 +223,27 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
 	}  as Feed;
 
 	if (rss.channel) {
-		result.links = rss.channel.link ? [rss.channel.link] : [];
-		result.published = rss.channel.pubDate;
-		result.language = rss.channel.language;
-		result.publishedRaw = rss.channel.pubDateRaw;
+		// ???
+		result.created = result.published = rss.channel[DublinCoreFields.DateSubmitted] || rss.channel.pubDate;
+		result.createdRaw = result.publishedRaw = rss.channel[DublinCoreFields.DateSubmittedRaw] || rss.channel.pubDateRaw;
+
+		let created = rss.channel[DublinCoreFields.Created] || rss.channel.lastBuildDate;
+		let createdRaw = rss.channel[DublinCoreFields.CreatedRaw] || rss.channel.lastBuildDateRaw;
+		if (created) {
+			result.created = created;
+		}
+		if (createdRaw) {
+			result.createdRaw = createdRaw;
+		}
+
+		result.links = [(rss.channel[DublinCoreFields.URI] || rss.channel.link)];
+		result.language = rss.channel[DublinCoreFields.Language] || rss.channel.language;
 		result.updateDate = rss.channel.lastBuildDate;
 		result.updateDateRaw = rss.channel.lastBuildDateRaw;
 		result.generator = rss.channel.generator as string;
 		result.ttl = rss.channel.ttl || 60;
-		result.title = { type: undefined, value: rss.channel.title };
-		result.description = rss.channel.description;
+		result.title = { type: undefined, value: rss.channel[DublinCoreFields.Title] || rss.channel.title };
+		result.description = rss.channel[DublinCoreFields.Description] || rss.channel.description;
 		result.copyright = rss.channel.copyright;
 		result.skipDays = rss.channel.skipDays?.day;
 		result.skipHours = rss.channel.skipHours?.hour;
@@ -249,6 +256,7 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
 			height: rss.channel.image.height,
 			width: rss.channel.image.width
 		}: undefined;
+
 		result.dc = {};
 		copyDublinCoreValues(rss.channel, result.dc);
 	}
@@ -257,13 +265,14 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
 		const title = item[DublinCoreFields.Title] || item.title;
 		const description = item[DublinCoreFields.Description] || item.description;
 		const creator = item[DublinCoreFields.Creator];
+		const publishedRaw = item[DublinCoreFields.DateSubmittedRaw] || item.pubDateRaw;
+		const published = item[DublinCoreFields.DateSubmitted] || item.pubDate;
 
 		const entryResult = {
 			id: item.guid,
-			summary: item.description,
 			link: item.link,
-			published: item.pubDate,
-			publishedRaw: item.pubDateRaw,
+			published,
+			publishedRaw,
 			updated: item.pubDate,
 			updatedRaw: item.pubDateRaw,
 			comments: item.comments,

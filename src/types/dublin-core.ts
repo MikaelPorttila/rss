@@ -28,7 +28,8 @@ export interface DublinCore {
 	'dc:conformsTo'?: string;
 	'dc:created'?: Date;
 	'dc:createdRaw'?: string;
-	'dc:dateAccepted'?: string;
+	'dc:dateAccepted'?: Date;
+	'dc:dateAcceptedRaw'?: string;
 	'dc:Copyrighted'?: Date;
 	'dc:CopyrightedRaw'?: string;
 	'dc:dateSubmitted'?: Date;
@@ -110,6 +111,7 @@ export enum DublinCoreFields {
 	Created = 'dc:created',
 	CreatedRaw = 'dc:createdRaw',
 	DateAccepted = 'dc:dateAccepted',
+	DateAcceptedRaw = 'dc:dateAcceptedRaw',
 	Copyrighted = 'dc:copyrighted',
 	CopyrightedRaw = 'dc:CopyrightedRaw',
 	DateSubmitted = 'dc:dateSubmitted',
@@ -191,6 +193,7 @@ export const DublinCoreFieldArray = [
 	DublinCoreFields.Created,
 	DublinCoreFields.CreatedRaw,
 	DublinCoreFields.DateAccepted,
+	DublinCoreFields.DateAcceptedRaw,
 	DublinCoreFields.Copyrighted,
 	DublinCoreFields.CopyrightedRaw,
 	DublinCoreFields.DateSubmitted,

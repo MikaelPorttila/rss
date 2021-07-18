@@ -1,3 +1,5 @@
+import { DublinCoreFields } from "../types/dublin-core.ts";
+
 export const resolveRss2Field = (
 	nodeName: string,
 ): [string, boolean, boolean, boolean] => {
@@ -38,7 +40,7 @@ export const resolveRss2Field = (
 			propertyName = "categories";
 			isArray = true;
 			break;
-		case Field.DCCreator:
+		case DublinCoreFields.Creator:
 			isArray = true;
 			break;
 		case Field.isPermaLink:
@@ -55,6 +57,13 @@ export const resolveRss2Field = (
 			break;
 		case Field.Day:
 			isArray = true;
+			break;
+		case DublinCoreFields.Date:
+		case DublinCoreFields.Created:
+		case DublinCoreFields.DateSubmitted:
+		case DublinCoreFields.Copyrighted:
+		case DublinCoreFields.DateAccepted:
+			isDate = true;
 			break;
 	}
 
@@ -91,7 +100,6 @@ enum Field {
 	Url = "url",
 	WebMaster = "webmaster",
 	Width = "width",
-	DCCreator = "dc:creator",
 	Hour = "hour",
 	Day = "day",
 }

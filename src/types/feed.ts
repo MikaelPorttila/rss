@@ -11,6 +11,8 @@ export interface Feed {
 	language?: string;
 	icon?: string;
 	links: string[];
+	created?: Date;
+	createdRaw?: string;
 	published?: Date;
 	publishedRaw?: string;
 	updateDate?: Date;
