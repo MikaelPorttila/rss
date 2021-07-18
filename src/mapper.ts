@@ -29,7 +29,7 @@ export const toJsonFeed = (
       result = mapRss2ToJsonFeed(feed as RSS2);
       break;
     case FeedType.Rss1:
-      //const rss1 = feed as RSS1;
+      const rss1 = feed as RSS1;
       break;
   }
 
@@ -47,6 +47,8 @@ export const toFeed = (
   switch (feedType) {
     case FeedType.Atom:
       return mapAtomToFeed(feed as Atom);
+		case FeedType.Rss1:
+			return mapRssToFeed(feed as RSS1);
     case FeedType.Rss2:
       return mapRss2ToFeed(feed as RSS2);
     case FeedType.JsonFeed:
@@ -215,13 +217,55 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
   return feed;
 };
 
+const mapRssToFeed = (rss: RSS1): Feed => {
+	const result = {
+		type: FeedType.Rss1
+	} as Feed;
+
+	if (rss.channel) {
+		result.title = {
+      type: undefined,
+      value: rss.channel[DublinCoreFields.Title] || rss.channel.title,
+    };
+		result.description = rss.channel[DublinCoreFields.Description] || rss.channel.description;
+		result.image = rss.channel.image
+      ? {
+        link: rss.channel.image.link,
+        title: rss.channel.image.title,
+        url: rss.channel.image.url,
+      }
+      : undefined;
+		result.entries = rss.channel?.items?.map((item) => {
+			const feedEntry = {
+				title: {
+					type: undefined,
+					value: item[DublinCoreFields.Title] || item.title,
+				},
+				description: {
+					type: undefined,
+					value: item[DublinCoreFields.Description] || item.description,
+				},
+				link: item[DublinCoreFields.URI] || item.link
+			} as FeedEntry;
+
+			feedEntry.dc = {};
+			copyDublinCoreValues(item, feedEntry.dc);
+
+			return feedEntry;
+		}) || undefined;
+	}
+
+	result.dc = {};
+	copyDublinCoreValues(rss.channel, result.dc);
+	return result;
+};
+
 const mapRss2ToFeed = (rss: RSS2): Feed => {
   const result = {
     type: FeedType.Rss2,
   } as Feed;
 
   if (rss.channel) {
-    // ???
     result.created = result.published =
       rss.channel[DublinCoreFields.DateSubmitted] || rss.channel.pubDate;
     result.createdRaw = result.publishedRaw =

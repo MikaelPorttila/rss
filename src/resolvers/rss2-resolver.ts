@@ -1,4 +1,5 @@
 import { DublinCoreFields } from "../types/dublin-core.ts";
+import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
 
 export const resolveRss2Field = (
   nodeName: string,
@@ -58,13 +59,26 @@ export const resolveRss2Field = (
     case Field.Day:
       isArray = true;
       break;
-    case DublinCoreFields.Date:
-    case DublinCoreFields.Created:
-    case DublinCoreFields.DateSubmitted:
-    case DublinCoreFields.Copyrighted:
-    case DublinCoreFields.DateAccepted:
-      isDate = true;
-      break;
+		default:
+			const dublinCoreResult = resolveDublinCoreField(propertyName);
+			if (dublinCoreResult.handled) {
+				if (dublinCoreResult.isArray) {
+					isArray = true;
+				}
+
+				if (dublinCoreResult.isDate) {
+					isDate = true;
+				}
+
+				if (dublinCoreResult.isNumber) {
+					isNumber = true;
+				}
+
+				if (!!dublinCoreResult.newName) {
+					propertyName = dublinCoreResult.newName;
+				}
+			}
+			break;
   }
 
   return [propertyName, isArray, isNumber, isDate];

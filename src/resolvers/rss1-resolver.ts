@@ -1,9 +1,10 @@
 import { DublinCoreFields } from "../types/dublin-core.ts";
+import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
 
 export const resolveRss1Field = (
   nodeName: string,
 ): [string, boolean, boolean, boolean] => {
-  let isArrayNode = false;
+  let isArray = false;
   let isNumber = false;
   let isDate = false;
   let propertyName = nodeName;
@@ -14,7 +15,7 @@ export const resolveRss1Field = (
       break;
     case Field.Item:
       propertyName = "items";
-      isArrayNode = true;
+      isArray = true;
       break;
     case Field.About:
       propertyName = "about";
@@ -22,16 +23,26 @@ export const resolveRss1Field = (
     case Field.Resource:
       propertyName = "resource";
       break;
-    case DublinCoreFields.Date:
-    case DublinCoreFields.Created:
-    case DublinCoreFields.DateSubmitted:
-    case DublinCoreFields.Copyrighted:
-    case DublinCoreFields.DateAccepted:
-      isDate = true;
-      break;
+		default:
+			const dublinCoreResult = resolveDublinCoreField(propertyName);
+			if (dublinCoreResult.handled) {
+				if (dublinCoreResult.isArray) {
+					isArray = true;
+				}
+				if (dublinCoreResult.isDate) {
+					isDate = true;
+				}
+				if (dublinCoreResult.isNumber) {
+					isNumber = true;
+				}
+				if (!!dublinCoreResult.newName) {
+					propertyName = dublinCoreResult.newName;
+				}
+			}
+			break;
   }
 
-  return [propertyName, isArrayNode, isNumber, isDate];
+  return [propertyName, isArray, isNumber, isDate];
 };
 
 enum Field {

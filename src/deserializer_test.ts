@@ -7,6 +7,8 @@ import {
 import { deserializeFeed, parseFeed } from "./deserializer.ts";
 import { Feed, FeedType } from "../mod.ts";
 import type { Atom, DeserializationResult, Options, RSS2 } from "../mod.ts";
+import type { TestEntry } from './test/test-entry.ts';
+
 
 const rss2TestSample = await Deno.readTextFile("./samples/rss2.xml");
 const rss2DublinCoreTestSample = await Deno.readTextFile(
@@ -211,7 +213,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
     tests: [
       {
         name: "Root",
-        getValue: (src) => src,
+        getValue: (src: Feed) => src,
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -219,42 +221,42 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Type",
-        getValue: (src) => src.type,
+        getValue: (src: Feed) => src.type,
         assert: [{ fn: assertEquals, expect: FeedType.Rss2 }],
       },
       {
         name: "Title",
-        getValue: (src) => src.title,
+        getValue: (src: Feed) => src.title,
         assert: [{ fn: assertNotEquals, expect: undefined }],
       },
       {
         name: "Title:Type",
-        getValue: (src) => src.title.type,
+        getValue: (src: Feed) => src.title.type,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Title:Value",
-        getValue: (src) => src.title.value,
+        getValue: (src: Feed) => src.title.value,
         assert: [{ fn: assertEquals, expect: "RSS2:Title:CData" }],
       },
       {
         name: "Description",
-        getValue: (src) => src.description,
+        getValue: (src: Feed) => src.description,
         assert: [{ fn: assertEquals, expect: "RSS2:Description:CData" }],
       },
       {
         name: "Language",
-        getValue: (src) => src.language,
+        getValue: (src: Feed) => src.language,
         assert: [{ fn: assertEquals, expect: "RSS2:Language" }],
       },
       {
         name: "Uri",
-        getValue: (src) => src.links[0],
+        getValue: (src: Feed) => src.links[0],
         assert: [{ fn: assertEquals, expect: "https://RSS2-link.com/" }],
       },
       {
         name: "Image",
-        getValue: (src) => src.image,
+        getValue: (src: Feed) => src.image,
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -262,32 +264,32 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Image:Url",
-        getValue: (src) => src.image?.url,
+        getValue: (src: Feed) => src.image?.url,
         assert: [{ fn: assertEquals, expect: "RSS2-image.com" }],
       },
       {
         name: "Image:Title",
-        getValue: (src) => src.image?.title,
+        getValue: (src: Feed) => src.image?.title,
         assert: [{ fn: assertEquals, expect: "RSS2:Image" }],
       },
       {
         name: "Image:Link",
-        getValue: (src) => src.image?.link,
+        getValue: (src: Feed) => src.image?.link,
         assert: [{ fn: assertEquals, expect: "RSS2-image2.com" }],
       },
       {
         name: "Image:Height",
-        getValue: (src) => src.image?.height,
+        getValue: (src: Feed) => src.image?.height,
         assert: [{ fn: assertEquals, expect: 69 }],
       },
       {
         name: "Image:Width",
-        getValue: (src) => src.image?.width,
+        getValue: (src: Feed) => src.image?.width,
         assert: [{ fn: assertEquals, expect: 420 }],
       },
       {
         name: "PubDate",
-        getValue: (src) => src.published,
+        getValue: (src: Feed) => src.published,
         assert: [{
           fn: assertEquals,
           expect: new Date("Mon, 22 Jun 2020 20:03:00 GMT"),
@@ -295,12 +297,12 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "PubDateRaw",
-        getValue: (src) => src.publishedRaw,
+        getValue: (src: Feed) => src.publishedRaw,
         assert: [{ fn: assertEquals, expect: "Mon, 22 Jun 2020 20:03:00 GMT" }],
       },
       {
         name: "LastBuildDate",
-        getValue: (src) => src.updateDate,
+        getValue: (src: Feed) => src.updateDate,
         assert: [{
           fn: assertEquals,
           expect: new Date("Mon, 22 Jun 2020 20:03:04 GMT"),
@@ -308,22 +310,22 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "LastBuildDateRaw",
-        getValue: (src) => src.updateDateRaw,
+        getValue: (src: Feed) => src.updateDateRaw,
         assert: [{ fn: assertEquals, expect: "Mon, 22 Jun 2020 20:03:04 GMT" }],
       },
       {
         name: "Generator",
-        getValue: (src) => src.generator,
+        getValue: (src: Feed) => src.generator,
         assert: [{ fn: assertEquals, expect: "RSS2:Generator" }],
       },
       {
         name: "Copyright",
-        getValue: (src) => src.copyright,
+        getValue: (src: Feed) => src.copyright,
         assert: [{ fn: assertEquals, expect: "RSS2:Copyright" }],
       },
       {
         name: "SkipDays",
-        getValue: (src) => src.skipDays,
+        getValue: (src: Feed) => src.skipDays,
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -331,12 +333,12 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "SkipDays:Length",
-        getValue: (src) => src.skipDays?.length,
+        getValue: (src: Feed) => src.skipDays?.length,
         assert: [{ fn: assertEquals, expect: 7 }],
       },
       {
         name: "SkipHours",
-        getValue: (src) => src.skipHours,
+        getValue: (src: Feed) => src.skipHours,
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -344,27 +346,27 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "SkipHours:Length",
-        getValue: (src) => src.skipHours?.length,
+        getValue: (src: Feed) => src.skipHours?.length,
         assert: [{ fn: assertEquals, expect: 24 }],
       },
       {
         name: "WebMaster",
-        getValue: (src) => src.webMasterMail,
+        getValue: (src: Feed) => src.webMasterMail,
         assert: [{ fn: assertEquals, expect: "mail@RSS2-webMaster.com" }],
       },
       {
         name: "ManagingEditor",
-        getValue: (src) => src.managingEditorMail,
+        getValue: (src: Feed) => src.managingEditorMail,
         assert: [{ fn: assertEquals, expect: "mail@wRSS2-managingEditor.com" }],
       },
       {
         name: "Ttl",
-        getValue: (src) => src.ttl,
+        getValue: (src: Feed) => src.ttl,
         assert: [{ fn: assertEquals, expect: 100 }],
       },
       {
         name: "Items",
-        getValue: (src) => src.entries,
+        getValue: (src: Feed) => src.entries,
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -372,22 +374,22 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Items:Length",
-        getValue: (src) => src.entries.length,
+        getValue: (src: Feed) => src.entries.length,
         assert: [{ fn: assertEquals, expect: 10 }],
       },
       {
         name: "Items:[0]:Title:Type",
-        getValue: (src) => src.entries[0].title?.type,
+        getValue: (src: Feed) => src.entries[0].title?.type,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Items:[0]:Title:Value",
-        getValue: (src) => src.entries[0].title?.value,
+        getValue: (src: Feed) => src.entries[0].title?.value,
         assert: [{ fn: assertEquals, expect: "RSS2:Item:0:Title:CData" }],
       },
       {
         name: "Items:[0]:Guid",
-        getValue: (src) => src.entries[0].id,
+        getValue: (src: Feed) => src.entries[0].id,
         assert: [{
           fn: assertEquals,
           expect: "https://RSS2-entry-0-link.com/0",
@@ -395,17 +397,17 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Items:[0]:Media:Credit",
-        getValue: (src) => src.entries[0].mediaCredit,
+        getValue: (src: Feed) => src.entries[0].mediaCredit,
         assert: [{ fn: assertEquals, expect: "RSS2:Media:Credit" }],
       },
       {
         name: "Items:[0]:Media:Description",
-        getValue: (src) => src.entries[0].mediaDescription,
+        getValue: (src: Feed) => src.entries[0].mediaDescription,
         assert: [{ fn: assertEquals, expect: "RSS2:Media:Description" }],
       },
       {
         name: "Items:[0]:Media:Content",
-        getValue: (src) => src.entries[0].mediaContent,
+        getValue: (src: Feed) => src.entries[0].mediaContent,
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -413,7 +415,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Items:[0]:Media:Content:Url",
-        getValue: (src) => src.entries[0].mediaContent?.url,
+        getValue: (src: Feed) => src.entries[0].mediaContent?.url,
         assert: [{
           fn: assertEquals,
           expect: "https://RSS2-media-content.com/",
@@ -421,42 +423,42 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Items:[0]:Media:Content:Medium",
-        getValue: (src) => src.entries[0].mediaContent?.medium,
+        getValue: (src: Feed) => src.entries[0].mediaContent?.medium,
         assert: [{ fn: assertEquals, expect: "image" }],
       },
       {
         name: "Items:[0]:Media:Content:Width",
-        getValue: (src) => src.entries[0].mediaContent?.width,
+        getValue: (src: Feed) => src.entries[0].mediaContent?.width,
         assert: [{ fn: assertEquals, expect: 1337 }],
       },
       {
         name: "Items:[0]:Media:Content:Height",
-        getValue: (src) => src.entries[0].mediaContent?.height,
+        getValue: (src: Feed) => src.entries[0].mediaContent?.height,
         assert: [{ fn: assertEquals, expect: 1337 }],
       },
       {
         name: "Items:[0]:DC:Creator",
-        getValue: (src) => src.entries[0].creators?.length,
+        getValue: (src: Feed) => src.entries[0].creators?.length,
         assert: [{ fn: assertEquals, expect: 1 }],
       },
       {
         name: "Items:[0]:DC:Creator:Length",
-        getValue: (src) => src.entries[0].creators?.[0],
+        getValue: (src: Feed) => src.entries[0].creators?.[0],
         assert: [{ fn: assertEquals, expect: "RSS2:Item:0:DC:Creator" }],
       },
       {
         name: "Items:[0]:Description:Type",
-        getValue: (src) => src.entries[0].description?.type,
+        getValue: (src: Feed) => src.entries[0].description?.type,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Items:[0]:Description:Value",
-        getValue: (src) => src.entries[0].description?.value,
+        getValue: (src: Feed) => src.entries[0].description?.value,
         assert: [{ fn: assertEquals, expect: "RSS2:Item:0:Description:CData" }],
       },
       {
         name: "Items:[0]:Link",
-        getValue: (src) => src.entries[0].link,
+        getValue: (src: Feed) => src.entries[0].link,
         assert: [{
           fn: assertEquals,
           expect: "https://RSS2-entry-0-link.com/0",
@@ -464,7 +466,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Items:[0]:Comments",
-        getValue: (src) => src.entries[0].comments,
+        getValue: (src: Feed) => src.entries[0].comments,
         assert: [{
           fn: assertEquals,
           expect: "https://RSS2-entry-0-comment.com/0",
@@ -472,7 +474,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Items:[0]:PubDate",
-        getValue: (src) => src.entries[0].published,
+        getValue: (src: Feed) => src.entries[0].published,
         assert: [{
           fn: assertEquals,
           expect: new Date("Mon, 22 Jun 2020 20:03:00 GMT"),
@@ -480,12 +482,12 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Items:[0]:PubDateRaw",
-        getValue: (src) => src.entries[0].publishedRaw,
+        getValue: (src: Feed) => src.entries[0].publishedRaw,
         assert: [{ fn: assertEquals, expect: "Mon, 22 Jun 2020 20:03:00 GMT" }],
       },
       {
         name: "Items:[0]:PubDate->Updated",
-        getValue: (src) => src.entries[0].updated,
+        getValue: (src: Feed) => src.entries[0].updated,
         assert: [{
           fn: assertEquals,
           expect: new Date("Mon, 22 Jun 2020 20:03:00 GMT"),
@@ -493,12 +495,12 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Items:[0]:PubDateRaw->UpdatedRaw",
-        getValue: (src) => src.entries[0].updatedRaw,
+        getValue: (src: Feed) => src.entries[0].updatedRaw,
         assert: [{ fn: assertEquals, expect: "Mon, 22 Jun 2020 20:03:00 GMT" }],
       },
       {
         name: "Items:[0]:Category",
-        getValue: (src) => src.entries[0].categories,
+        getValue: (src: Feed) => src.entries[0].categories,
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -506,25 +508,25 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Items:[0]:Category:Length",
-        getValue: (src) => src.entries[0].categories?.length,
+        getValue: (src: Feed) => src.entries[0].categories?.length,
         assert: [{ fn: assertEquals, expect: 5 }],
       },
       {
         name: "Items:[0]:Category[0]:Term",
-        getValue: (src) => src.entries[0].categories?.[0].term,
+        getValue: (src: Feed) => src.entries[0].categories?.[0].term,
         assert: [{ fn: assertEquals, expect: "RSS2:Item:0:Category:0" }],
       },
       {
         name: "Items:[0]:Category[0]:Label",
-        getValue: (src) => src.entries[0].categories?.[0].label,
+        getValue: (src: Feed) => src.entries[0].categories?.[0].label,
         assert: [{ fn: assertEquals, expect: "RSS2:Item:0:Category:0" }],
       },
-    ] as TestDefinition[],
+    ] as TestEntry<Feed>[],
   },
   {
     name: "RSS2:DublinCore",
     source: await parseFeed(rss2DublinCoreTestSample),
-    tests: [] as TestDefinition[],
+    tests: [] as TestEntry<Feed>[],
   },
   {
     name: "Atom",
@@ -532,7 +534,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
     tests: [
       {
         name: "Root",
-        getValue: (src) => src,
+        getValue: (src: Feed) => src,
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -540,17 +542,17 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Type",
-        getValue: (src) => src.type,
+        getValue: (src: Feed) => src.type,
         assert: [{ fn: assertEquals, expect: FeedType.Atom }],
       },
       {
         name: "Icon",
-        getValue: (src) => src.icon,
+        getValue: (src: Feed) => src.icon,
         assert: [{ fn: assertEquals, expect: "/AtomIcon.jpg" }],
       },
       {
         name: "Updated",
-        getValue: (src) => src.updateDate,
+        getValue: (src: Feed) => src.updateDate,
         assert: [{
           fn: assertEquals,
           expect: new Date("2003-12-13T18:30:02Z"),
@@ -558,12 +560,12 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "UpdatedRaw",
-        getValue: (src) => src.updateDateRaw,
+        getValue: (src: Feed) => src.updateDateRaw,
         assert: [{ fn: assertEquals, expect: "2003-12-13T18:30:02Z" }],
       },
       {
         name: "Title",
-        getValue: (src) => src.title,
+        getValue: (src: Feed) => src.title,
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -571,17 +573,17 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Title:Type",
-        getValue: (src) => src.title.type,
+        getValue: (src: Feed) => src.title.type,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Title:Value",
-        getValue: (src) => src.title.value,
+        getValue: (src: Feed) => src.title.value,
         assert: [{ fn: assertEquals, expect: "ATOM:Title" }],
       },
       {
         name: "Category",
-        getValue: (src) => src.categories,
+        getValue: (src: Feed) => src.categories,
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -589,22 +591,22 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Category:Length",
-        getValue: (src) => src.categories.length,
+        getValue: (src: Feed) => src.categories.length,
         assert: [{ fn: assertEquals, expect: 2 }],
       },
       {
         name: "Category:[0]:Term",
-        getValue: (src) => src.categories[0].term,
+        getValue: (src: Feed) => src.categories[0].term,
         assert: [{ fn: assertEquals, expect: "ATOM:Category:0:Term" }],
       },
       {
         name: "Category:[1]:Term",
-        getValue: (src) => src.categories[1].term,
+        getValue: (src: Feed) => src.categories[1].term,
         assert: [{ fn: assertEquals, expect: "ATOM:Category:1:Term" }],
       },
       {
         name: "Image",
-        getValue: (src) => src.image,
+        getValue: (src: Feed) => src.image,
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -612,32 +614,32 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Image:Url",
-        getValue: (src) => src.image?.url,
+        getValue: (src: Feed) => src.image?.url,
         assert: [{ fn: assertEquals, expect: "Atom-Logo.com" }],
       },
       {
         name: "Image:Title",
-        getValue: (src) => src.image?.title,
+        getValue: (src: Feed) => src.image?.title,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Image:Link",
-        getValue: (src) => src.image?.link,
+        getValue: (src: Feed) => src.image?.link,
         assert: [{ fn: assertEquals, expect: "Atom-Logo.com" }],
       },
       {
         name: "Image:Height",
-        getValue: (src) => src.image?.height,
+        getValue: (src: Feed) => src.image?.height,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Image:Width",
-        getValue: (src) => src.image?.width,
+        getValue: (src: Feed) => src.image?.width,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Link",
-        getValue: (src) => src.links,
+        getValue: (src: Feed) => src.links,
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -645,17 +647,17 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Link:length",
-        getValue: (src) => src.links.length,
+        getValue: (src: Feed) => src.links.length,
         assert: [{ fn: assertEquals, expect: 1 }],
       },
       {
         name: "Link:Href",
-        getValue: (src) => src.links[0],
+        getValue: (src: Feed) => src.links[0],
         assert: [{ fn: assertEquals, expect: "https://AtomLink.org/" }],
       },
       {
         name: "Entry",
-        getValue: (src) => src.entries,
+        getValue: (src: Feed) => src.entries,
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -664,12 +666,12 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       ,
       {
         name: "Entry:Length",
-        getValue: (src) => src.entries.length,
+        getValue: (src: Feed) => src.entries.length,
         assert: [{ fn: assertEquals, expect: 3 }],
       },
       {
         name: "Entry:[0]:Title",
-        getValue: (src) => src.entries[0].title,
+        getValue: (src: Feed) => src.entries[0].title,
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -677,12 +679,12 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Entry:[0]:Title:Type",
-        getValue: (src) => src.entries[0].title?.type,
+        getValue: (src: Feed) => src.entries[0].title?.type,
         assert: [{ fn: assertEquals, expect: "xhtml" }],
       },
       {
         name: "Entry:[0]:Title:Value",
-        getValue: (src) => src.entries[0].title?.value,
+        getValue: (src: Feed) => src.entries[0].title?.value,
         assert: [{
           fn: assertEquals,
           expect:
@@ -691,7 +693,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Entry:[0]:Link",
-        getValue: (src) => src.entries[0].link,
+        getValue: (src: Feed) => src.entries[0].link,
         assert: [{
           fn: assertEquals,
           expect: "https://AtomLink.org/Entry/0/link",
@@ -699,7 +701,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Entry:[1]:Feedburner:OrigLink",
-        getValue: (src) => src.entries[1].link,
+        getValue: (src: Feed) => src.entries[1].link,
         assert: [{
           fn: assertEquals,
           expect: "https://AtomFeedburner.org/Entry/1",
@@ -707,7 +709,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Entry:[0]:Published",
-        getValue: (src) => src.entries[0].published,
+        getValue: (src: Feed) => src.entries[0].published,
         assert: [{
           fn: assertEquals,
           expect: new Date("2003-12-13T18:30:02Z"),
@@ -715,12 +717,12 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Entry:[0]:PublishedRaw",
-        getValue: (src) => src.entries[0].publishedRaw,
+        getValue: (src: Feed) => src.entries[0].publishedRaw,
         assert: [{ fn: assertEquals, expect: "2003-12-13T18:30:02Z" }],
       },
       {
         name: "Entry:[0]:Updated",
-        getValue: (src) => src.entries[0].updated,
+        getValue: (src: Feed) => src.entries[0].updated,
         assert: [{
           fn: assertEquals,
           expect: new Date("2003-12-13T18:30:02Z"),
@@ -728,25 +730,16 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       },
       {
         name: "Entry:[0]:UpdatedRaw",
-        getValue: (src) => src.entries[0].updatedRaw,
+        getValue: (src: Feed) => src.entries[0].updatedRaw,
         assert: [{ fn: assertEquals, expect: "2003-12-13T18:30:02Z" }],
       },
-    ] as TestDefinition[],
+    ] as TestEntry<Feed>[],
   },
 ].forEach((workspace) => {
   workspace.tests.forEach((test) => {
     Deno.test(`parseFeed:${workspace.name}:${test.name}`, () => {
       const target = test.getValue(workspace.source);
-      test.assert.forEach((x) => x.fn(target, x.expect));
+      test.assert.forEach((x: TestEntry<Feed>) => x.fn(target, x.expect));
     });
   });
 });
-
-interface TestDefinition {
-  name: string;
-  getValue(arg0: Feed): any;
-  assert: [{
-    fn: any;
-    expect: any;
-  }];
-}

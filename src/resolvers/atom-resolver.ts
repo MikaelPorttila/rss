@@ -1,7 +1,9 @@
+import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
+
 export const resolveAtomField = (
   nodeName: string,
 ): [string, boolean, boolean, boolean] => {
-  let isArrayNode = false;
+  let isArray = false;
   let isNumber = false;
   let isDate = false;
   let propertyName = nodeName;
@@ -9,30 +11,47 @@ export const resolveAtomField = (
   switch (nodeName) {
     case Field.Category:
       propertyName = "categories";
-      isArrayNode = true;
+      isArray = true;
       break;
     case Field.Contributor:
       propertyName = "contributors";
-      isArrayNode = true;
+      isArray = true;
       break;
     case Field.Link:
       propertyName = "links";
-      isArrayNode = true;
+      isArray = true;
       break;
     case Field.Entry:
       propertyName = "entries";
-      isArrayNode = true;
+      isArray = true;
       break;
     case Field.Updated:
     case Field.Published:
-      propertyName = nodeName;
       isDate = true;
       break;
     default:
-      propertyName = nodeName;
+			const dublinCoreResult = resolveDublinCoreField(propertyName);
+			if (dublinCoreResult.handled) {
+				if (dublinCoreResult.isArray) {
+					isArray = true;
+				}
+
+				if (dublinCoreResult.isDate) {
+					isDate = true;
+				}
+
+				if (dublinCoreResult.isNumber) {
+					isNumber = true;
+				}
+
+				if (!!dublinCoreResult.newName) {
+					propertyName = dublinCoreResult.newName;
+				}
+			}
+			break;
   }
 
-  return [propertyName, isArrayNode, isNumber, isDate];
+  return [propertyName, isArray, isNumber, isDate];
 };
 
 export const isAtomCDataField = (nodeName: string): boolean => {
