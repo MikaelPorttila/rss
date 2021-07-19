@@ -14,7 +14,6 @@ export const resolveRss1Field = (
       propertyName = "textInput";
       break;
     case Field.Item:
-      propertyName = "items";
       isArray = true;
       break;
     case Field.About:

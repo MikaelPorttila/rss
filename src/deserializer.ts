@@ -180,12 +180,14 @@ export const deserializeFeed = ((
         let node = stack.pop();
 
         if (stack.length === 0) {
+					parser.close();
+					parser.flush();
           Object.assign(parser, {
             onopentag: undefined,
             onclosetag: undefined,
             ontext: undefined,
             oncdata: undefined,
-            onattribute: undefined,
+            onattribute: undefined
           });
 
           const result: DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed> & {

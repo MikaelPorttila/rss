@@ -228,6 +228,8 @@ const mapRssToFeed = (rss: RSS1): Feed => {
       value: rss.channel[DublinCoreFields.Title] || rss.channel.title,
     };
 		result.description = rss.channel[DublinCoreFields.Description] || rss.channel.description;
+		result.links = [(rss.channel[DublinCoreFields.URI] || rss.channel.link)];
+		result.language = rss.channel[DublinCoreFields.Language];
 		result.image = rss.channel.image
       ? {
         link: rss.channel.image.link,
@@ -235,7 +237,7 @@ const mapRssToFeed = (rss: RSS1): Feed => {
         url: rss.channel.image.url,
       }
       : undefined;
-		result.entries = rss.channel?.items?.map((item) => {
+		result.entries = rss.channel?.item?.map((item) => {
 			const feedEntry = {
 				title: {
 					type: undefined,

@@ -11,6 +11,7 @@ interface Channel extends DublinCore {
 	description: string;
 	about: string; // Mapped rdf:about
 	image: Image;
+	item: Item[];
 	items: Item[];
 	textInput: {
 		title: string;

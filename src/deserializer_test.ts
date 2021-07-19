@@ -10,10 +10,9 @@ import type { Atom, DeserializationResult, Options, RSS2 } from "../mod.ts";
 import type { TestEntry } from './test/test-entry.ts';
 
 
+const rss1TestSample = await Deno.readTextFile("./samples/rss1.xml");
 const rss2TestSample = await Deno.readTextFile("./samples/rss2.xml");
-const rss2DublinCoreTestSample = await Deno.readTextFile(
-  "./samples/rss2_dublin-core.xml",
-);
+const rss2DublinCoreTestSample = await Deno.readTextFile("./samples/rss2_dublin-core.xml");
 const atomTestSample = await Deno.readTextFile("./samples/atom.xml");
 
 [undefined, null, ""].forEach((input: any) => {
@@ -207,6 +206,65 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
 */
 
 [
+	{
+		name: "RSS1",
+		source: await parseFeed(rss1TestSample),
+		tests: [
+			{
+        name: "Root",
+        getValue: (src: Feed) => src,
+        assert: [{ fn: assertNotEquals, expect: undefined }, {
+          fn: assertNotEquals,
+          expect: null,
+        }],
+      },
+			{
+        name: "Type",
+        getValue: (src: Feed) => src.type,
+        assert: [{ fn: assertEquals, expect: FeedType.Rss1 }],
+      },
+			{
+        name: "Title",
+        getValue: (src: Feed) => src.title.value,
+        assert: [{ fn: assertEquals, expect: 'RSS1:Title' }],
+      },
+			{
+        name: "Link",
+        getValue: (src: Feed) => src.links,
+        assert: [{ fn: assertNotEquals, expect: undefined }],
+      },
+			{
+        name: "Link",
+        getValue: (src: Feed) => src.links[0],
+        assert: [{ fn: assertEquals, expect: 'RSS1:Link' }],
+      },
+			{
+        name: "Image",
+        getValue: (src: Feed) => src.image,
+        assert: [{ fn: assertNotEquals, expect: undefined }],
+      },
+			{
+        name: "Image:Url",
+        getValue: (src: Feed) => src.image?.url,
+        assert: [{ fn: assertEquals, expect: 'RSS1:Image:Url' }],
+      },
+			{
+        name: "Image:Title",
+        getValue: (src: Feed) => src.image?.title,
+        assert: [{ fn: assertEquals, expect: 'RSS1:Image:Title' }],
+      },
+			{
+        name: "Image:Link",
+        getValue: (src: Feed) => src.image?.link,
+        assert: [{ fn: assertEquals, expect: 'RSS1:Image:Link' }],
+      },
+			{
+        name: "Description",
+        getValue: (src: Feed) => src.description,
+        assert: [{ fn: assertEquals, expect: 'RSS1:Description' }],
+      },
+		] as TestEntry<Feed>[]
+	},
   {
     name: "RSS2",
     source: await parseFeed(rss2TestSample),
