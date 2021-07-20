@@ -29,16 +29,54 @@ export const parseFeed = (
       return;
     }
 
-    const { feed, feedType } = await deserializeFeed(input);
-    const result = toFeed(feedType, feed) as Feed;
+    const { data, feedType } = await parse(input);
+    const result = toFeed(feedType, data) as Feed;
     resolve(result);
   });
 
-export const deserializeFeed = ((
-  input: string,
-  options?: Options,
-) =>
-  new Promise<DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed>>(
+/**
+ * @deprecated The method should not be used, please use the parseFeed method instead.
+ */
+export const deserializeFeed = (async (
+	input: string,
+  options?: Options
+) => {
+	console.warn('RSS: deserializeFeed is deprecated, please use parseFeed instead.');
+	const {data, feedType} = await parse(input);
+
+	const result: DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed> & {
+		originalFeedType?: FeedType;
+	} = {
+		feed: options?.outputJsonFeed ? toJsonFeed(feedType, data) : data,
+		feedType: options?.outputJsonFeed ? FeedType.JsonFeed : feedType,
+	};
+
+	if (options?.outputJsonFeed) {
+		result.originalFeedType = feedType;
+	}
+
+	return result;
+
+}) as {
+	(input: string): Promise<DeserializationResult<Atom | RSS1 | RSS2>>;
+	(
+		input: string,
+		options: Options & { outputJsonFeed: false },
+	): Promise<DeserializationResult<Atom | RSS1 | RSS2>>;
+	(
+		input: string,
+		options: Options & { outputJsonFeed: true },
+	): Promise<
+		DeserializationResult<JsonFeed> & { originalFeedType: FeedType }
+	>;
+	(
+		input: string,
+		options?: Options,
+	): Promise<DeserializationResult<Atom | JsonFeed | RSS1 | RSS2>>;
+};
+
+const parse = (input: string) =>
+  new Promise<{feedType: FeedType, data: any}>(
     (resolve, reject) => {
       if (!input) {
         reject(new Error("Input was undefined, null or empty"));
@@ -69,19 +107,11 @@ export const deserializeFeed = ((
 
       let isCDataField: (nodeName: string) => boolean;
 
-      parser.ontext = (text: string): void => {
+      parser.oncdata = parser.ontext = (text: string): void => {
         if (cDataActive) {
           cDataBuilder += text;
         } else {
-          stack[stack.length - 1] = text.trim();
-        }
-      };
-
-      parser.oncdata = (text: string): void => {
-        if (cDataActive) {
-          cDataBuilder += text;
-        } else {
-          stack[stack.length - 1] = text.trim();
+					stack[stack.length - 1].value = text.trim();
         }
       };
 
@@ -110,7 +140,7 @@ export const deserializeFeed = ((
           cDataLevel = 0;
         }
 
-        const attributes = attributeNames.reduce((builder, attrName) => {
+        const newNode = attributeNames.reduce((builder, attrName) => {
           const [
             attributeName,
             isArray,
@@ -130,44 +160,7 @@ export const deserializeFeed = ((
           return builder;
         }, {} as any);
 
-        stack.push(attributes);
-      };
-
-      parser.onattribute = (attr: Attribute): void => {
-        if (cDataActive) {
-          return;
-        }
-
-        if (!resolveField) {
-          return;
-        }
-
-        let attributeName, value, node;
-
-        try {
-          const [
-            attributeName,
-            isArray,
-            isNumber,
-            isDate,
-          ] = resolveField(attr.name);
-
-          node = stack[stack.length - 1];
-          value = attr.value.trim();
-
-          if (isNumber) {
-            node[attributeName] = parseInt(value);
-          } else if (isDate) {
-            node[attributeName + "Raw"] = value;
-            node[attributeName] = new Date(value);
-          } else {
-            node[attributeName] = value;
-          }
-        } catch (ex) {
-          console.error(
-            `Failed to assign property ${attributeName} with the value ${value} on ${node}, ex: ${ex}`,
-          );
-        }
+        stack.push(newNode);
       };
 
       parser.onclosetag = (nodeName: string) => {
@@ -180,54 +173,43 @@ export const deserializeFeed = ((
         let node = stack.pop();
 
         if (stack.length === 0) {
-					parser.close();
-					parser.flush();
           Object.assign(parser, {
             onopentag: undefined,
             onclosetag: undefined,
             ontext: undefined,
-            oncdata: undefined,
-            onattribute: undefined
+            oncdata: undefined
           });
 
-          const result: DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed> & {
-            originalFeedType?: FeedType;
-          } = {
-            feed: options?.outputJsonFeed ? toJsonFeed(feedType, node) : node,
-            feedType: options?.outputJsonFeed ? FeedType.JsonFeed : feedType,
-          };
-
-          if (options?.outputJsonFeed) {
-            result.originalFeedType = feedType;
-          }
-
+					const result = {
+						feedType: feedType,
+						data: node
+					};
           resolve(result);
           return;
         }
 
-        if (cDataActive) {
-          node["value"] = cDataBuilder;
-          stack[stack.length - 1][nodeName] = node;
-          cDataBuilder = "";
-          cDataActive = false;
-          cDataLevel = 0;
-          return;
-        }
-
-        const [
+				const targetNode = stack[stack.length - 1];
+				const [
           propertyName,
           isArray,
           isNumber,
           isDate,
         ] = resolveField(nodeName);
 
-        const targetNode = stack[stack.length - 1];
+        if (cDataActive) {
+          node.value = cDataBuilder;
+					targetNode[propertyName] = node;
+          cDataBuilder = "";
+          cDataActive = false;
+          cDataLevel = 0;
+          return;
+        }
 
         if (isNumber) {
-          node = parseInt(node);
+          node.value = parseInt(node.value);
         } else if (isDate) {
-          targetNode[propertyName + "Raw"] = node;
-          node = new Date(node);
+          targetNode[propertyName + "Raw"] = { value: node.value };
+          node.value = new Date(node.value);
         }
 
         if (isArray) {
@@ -277,30 +259,12 @@ export const deserializeFeed = ((
         parser.onopentag = onOpenTag;
       };
 
-      parser.write(input).close();
+      parser
+				.write(input)
+				.close()
+				.flush();
     },
-  )) as {
-    (input: string): Promise<DeserializationResult<Atom | RSS1 | RSS2>>;
-    (
-      input: string,
-      options: Options & { outputJsonFeed: false },
-    ): Promise<DeserializationResult<Atom | RSS1 | RSS2>>;
-    (
-      input: string,
-      options: Options & { outputJsonFeed: true },
-    ): Promise<
-      DeserializationResult<JsonFeed> & { originalFeedType: FeedType }
-    >;
-    (
-      input: string,
-      options?: Options,
-    ): Promise<DeserializationResult<Atom | JsonFeed | RSS1 | RSS2>>;
-  };
-
-interface Attribute {
-  name: string;
-  value: string;
-}
+  );
 
 interface OpenTag {
   name: string;

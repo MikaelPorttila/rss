@@ -495,12 +495,12 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
         assert: [{ fn: assertEquals, expect: 1337 }],
       },
       {
-        name: "Items:[0]:DC:Creator",
+        name: "Items:[0]:DC:Creator:Length",
         getValue: (src: Feed) => src.entries[0].creators?.length,
         assert: [{ fn: assertEquals, expect: 1 }],
       },
       {
-        name: "Items:[0]:DC:Creator:Length",
+        name: "Items:[0]:DC:Creator[0]:Value",
         getValue: (src: Feed) => src.entries[0].creators?.[0],
         assert: [{ fn: assertEquals, expect: "RSS2:Item:0:DC:Creator" }],
       },

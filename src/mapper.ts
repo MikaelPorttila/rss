@@ -11,6 +11,9 @@ import type {
 import { isValidHttpURL } from "./util.ts";
 import { FeedType } from "./types/mod.ts";
 import { DublinCoreFieldArray, DublinCoreFields } from "./types/dublin-core.ts";
+import { InternalAtom } from "./types/internal-atom.ts";
+import { InternalRSS2 } from "./types/internal-rss2.ts";
+import { InternalRSS1 } from "./types/internal-rss1.ts";
 
 export const toJsonFeed = (
   feedType: FeedType,
@@ -38,7 +41,7 @@ export const toJsonFeed = (
 
 export const toFeed = (
   feedType: FeedType,
-  feed: Atom | RSS2 | RSS1 | JsonFeed,
+  feed: InternalAtom | InternalRSS2 | InternalRSS1 | JsonFeed,
 ): Feed | null => {
   if (!feed) {
     return null;
@@ -46,11 +49,11 @@ export const toFeed = (
 
   switch (feedType) {
     case FeedType.Atom:
-      return mapAtomToFeed(feed as Atom);
+      return mapAtomToFeed(feed as InternalAtom);
 		case FeedType.Rss1:
-			return mapRssToFeed(feed as RSS1);
+			return mapRssToFeed(feed as InternalRSS1);
     case FeedType.Rss2:
-      return mapRss2ToFeed(feed as RSS2);
+      return mapRss2ToFeed(feed as InternalRSS2);
     case FeedType.JsonFeed:
       return mapJsonFeedToFeed(feed as JsonFeed);
     default:
@@ -217,7 +220,7 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
   return feed;
 };
 
-const mapRssToFeed = (rss: RSS1): Feed => {
+const mapRssToFeed = (rss: InternalRSS1): Feed => {
 	const result = {
 		type: FeedType.Rss1
 	} as Feed;
@@ -225,29 +228,29 @@ const mapRssToFeed = (rss: RSS1): Feed => {
 	if (rss.channel) {
 		result.title = {
       type: undefined,
-      value: rss.channel[DublinCoreFields.Title] || rss.channel.title,
+      value: rss.channel[DublinCoreFields.Title]?.value || rss.channel.title.value,
     };
-		result.description = rss.channel[DublinCoreFields.Description] || rss.channel.description;
-		result.links = [(rss.channel[DublinCoreFields.URI] || rss.channel.link)];
-		result.language = rss.channel[DublinCoreFields.Language];
+		result.description = rss.channel[DublinCoreFields.Description]?.value || rss.channel.description.value;
+		result.links = [(rss.channel[DublinCoreFields.URI]?.value as string || rss.channel.link.value as string)];
+		result.language = rss.channel[DublinCoreFields.Language]?.value;
 		result.image = rss.channel.image
       ? {
-        link: rss.channel.image.link,
-        title: rss.channel.image.title,
-        url: rss.channel.image.url,
+        link: rss.channel.image.link?.value as string,
+        title: rss.channel.image.title?.value as string,
+        url: rss.channel.image.url?.value as string,
       }
       : undefined;
 		result.entries = rss.channel?.item?.map((item) => {
 			const feedEntry = {
 				title: {
 					type: undefined,
-					value: item[DublinCoreFields.Title] || item.title,
+					value: item[DublinCoreFields.Title]?.value || item.title.value,
 				},
 				description: {
 					type: undefined,
-					value: item[DublinCoreFields.Description] || item.description,
+					value: item[DublinCoreFields.Description]?.value || item.description.value,
 				},
-				link: item[DublinCoreFields.URI] || item.link
+				link: item[DublinCoreFields.URI]?.value || item.link.value
 			} as FeedEntry;
 
 			feedEntry.dc = {};
@@ -262,21 +265,21 @@ const mapRssToFeed = (rss: RSS1): Feed => {
 	return result;
 };
 
-const mapRss2ToFeed = (rss: RSS2): Feed => {
+const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
   const result = {
     type: FeedType.Rss2,
   } as Feed;
 
   if (rss.channel) {
     result.created = result.published =
-      rss.channel[DublinCoreFields.DateSubmitted] || rss.channel.pubDate;
+      rss.channel[DublinCoreFields.DateSubmitted]?.value || rss.channel.pubDate?.value;
     result.createdRaw = result.publishedRaw =
-      rss.channel[DublinCoreFields.DateSubmittedRaw] || rss.channel.pubDateRaw;
+      rss.channel[DublinCoreFields.DateSubmittedRaw]?.value || rss.channel.pubDateRaw?.value;
 
-    let created = rss.channel[DublinCoreFields.Created] ||
-      rss.channel.lastBuildDate;
-    let createdRaw = rss.channel[DublinCoreFields.CreatedRaw] ||
-      rss.channel.lastBuildDateRaw;
+    let created = rss.channel[DublinCoreFields.Created]?.value ||
+      rss.channel.lastBuildDate?.value;
+    let createdRaw = rss.channel[DublinCoreFields.CreatedRaw]?.value ||
+      rss.channel.lastBuildDateRaw?.value;
     if (created) {
       result.created = created;
     }
@@ -284,31 +287,30 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
       result.createdRaw = createdRaw;
     }
 
-    result.links = [(rss.channel[DublinCoreFields.URI] || rss.channel.link)];
-    result.language = rss.channel[DublinCoreFields.Language] ||
-      rss.channel.language;
-    result.updateDate = rss.channel.lastBuildDate;
-    result.updateDateRaw = rss.channel.lastBuildDateRaw;
-    result.generator = rss.channel.generator as string;
-    result.ttl = rss.channel.ttl || 60;
+    result.links = [(rss.channel[DublinCoreFields.URI]?.value || (rss.channel.link.value as string))];
+    result.language = rss.channel[DublinCoreFields.Language]?.value || rss.channel.language?.value;
+    result.updateDate = rss.channel.lastBuildDate?.value;
+    result.updateDateRaw = rss.channel.lastBuildDateRaw?.value;
+    result.generator = rss.channel.generator?.value;
+    result.ttl = rss.channel.ttl?.value || 60;
     result.title = {
       type: undefined,
-      value: rss.channel[DublinCoreFields.Title] || rss.channel.title,
+      value: rss.channel[DublinCoreFields.Title]?.value || rss.channel.title?.value,
     };
-    result.description = rss.channel[DublinCoreFields.Description] ||
-      rss.channel.description;
-    result.copyright = rss.channel.copyright;
-    result.skipDays = rss.channel.skipDays?.day;
-    result.skipHours = rss.channel.skipHours?.hour;
-    result.webMasterMail = rss.channel.webMaster;
-    result.managingEditorMail = rss.channel.managingEditor;
+    result.description = rss.channel[DublinCoreFields.Description]?.value ||
+      rss.channel.description?.value;
+    result.copyright = rss.channel.copyright?.value;
+    result.skipDays = rss.channel.skipDays?.day?.map(x => x.value as string);
+    result.skipHours = rss.channel.skipHours?.hour?.map(x => x.value as number);
+    result.webMasterMail = rss.channel.webMaster?.value;
+    result.managingEditorMail = rss.channel.managingEditor?.value;
     result.image = rss.channel.image
       ? {
-        link: rss.channel.image.link,
-        title: rss.channel.image.title,
-        url: rss.channel.image.url,
-        height: rss.channel.image.height,
-        width: rss.channel.image.width,
+        link: rss.channel.image.link?.value as string,
+        title: rss.channel.image.title?.value as string,
+        url: rss.channel.image.url?.value as string,
+        height: rss.channel.image?.height?.value,
+        width: rss.channel.image?.width?.value,
       }
       : undefined;
 
@@ -317,24 +319,24 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
   }
 
   result.entries = rss.channel?.items?.map((item) => {
-    const title = item[DublinCoreFields.Title] || item.title;
-    const description = item[DublinCoreFields.Description] || item.description;
-    const creator = item[DublinCoreFields.Creator];
+    const title = item[DublinCoreFields.Title] || item.title?.value;
+    const description = item[DublinCoreFields.Description] || item.description?.value;
+    const creator = item[DublinCoreFields.Creator]?.map(x => x.value);
     const publishedRaw = item[DublinCoreFields.DateSubmittedRaw] ||
-      item.pubDateRaw;
-    const published = item[DublinCoreFields.DateSubmitted] || item.pubDate;
+      item.pubDateRaw?.value;
+    const published = item[DublinCoreFields.DateSubmitted] || item.pubDate?.value;
 
     const entryResult = {
-      id: item.guid,
-      link: item.link,
+      id: item.guid?.value,
+      link: item.link?.value,
       published,
       publishedRaw,
-      updated: item.pubDate,
-      updatedRaw: item.pubDateRaw,
-      comments: item.comments,
+      updated: item.pubDate?.value,
+      updatedRaw: item.pubDateRaw?.value,
+      comments: item.comments?.value,
       categories: item.categories?.map((category) => ({
-        term: category,
-        label: category,
+        term: category.value,
+        label: category.value,
       })) ?? undefined,
       title: title
         ? {
@@ -348,8 +350,8 @@ const mapRss2ToFeed = (rss: RSS2): Feed => {
           value: description,
         }
         : undefined,
-      mediaCredit: item["media:credit"],
-      mediaDescription: item["media:description"],
+      mediaCredit: item["media:credit"]?.value,
+      mediaDescription: item["media:description"]?.value,
       mediaContent: item["media:content"]
         ? { ...item["media:content"] }
         : undefined,
@@ -367,91 +369,87 @@ const copyDublinCoreValues = (source: any, target: any): void => {
   DublinCoreFieldArray.forEach((field: string) => {
     const val = source[field];
     if (val) {
-      target[field] = val;
+      target[field] = val?.value || val;
     }
   });
 };
 
-const mapAtomToFeed = (atom: Atom): Feed => {
+const mapAtomToFeed = (atom: InternalAtom): Feed => {
   const entries = atom.entries?.map((entry) => {
     let link;
     if (entry["feedburner:origlink"]) {
-      link = entry["feedburner:origlink"];
+      link = entry["feedburner:origlink"]?.value;
     } else if (entry.links?.[0]?.href) {
       link = entry.links?.[0]?.href;
     } else if (entry.href) {
       link = entry.href;
-    } else if (isValidHttpURL(entry.id)) {
-      link = entry.id;
+    } else if (isValidHttpURL(entry.id.value as string)) {
+      link = entry.id.value;
     }
 
     return {
-      title: entry.title
-        ? {
-          type: entry.title.type,
-          value: entry.title.value,
-        }
-        : undefined,
-      published: entry.published,
-      publishedRaw: entry.publishedRaw,
-      id: entry.id,
-      updated: entry.updated,
-      updatedRaw: entry.updatedRaw,
+      title: {
+				type: entry.title.type,
+				value: entry.title.value,
+			},
+      published: entry.published?.value,
+      publishedRaw: entry.publishedRaw?.value,
+      id: entry.id.value,
+      updated: entry.updated?.value,
+      updatedRaw: entry.updatedRaw?.value,
       link,
-      summary: entry.summary,
+      summary: entry.summary?.value,
       source: entry.source
         ? {
-          id: entry.source.id,
-          title: entry.source.title,
-          updated: entry.source.updated,
-          updatedRaw: entry.source.updatedRaw,
+          id: entry.source.id?.value,
+          title: entry.source.title?.value,
+          updated: entry.source.updated?.value,
+          updatedRaw: entry.source.updatedRaw?.value,
         }
         : undefined,
       author: entry.author
         ? {
-          email: entry.author.email,
-          name: entry.author.name,
-          uri: entry.author.uri,
+          email: entry.author.email?.value,
+          name: entry.author.name.value,
+          uri: entry.author.uri?.value,
         }
         : undefined,
       contributors: entry.contributors?.map((x) => ({
-        name: x.name,
-        email: x.email,
-        uri: x.uri,
+        name: x.name?.value,
+        email: x.email?.value,
+        uri: x.uri?.value,
       })) ?? undefined,
     } as FeedEntry;
   });
 
   const result = {
     type: FeedType.Atom,
-    id: atom.id,
-    generator: atom.generator,
-    description: atom.subtitle,
+    id: atom.id.value,
+    generator: atom.generator?.value,
+		title: {
+			type: atom.title?.type,
+			value: atom.title?.value,
+		},
+    description: atom.subtitle?.value,
     links: atom.links?.map((x) => x.href) ?? [],
-    icon: atom.icon,
+    icon: atom.icon?.value,
     image: atom.logo
       ? {
-        link: atom.logo,
-        url: atom.logo,
+        link: atom.logo?.value,
+        url: atom.logo?.value,
       }
       : undefined,
-    updateDate: atom.updated,
-    updateDateRaw: atom.updatedRaw,
+    updateDate: atom.updated?.value,
+    updateDateRaw: atom.updatedRaw?.value,
     categories: atom.categories?.map((category) => ({
       term: category.term,
       label: category.label,
     })) ?? undefined,
-    title: atom.title
-      ? {
-        type: atom.title.type,
-        value: atom.title.value,
-      }
-      : undefined,
     author: atom.author
       ? {
-        name: atom.author.name,
-        email: atom.author.email,
-        uri: atom.author.uri,
+        name: atom.author.name?.value,
+        email: atom.author.email?.value,
+        uri: atom.author.uri?.value,
       }
       : undefined,
     entries,
