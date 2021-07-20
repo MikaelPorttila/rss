@@ -4,16 +4,8 @@ import { ValueField } from "./value-field.ts";
 // https://validator.w3.org/feed/docs/rss1.html
 export interface InternalRSS1 {
   channel: Channel;
-}
-
-interface Channel extends DublinCore {
-	title: ValueField<string>;
-	link: ValueField<string>;
-	description: ValueField<string>;
-	about: ValueField<string>; // Mapped rdf:about
-	image: Image;
 	item: Item[];
-	items: Item[];
+	image: Image;
 	textInput: {
 		title: string;
 		description: string;
@@ -21,6 +13,13 @@ interface Channel extends DublinCore {
 		link: string;
 		about: string; //Mapped from rdf:about
 	};
+}
+
+interface Channel extends DublinCore {
+	title: ValueField<string>;
+	link: ValueField<string>;
+	description: ValueField<string>;
+	about: ValueField<string>; // Mapped rdf:about
 }
 
 interface Item extends DublinCore {

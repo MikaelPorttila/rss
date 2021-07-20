@@ -6,7 +6,7 @@ import { DublinCoreFields } from "../types/dublin-core.ts";
 import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
 
 [
-	{ propertyName: '', expect: { isArray: undefined, isNumber: undefined, isDate: undefined, newName: undefined, handled: undefined } },
+	{ propertyName: '', expect: { isArray: undefined, isNumber: undefined, isDate: undefined, newName: undefined, handled: false } },
 	{ propertyName: DublinCoreFields.Date, expect: { isArray: undefined, isNumber: undefined, isDate: true, newName: undefined, handled: true } },
 	{ propertyName: DublinCoreFields.Created, expect: { isArray: undefined, isNumber: undefined, isDate: true, newName: undefined, handled: true } },
 	{ propertyName: DublinCoreFields.DateSubmitted, expect: { isArray: undefined, isNumber: undefined, isDate: true, newName: undefined, handled: true } },

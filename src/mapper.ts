@@ -233,14 +233,14 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
 		result.description = rss.channel[DublinCoreFields.Description]?.value || rss.channel.description.value;
 		result.links = [(rss.channel[DublinCoreFields.URI]?.value as string || rss.channel.link.value as string)];
 		result.language = rss.channel[DublinCoreFields.Language]?.value;
-		result.image = rss.channel.image
+		result.image = rss.image
       ? {
-        link: rss.channel.image.link?.value as string,
-        title: rss.channel.image.title?.value as string,
-        url: rss.channel.image.url?.value as string,
+        link: rss.image.link?.value as string,
+        title: rss.image.title?.value as string,
+        url: rss.image.url?.value as string,
       }
       : undefined;
-		result.entries = rss.channel?.item?.map((item) => {
+		result.entries = rss?.item?.map((item) => {
 			const feedEntry = {
 				title: {
 					type: undefined,
