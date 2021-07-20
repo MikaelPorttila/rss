@@ -7,10 +7,10 @@ export interface InternalRSS1 {
 	item: Item[];
 	image: Image;
 	textInput: {
-		title: string;
-		description: string;
-		name: string;
-		link: string;
+		title: ValueField<string>;
+		description: ValueField<string>;
+		name: ValueField<string>;
+		link: ValueField<string>;
 		about: string; //Mapped from rdf:about
 	};
 }

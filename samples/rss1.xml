@@ -27,22 +27,16 @@
         <description>RSS1:Item:0:Description</description>
     </item>
     <item rdf:about="http://xml.com/pub/2000/08/09/rdfdb/index.html">
-        <title>Putting RDF to Work</title>
-        <link>http://xml.com/pub/2000/08/09/rdfdb/index.html</link>
-
+        <title>RSS1:Item:1:Title</title>
+        <link>RSS1:Item:1:Link</link>
         <description>
-     Tool and API support for the Resource Description Framework
-     is slowly coming of age. Edd Dumbill takes a look at RDFDB,
-     one of the most exciting new RDF toolkits.
+     RSS1:Item:1:Description
         </description>
     </item>
-
     <textinput rdf:about="http://search.xml.com">
-        <title>Search XML.com</title>
-
-        <description>Search XML.com's XML collection</description>
-        <name>s</name>
-        <link>http://search.xml.com</link>
+        <title>RSS1:TextInput:Title</title>
+        <description>RSS1:TextInput:Description</description>
+        <name>RSS1:TextInput:Name</name>
+        <link>https://rss1-textinput-description.com</link>
     </textinput>
-
 </rdf:RDF>

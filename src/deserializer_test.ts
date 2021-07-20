@@ -5,10 +5,9 @@ import {
   assertThrowsAsync,
 } from "../test_deps.ts";
 import { deserializeFeed, parseFeed } from "./deserializer.ts";
-import { Feed, FeedType } from "../mod.ts";
+import { Feed, FeedType, RSS1 } from "../mod.ts";
 import type { Atom, DeserializationResult, Options, RSS2 } from "../mod.ts";
 import type { TestEntry } from './test/test-entry.ts';
-
 
 const rss1TestSample = await Deno.readTextFile("./samples/rss1.xml");
 const rss2TestSample = await Deno.readTextFile("./samples/rss2.xml");
@@ -48,12 +47,290 @@ Deno.test(`Call signatures compile without error`, async () => {
   }
 });
 
+
+[
+	{
+		name: 'OldRSS1',
+		source: await deserializeFeed(rss1TestSample),
+		tests: [
+			{
+        name: "Root",
+        getValue: (src: DeserializationResult<RSS1>) => src,
+        assert: [{ fn: assertNotEquals, expect: undefined }, {
+          fn: assertNotEquals,
+          expect: null,
+        }]
+      },
+			{
+        name: "FeedType",
+        getValue: (src: DeserializationResult<RSS1>) => src.feedType,
+        assert: [{ fn: assertEquals, expect: FeedType.Rss1 }]
+      },
+			{
+        name: "Feed",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed,
+        assert: [{ fn: assertNotEquals, expect: undefined }, {
+          fn: assertNotEquals,
+          expect: null,
+        }]
+      },
+			{
+        name: "Feed:Channel",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.channel,
+        assert: [{ fn: assertNotEquals, expect: undefined }, {
+          fn: assertNotEquals,
+          expect: null,
+        }]
+      },
+			{
+        name: "Feed:Channel:Title",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.channel.title,
+        assert: [{ fn: assertEquals, expect: 'RSS1:Title' }]
+      },
+			{
+        name: "Feed:Channel:Link",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.channel.link,
+        assert: [{ fn: assertEquals, expect: 'RSS1:Link' }]
+      },
+			{
+        name: "Feed:Channel:Description",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.channel.description,
+        assert: [{ fn: assertEquals, expect: 'RSS1:Description' }]
+      },
+			{
+        name: "Feed:Item",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Item:Length",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item.length,
+        assert: [{ fn: assertEquals, expect: 2 }]
+      },
+			{
+        name: "Feed:Item:0:Title",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0].title,
+        assert: [{ fn: assertEquals, expect: 'RSS1:Item:0:Title' }]
+      },
+			{
+        name: "Feed:Item:0:Description",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0].description,
+        assert: [{ fn: assertEquals, expect: 'RSS1:Item:0:Description' }]
+      },
+			{
+        name: "Feed:TextInput",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.textInput,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:TextInput:Title",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.textInput.title,
+        assert: [{ fn: assertEquals, expect: 'RSS1:TextInput:Title' }]
+      },
+			{
+        name: "Feed:TextInput:Description",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.textInput.description,
+        assert: [{ fn: assertEquals, expect: 'RSS1:TextInput:Description' }]
+      },
+			{
+        name: "Feed:TextInput:Name",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.textInput.name,
+        assert: [{ fn: assertEquals, expect: 'RSS1:TextInput:Name' }]
+      },
+			{
+        name: "Feed:TextInput:Link",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.textInput.link,
+        assert: [{ fn: assertEquals, expect: 'https://rss1-textinput-description.com' }]
+      },
+		] as TestEntry<DeserializationResult<RSS1>>[]
+	},
+	{
+    name: "OldRSS2",
+    source: await deserializeFeed(rss2DublinCoreTestSample),
+    tests: [
+			{
+        name: "Root",
+        getValue: (src: DeserializationResult<RSS2>) => src,
+        assert: [{ fn: assertNotEquals, expect: undefined }, {
+          fn: assertNotEquals,
+          expect: null,
+        }]
+      },
+			{
+        name: "FeedType",
+        getValue: (src: DeserializationResult<RSS2>) => src.feedType,
+        assert: [{ fn: assertEquals, expect: FeedType.Rss2 }]
+      },
+			{
+        name: "Feed",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed,
+        assert: [{ fn: assertNotEquals, expect: undefined }, {
+          fn: assertNotEquals,
+          expect: null,
+        }]
+      },
+			{
+        name: "Feed:Channel",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel,
+        assert: [{ fn: assertNotEquals, expect: undefined }, {
+          fn: assertNotEquals,
+          expect: null,
+        }]
+      },
+			{
+        name: "Feed:Channel:Title",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.title,
+        assert: [{ fn: assertEquals, expect: 'RSS2:Title:CData' }]
+      },
+			{
+        name: "Feed:Channel:Description",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.description,
+        assert: [{ fn: assertEquals, expect: 'RSS2:Description:CData' }]
+      },
+			{
+        name: "Feed:Channel:Generator",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.generator,
+        assert: [{ fn: assertEquals, expect: 'RSS2:Generator' }]
+      },
+			{
+        name: "Feed:Channel:Generator",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.language,
+        assert: [{ fn: assertEquals, expect: 'RSS2:Language' }]
+      },
+			{
+        name: "Feed:Channel:LastBuildDate",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.lastBuildDate,
+        assert: [{ fn: assertEquals, expect: new Date('Mon, 22 Jun 2020 20:03:04 GMT') }]
+      },
+			{
+        name: "Feed:Channel:LastBuildDateRaw",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.lastBuildDateRaw,
+        assert: [{ fn: assertEquals, expect: 'Mon, 22 Jun 2020 20:03:04 GMT' }]
+      },
+			{
+        name: "Feed:Channel:SkipDays",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.skipDays,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Channel:SkipDays:Day",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.skipDays?.day,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Channel:SkipDays:Day:Length",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.skipDays?.day?.length,
+        assert: [{ fn: assertEquals, expect: 7 }]
+      },
+			{
+        name: "Feed:Channel:SkipDays:Day:0",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.skipDays?.day?.[0],
+        assert: [{ fn: assertEquals, expect: 'Monday' }]
+      },
+			{
+        name: "Feed:Channel:SkipDays:Day:6",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.skipDays?.day?.[6],
+        assert: [{ fn: assertEquals, expect: 'Sunday' }]
+      },
+			{
+        name: "Feed:Channel:SkipHours",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.skipHours,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Channel:SkipHours:Hour",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.skipHours?.hour,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Channel:SkipHours:Hour:0",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.skipHours?.hour?.[0],
+        assert: [{ fn: assertEquals, expect: 0 }]
+      },
+			{
+        name: "Feed:Channel:SkipHours:Hour:23",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.skipHours?.hour?.[23],
+        assert: [{ fn: assertEquals, expect: 23 }]
+      },
+			{
+        name: "Feed:Channel:Docs",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.docs,
+        assert: [{ fn: assertEquals, expect: 'https://RSS2-docs.com/' }]
+      },
+			{
+        name: "Feed:Channel:ManagingEditor",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.managingEditor,
+        assert: [{ fn: assertEquals, expect: 'mail@wRSS2-managingEditor.com' }]
+      },
+			{
+        name: "Feed:Channel:WebMaster",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.webMaster,
+        assert: [{ fn: assertEquals, expect: 'mail@RSS2-webMaster.com' }]
+      },
+			{
+        name: "Feed:Channel:PubDate",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.pubDate,
+        assert: [{ fn: assertEquals, expect: new Date('Mon, 22 Jun 2020 20:03:00 GMT') }]
+      },
+			{
+        name: "Feed:Channel:PubDateRaw",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.pubDateRaw,
+        assert: [{ fn: assertEquals, expect: 'Mon, 22 Jun 2020 20:03:00 GMT' }]
+      },
+			{
+        name: "Feed:Channel:Copyright",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.copyright,
+        assert: [{ fn: assertEquals, expect: 'RSS2:Copyright' }]
+      },
+			{
+        name: "Feed:Channel:Tll",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.ttl,
+        assert: [{ fn: assertEquals, expect: 100 }]
+      },
+			{
+        name: "Feed:Channel:Image",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.image,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Channel:Image:Url",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.image?.url,
+        assert: [{ fn: assertEquals, expect: 'RSS2-image.com' }]
+      },
+			{
+        name: "Feed:Channel:Image:Title",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.image?.title,
+        assert: [{ fn: assertEquals, expect: 'RSS2:Image' }]
+      },
+			{
+        name: "Feed:Channel:Image:Link",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.image?.link,
+        assert: [{ fn: assertEquals, expect: 'RSS2-image2.com' }]
+      },
+			{
+        name: "Feed:Channel:Image:Height",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.image?.height,
+        assert: [{ fn: assertEquals, expect: 69 }]
+      },
+			{
+        name: "Feed:Channel:Image:Width",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.image?.width,
+        assert: [{ fn: assertEquals, expect: 420 }]
+      },
+		] as TestEntry<DeserializationResult<RSS2>>[]
+  },
+].forEach((workspace) => {
+  workspace.tests.forEach((test) => {
+    Deno.test(`parseFeed:${workspace.name}:${test.name}`, () => {
+      const target = test.getValue(workspace.source);
+      test.assert.forEach((x: TestEntry<Feed>) => x.fn(target, x.expect));
+    });
+  });
+});
+
 Deno.test("Deserialize RSS2", async (): Promise<void> => {
   const { feed, feedType } =
     (await deserializeFeed(rss2TestSample)) as DeserializationResult<RSS2>;
-
-  assertEquals(feedType, FeedType.Rss2);
-  assert(!!feed, "Deserializer returned undefined");
 
   const { items, pubDate, ttl, copyright, link } = feed.channel;
   assertNotEquals(ttl, undefined, "Missing ttl");

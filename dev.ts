@@ -11,10 +11,10 @@ if (isValidHttpURL(arg0)) {
 } else {
 	xml = await Deno.readTextFile(`./samples/${(arg0 || "rss2")}.xml`);
 }
-console.log("\n", "============ RESULT ============", '\n');
-const feed = await parseFeed(xml);
-/* console.log("\n", "============ RESULT ============", '\n', feed); */
-/*
+
+const feed = await deserializeFeed(xml);
+console.log("\n", "============ RESULT ============", '\n', feed);
+
 
 /* xml = xml
 .replaceAll(
