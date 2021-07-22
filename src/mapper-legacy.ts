@@ -133,9 +133,13 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
 					};
 				}
 
+				copyDublinCoreValues(item, itemResult);
+
 				return itemResult;
 			})
 		};
+
+		copyDublinCoreValues(rss.channel, result.channel);
 	}
 
 	return result;
@@ -322,4 +326,13 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
   }
 
   return feed;
+};
+
+const copyDublinCoreValues = (source: any, target: any): void => {
+  DublinCoreFieldArray.forEach((field: string) => {
+    const val = source[field];
+    if (val) {
+      target[field] = val?.value || val;
+    }
+  });
 };

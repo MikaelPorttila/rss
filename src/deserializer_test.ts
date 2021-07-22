@@ -422,17 +422,22 @@ Deno.test(`Call signatures compile without error`, async () => {
         getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.items[0]["media:content"]?.medium,
         assert: [{ fn: assertEquals, expect: 'image' }]
       },
-			{
+      {
         name: "Feed:Channel:Item:0:MediaContent:Url",
         getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.items[0]["media:content"]?.url,
         assert: [{ fn: assertEquals, expect: 'https://RSS2-media-content.com/' }]
       },
 			// Edge case item checks
-			{
+      {
         name: "Feed:Channel:Item:8:Description - Self closing tag",
         getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.items[8].description,
         assert: [{ fn: assertEquals, expect: undefined }]
-      }
+      },
+      {
+        name: "Feed:Channel:Item:9:DCCreator - Multiple DCCreators",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.items[9]["dc:creator"]?.length,
+        assert: [{ fn: assertEquals, expect: 2 }]
+      },
 		] as TestEntry<DeserializationResult<RSS2>>[]
   },
 ].forEach((workspace) => {
@@ -442,64 +447,6 @@ Deno.test(`Call signatures compile without error`, async () => {
       test.assert.forEach((x: TestEntry<Feed>) => x.fn(target, x.expect));
     });
   });
-});
-
-Deno.test("Deserialize RSS2", async (): Promise<void> => {
-  const { feed, feedType } = (await deserializeFeed(rss2TestSample)) as DeserializationResult<RSS2>;
-
-  const { items } = feed.channel;
-
-
-
-  for (const item of items) {
-    assert(!!item.title, "Item is missing title value");
-    assert(!!item.guid, "Item is missing guid value");
-    assert(!!item["dc:creator"], "Item is missing dc:creator");
-    assertEquals(
-      typeof (item.pubDate),
-      typeof (new Date()),
-      "Item.pubDate was not converted into date",
-    );
-  }
-
-  for (const item of items.slice(0, 8)) {
-    assert(!!item.description, "Item is missing description value");
-    assert(!!item.link, "Item is missing link value");
-  }
-
-  const itemWithMissingEndTags = items.find((x) =>
-    x.guid === "itemWithMissingEndTags"
-  );
-  assertNotEquals(
-    itemWithMissingEndTags,
-    null,
-    "Was not able to find item with guid itemDescriptionWithoutEndTag",
-  );
-  assertEquals(
-    itemWithMissingEndTags?.description,
-    undefined,
-    "Item Description was suppose to be undefined",
-  );
-  assertEquals(
-    itemWithMissingEndTags?.link,
-    undefined,
-    "Item link was suppose to be undefined",
-  );
-
-  const itemWithMultipleDublinCoreCreators = items.find((x) =>
-    x.guid === "itemWithMultipleDCCreators"
-  );
-  assertNotEquals(
-    itemWithMultipleDublinCoreCreators,
-    null,
-    "Was not able to find item with guid itemWithMultipleDublinCoreCreators",
-  );
-  assertEquals(
-    itemWithMultipleDublinCoreCreators?.["dc:creator"]?.length,
-    2,
-    `Actual: ${itemWithMultipleDublinCoreCreators
-      ?.["dc:creator"]}, Expected: 2`,
-  );
 });
 
 Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
