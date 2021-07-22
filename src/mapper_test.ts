@@ -248,7 +248,7 @@ Deno.test("Mapper RSS2 -> JSON Feed", () => {
         guid: "item.guid2",
         title: "item.title",
         description: "item.description",
-        "dc:creator": [{value: "dccreator1"}, {value: "hello"}],
+        "dc:creator": ["dccreator1", "dccreator2"] as any,
         link: "item.link",
         comments: "item.comments",
         categories: ["item.link.category1", "item.link.category2"],
@@ -336,14 +336,14 @@ Deno.test("Mapper RSS2 -> JSON Feed", () => {
   assertEquals(
     item2.authors?.[0].name,
     "dccreator1",
-    `Creator1 was not mapped correctly, Expected creator1 but was actually ${
+    `Creator1 was not mapped correctly, Expected dccreator1 but was actually ${
       item2.authors?.[0].name
     }`,
   );
   assertEquals(
     item2.authors?.[1].name,
     "dccreator2",
-    `Creator2 was not mapped correctly, Expected creator2 but was actually ${
+    `Creator2 was not mapped correctly, Expected dccreator2 but was actually ${
       item2.authors?.[1].name
     }`,
   );
@@ -379,3 +379,7 @@ Deno.test("Mapper RSS2 -> JSON Feed", () => {
     "Attachment title was not undefined",
   );
 });
+
+[
+
+]
