@@ -193,6 +193,11 @@ Deno.test(`Call signatures compile without error`, async () => {
         assert: [{ fn: assertEquals, expect: 'RSS2:Generator' }]
       },
 			{
+        name: "Feed:Channel:Link",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.link,
+        assert: [{ fn: assertEquals, expect: 'https://RSS2-link.com/' }]
+      },
+			{
         name: "Feed:Channel:Generator",
         getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.language,
         assert: [{ fn: assertEquals, expect: 'RSS2:Language' }]
@@ -283,7 +288,7 @@ Deno.test(`Call signatures compile without error`, async () => {
         assert: [{ fn: assertEquals, expect: 'RSS2:Copyright' }]
       },
 			{
-        name: "Feed:Channel:Tll",
+        name: "Feed:Channel:Ttl",
         getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.ttl,
         assert: [{ fn: assertEquals, expect: 100 }]
       },
@@ -421,6 +426,12 @@ Deno.test(`Call signatures compile without error`, async () => {
         name: "Feed:Channel:Item:0:MediaContent:Url",
         getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.items[0]["media:content"]?.url,
         assert: [{ fn: assertEquals, expect: 'https://RSS2-media-content.com/' }]
+      },
+			// Edge case item checks
+			{
+        name: "Feed:Channel:Item:8:Description - Self closing tag",
+        getValue: (src: DeserializationResult<RSS2>) => src.feed.channel.items[8].description,
+        assert: [{ fn: assertEquals, expect: undefined }]
       }
 		] as TestEntry<DeserializationResult<RSS2>>[]
   },
@@ -434,21 +445,12 @@ Deno.test(`Call signatures compile without error`, async () => {
 });
 
 Deno.test("Deserialize RSS2", async (): Promise<void> => {
-  const { feed, feedType } =
-    (await deserializeFeed(rss2TestSample)) as DeserializationResult<RSS2>;
+  const { feed, feedType } = (await deserializeFeed(rss2TestSample)) as DeserializationResult<RSS2>;
 
-  const { items, pubDate, ttl, copyright, link } = feed.channel;
-  assertNotEquals(ttl, undefined, "Missing ttl");
-  assertEquals(
-    typeof (ttl),
-    typeof (2),
-    "ttl was not deserializes into number",
-  );
-  assertEquals(typeof (pubDate), typeof (new Date()));
-  assert(!!copyright, "Channel is missing copyright value");
-  assert(!!link, "Channel is missing link value");
+  const { items } = feed.channel;
 
-  assert(items.length > 0, "Channel is missing items");
+
+
   for (const item of items) {
     assert(!!item.title, "Item is missing title value");
     assert(!!item.guid, "Item is missing guid value");
@@ -961,6 +963,22 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
         getValue: (src: Feed) => src.entries[0].categories?.[0].label,
         assert: [{ fn: assertEquals, expect: "RSS2:Item:0:Category:0" }],
       },
+			// Edge case item checks
+			{
+        name: "Items:[8]:Description - Self closing tag",
+        getValue: (src: Feed) => src.entries[8].description,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+			{
+        name: "Items:[9]:Creators - Multiple DCCreators",
+        getValue: (src: Feed) => src.entries[9].creators?.length,
+        assert: [{ fn: assertEquals, expect: 2 }],
+      },
+			{
+        name: "Items:[9]:DCCreator - Multiple DCCreators",
+        getValue: (src: Feed) => src.entries[9].dc["dc:creator"]?.length,
+        assert: [{ fn: assertEquals, expect: 2 }],
+      },
     ] as TestEntry<Feed>[],
   },
   {
@@ -975,10 +993,10 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       {
         name: "Root",
         getValue: (src: Feed) => src,
-        assert: [{ fn: assertNotEquals, expect: undefined }, {
-          fn: assertNotEquals,
-          expect: null,
-        }],
+        assert: [{
+					fn: assertNotEquals, expect: undefined }, {
+          fn: assertNotEquals, expect: null }
+				],
       },
       {
         name: "Type",
@@ -993,10 +1011,7 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
       {
         name: "Updated",
         getValue: (src: Feed) => src.updateDate,
-        assert: [{
-          fn: assertEquals,
-          expect: new Date("2003-12-13T18:30:02Z"),
-        }],
+        assert: [{ fn: assertEquals, expect: new Date("2003-12-13T18:30:02Z") }]
       },
       {
         name: "UpdatedRaw",
@@ -1103,7 +1118,6 @@ Deno.test("Returns correct original feedType with outputJsonFeed option", async 
           expect: null,
         }],
       },
-      ,
       {
         name: "Entry:Length",
         getValue: (src: Feed) => src.entries.length,
