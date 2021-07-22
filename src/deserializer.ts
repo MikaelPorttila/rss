@@ -16,7 +16,7 @@ import {
   resolveRss2Field,
 } from "./resolvers/mod.ts";
 import { toFeed, toJsonFeed } from "./mapper.ts";
-import { toLegacyRss1 } from "./mapper-legacy.ts";
+import { toLegacyRss1, toLegacyRss2 } from "./mapper-legacy.ts";
 export interface Options {
   outputJsonFeed?: boolean;
 }
@@ -45,11 +45,13 @@ export const deserializeFeed = (async (
 	console.warn('RSS: deserializeFeed is deprecated, please use parseFeed instead.');
 	const { data, feedType } = await parse(input);
 
-
 	let legacyFeed;
 	switch(feedType) {
 		case FeedType.Rss1:
 			legacyFeed = toLegacyRss1(data) as any;
+			break;
+		case FeedType.Rss2:
+			legacyFeed = toLegacyRss2(data) as any;
 			break;
 		default:
 			legacyFeed = data;

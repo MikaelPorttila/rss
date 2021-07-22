@@ -55,6 +55,7 @@ export const resolveRss2Field = (
       break;
     case Field.Hour:
       isArray = true;
+			isNumber = true;
       break;
     case Field.Day:
       isArray = true;

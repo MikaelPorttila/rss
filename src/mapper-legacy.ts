@@ -57,8 +57,87 @@ export const toLegacyRss1 = (rss :InternalRSS1): RSS1 => {
 	return result;
 }
 
-export const toLegacyRss2 = (rss2: InternalRSS2): RSS2 => {
+export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
 	const result = {} as RSS2;
+
+	if (rss.channel) {
+		const image = rss.channel.image ? {
+			url: rss.channel.image.url?.value,
+			title: rss.channel.image.title?.value,
+			link: rss.channel.image.link?.value,
+			width: rss.channel.image.width?.value,
+			height: rss.channel.image.height?.value
+		} : undefined as any;
+
+		const skipHours = (rss.channel.skipHours && rss.channel.skipHours.hour && rss.channel.skipHours.hour.length > 0) ? {
+			hour: rss.channel.skipHours.hour?.map(x => x.value)
+		} : undefined as any;
+
+		const skipDays = (rss.channel.skipDays && rss.channel.skipDays.day && rss.channel.skipDays.day.length > 0) ? {
+			day: rss.channel.skipDays.day?.map(x => x.value)
+		} : undefined as any;
+
+		result.channel = {
+			title: rss.channel.title?.value as string,
+			description: rss.channel.description?.value as string,
+			language: rss.channel.language?.value as string,
+			link: rss.channel.link?.value as string,
+			ttl: rss.channel.ttl?.value,
+			docs: rss.channel.docs?.value,
+			image,
+			skipHours,
+			skipDays,
+			copyright: rss.channel.copyright?.value,
+			managingEditor: rss.channel.managingEditor?.value,
+			lastBuildDate: rss.channel.lastBuildDate?.value,
+			lastBuildDateRaw: rss.channel.lastBuildDateRaw?.value,
+			webMaster: rss.channel.webMaster?.value,
+			pubDate: rss.channel.pubDate?.value,
+			pubDateRaw: rss.channel.pubDateRaw?.value,
+			generator: rss.channel.generator?.value,
+			category: rss.channel.category?.map((x) => x.value as string),
+			items: rss.channel.items?.map((item, index) => {
+
+				let author;
+				const dublinCoreCreator = item[DublinCoreFields.Creator]
+				if (dublinCoreCreator && dublinCoreCreator.length > 0) {
+					author = dublinCoreCreator[0].value;
+				}
+
+				if (!author) {
+					author = item.author?.value;
+				}
+
+				const itemResult =  {
+					guid: item.guid?.value,
+					pubDate: item.pubDate?.value,
+					pubDateRaw: item.pubDateRaw?.value,
+					title: item.title?.value,
+					description: item.description?.value,
+					link: item.link?.value,
+					author,
+					comments: item.comments?.value,
+					categories: item.categories?.map((x) => x.value as string),
+					"media:credit": item["media:credit"]?.value,
+					"media:description": item["media:description"]?.value,
+					"media:content": {}
+				};
+
+				const mediaContent = item["media:content"];
+				if (mediaContent) {
+					itemResult["media:content"] = {
+						height: mediaContent.height,
+						width: mediaContent.width,
+						medium: mediaContent.medium,
+						url: mediaContent.url,
+					};
+				}
+
+				return itemResult;
+			})
+		};
+	}
+
 	return result;
 }
 

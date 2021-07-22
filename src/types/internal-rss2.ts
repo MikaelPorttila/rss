@@ -29,10 +29,10 @@ interface Channel extends DublinCore {
   image?: Image;
   textInput?: any; // TODO: Fix
   skipHours?: {
-    hour?: [ValueField<number>];
+    hour?: ValueField<number>[];
   };
   skipDays?: {
-    day?: [ValueField<string>];
+    day?: ValueField<string>[];
   };
 }
 
@@ -41,7 +41,7 @@ interface Item extends DublinCore {
   description?: ValueField<string>;
   link?: ValueField<string>;
   author?: ValueField<string>;
-  categories?: [ValueField<string>];
+  categories?: ValueField<string>[];
   comments?: ValueField<string>;
   enclosure?: Enclosure;
   guid?: ValueField<string>;
