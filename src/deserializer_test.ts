@@ -50,7 +50,7 @@ Deno.test(`Call signatures compile without error`, async () => {
 
 [
 	{
-		name: 'OldRSS1',
+		name: 'LegacyRSS1',
 		source: await deserializeFeed(rss1TestSample),
 		tests: [
 			{
@@ -145,7 +145,7 @@ Deno.test(`Call signatures compile without error`, async () => {
 		] as TestEntry<DeserializationResult<RSS1>>[]
 	},
 	{
-    name: "OldRSS2",
+    name: "LegacyRSS2",
     source: await deserializeFeed(rss2TestSample),
     tests: [
 			{
@@ -440,6 +440,367 @@ Deno.test(`Call signatures compile without error`, async () => {
       },
 		] as TestEntry<DeserializationResult<RSS2>>[]
   },
+	{
+		name: 'LegacyAtom',
+		source: '',
+		tests: [
+			{
+        name: "Root",
+        getValue: (src: DeserializationResult<Atom>) => src,
+        assert: [{ fn: assertNotEquals, expect: undefined }, {
+          fn: assertNotEquals,
+          expect: null,
+        }]
+      },
+			{
+        name: "FeedType",
+        getValue: (src: DeserializationResult<Atom>) => src.feedType,
+        assert: [{ fn: assertEquals, expect: FeedType.Atom }]
+      },
+			{
+        name: "Feed",
+        getValue: (src: DeserializationResult<Atom>) => src.feed,
+        assert: [
+					{ fn: assertNotEquals, expect: undefined },
+					{ fn: assertNotEquals, expect: null }
+				]
+      },
+			{
+        name: "Feed:Title",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.title,
+        assert: [
+					{ fn: assertNotEquals, expect: undefined },
+					{ fn: assertNotEquals, expect: null }
+				]
+      },
+			{
+        name: "Feed:Title:Type",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.title.type,
+        assert: [{ fn: assertEquals, expect: undefined }]
+      },
+			{
+        name: "Feed:Title:Value",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.title.value,
+        assert: [{ fn: assertEquals, expect: 'TOM:Title' }]
+      },
+			{
+        name: "Feed:Title:Links",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.links,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Title:Links:Length",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.links?.length,
+        assert: [{ fn: assertEquals, expect: 1 }]
+      },
+/* 			{
+        name: "Feed:Title:Links:0",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.links[0].,
+        assert: [{ fn: assertEquals, expect: 1 }]
+      }, */
+			{
+        name: "Feed:Icon",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.icon,
+        assert: [{ fn: assertEquals, expect: '/AtomIcon.jpg' }]
+      },
+			{
+        name: "Feed:Category",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.categories,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Category:length",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.categories?.length,
+        assert: [{ fn: assertEquals, expect: 2 }]
+      },
+			{
+        name: "Feed:Category:0",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.categories?.[0],
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Category:0:Term",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.categories?.[0].term,
+        assert: [{ fn: assertEquals, expect: 'ATOM:Category:0:Term' }]
+      },
+			{
+        name: "Feed:Category:0:Label",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.categories?.[0].label,
+        assert: [{ fn: assertEquals, expect: undefined }]
+      },
+			{
+        name: "Feed:Category:1:Term",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.categories?.[1].term,
+        assert: [{ fn: assertEquals, expect: 'ATOM:Category:1:Term' }]
+      },
+			{
+        name: "Feed:Category:1:Label",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.categories?.[1].term,
+        assert: [{ fn: assertEquals, expect: undefined }]
+      },
+			{
+        name: "Feed:Updated",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.updated,
+        assert: [{ fn: assertEquals, expect: new Date('2003-12-13T18:30:02Z') }]
+      },
+			{
+        name: "Feed:UpdatedRaw",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.updatedRaw,
+        assert: [{ fn: assertEquals, expect: '2003-12-13T18:30:02Z' }]
+      },
+			{
+        name: "Feed:Logo",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.logo,
+        assert: [{ fn: assertEquals, expect: 'Atom-Logo.com' }]
+      },
+			{
+        name: "Feed:Subtitle",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.subtitle,
+        assert: [{ fn: assertEquals, expect: 'ATOM:Subtitle' }]
+      },
+			{
+        name: "Feed:Author",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.author,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Author:Name",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.author?.name,
+        assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Author:Name' }]
+      },
+			{
+        name: "Feed:Author:Email",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.author?.name,
+        assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Author:Email' }]
+      },
+			{
+        name: "Feed:Author:Uri",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.author?.uri,
+        assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Author:Uri' }]
+      },
+			{
+        name: "Feed:Author:Id",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.id,
+        assert: [{ fn: assertEquals, expect: 'urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6' }]
+      },
+			{
+        name: "Feed:Entry",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Entry:Length",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries,
+        assert: [{ fn: assertEquals, expect: 3 }]
+      },
+			{
+        name: "Feed:Entry:0",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0],
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Entry:0:Title",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].title,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Entry:0:Title:Type",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].title.type,
+        assert: [{ fn: assertEquals, expect: 'xhtml' }]
+      },
+			{
+        name: "Feed:Entry:0:Title:Value",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].title.value,
+        assert: [{ fn: assertEquals, expect: '<div xmlns="http://www.w3.org/1999/xhtml">HTML&amp;Test Brough to you by <b>Test</b>!</div>' }]
+      },
+			{
+        name: "Feed:Entry:0:Link",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].links,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Entry:0:Link:Length",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].links?.length,
+        assert: [{ fn: assertEquals, expect: 1 }]
+      },
+			{
+        name: "Feed:Entry:0:Link:0",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].links?.[0],
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Entry:0:Link:0:Href",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].links?.[0].href,
+        assert: [{ fn: assertEquals, expect: 'https://AtomLink.org/Entry/0/link' }]
+      },
+			{
+        name: "Feed:Entry:0:Link:0:Rel",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].links?.[0].rel,
+        assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Entry:0:Link:Rel' }]
+      },
+			{
+        name: "Feed:Entry:0:Link:0:Type",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].links?.[0].type,
+        assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Entry:0:Link:Type' }]
+      },
+			{
+        name: "Feed:Entry:0:0:Published",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].published,
+        assert: [{ fn: assertEquals, expect: new Date('2003-12-13T18:30:02Z') }]
+      },
+			{
+        name: "Feed:Entry:0:PublishedRaw",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].publishedRaw,
+        assert: [{ fn: assertEquals, expect: '2003-12-13T18:30:02Z' }]
+      },
+			{
+        name: "Feed:Entry:0:Id",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].id,
+        assert: [{ fn: assertEquals, expect: 'urn:uuid:1225c695-cfb8-4ebb-aaaa-80da354efa6a' }]
+      },
+			{
+        name: "Feed:Entry:0:Id",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].id,
+        assert: [{ fn: assertEquals, expect: 'urn:uuid:1225c695-cfb8-4ebb-aaaa-80da354efa6a' }]
+      },
+			{
+        name: "Feed:Entry:0:Updated",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].updated,
+        assert: [{ fn: assertEquals, expect: new Date('2003-12-13T18:30:02Z') }]
+      },
+			{
+        name: "Feed:Entry:0:UpdatedRaw",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].updatedRaw,
+        assert: [{ fn: assertEquals, expect: '2003-12-13T18:30:02Z' }]
+      },
+			{
+        name: "Feed:Entry:0:Summary",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].summary,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Entry:0:Summary:Type",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].summary?.type,
+        assert: [{ fn: assertEquals, expect: undefined }]
+      },
+			{
+        name: "Feed:Entry:0:Summary:Value",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].summary?.value,
+        assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Entry:0:Summary' }]
+      },
+			{
+        name: "Feed:Entry:0:Author",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].author,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Entry:0:Author:Email",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].author?.email,
+        assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Entry:0:Author:Email' }]
+      },
+			{
+        name: "Feed:Entry:0:Author:Name",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].author?.name,
+        assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Entry:0:Author:Name' }]
+      },
+			{
+        name: "Feed:Entry:0:Author:Uri",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].author?.uri,
+        assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Entry:0:Author:Uri' }]
+      },
+			{
+        name: "Feed:Entry:0:Content",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].content,
+				assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Entry:0:Content:Value",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].content?.value,
+				assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Entry:0:Content' }]
+      },
+			{
+        name: "Feed:Entry:0:Category",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].categories,
+				assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Entry:0:Category:Length",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].categories?.length,
+				assert: [{ fn: assertEquals, expect: 2 }]
+      },
+			{
+        name: "Feed:Entry:0:Category:0",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].categories?.[0],
+				assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Entry:0:Category:0:Term",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].categories?.[0].term,
+				assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Entry:0:Category:0:Term' }]
+      },
+			{
+        name: "Feed:Entry:0:Category:0:Label",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].categories?.[0].label,
+				assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Entry:0:Category:0:Label' }]
+      },
+			{
+        name: "Feed:Entry:0:Source",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].source,
+				assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Entry:0:Source:Id",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].source?.id,
+				assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Entry:0:Source:Id' }]
+      },
+			{
+        name: "Feed:Entry:0:Source:Title",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].source?.title,
+				assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Entry:0:Source:Title' }]
+      },
+			{
+        name: "Feed:Entry:0:Source:Updated",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].source?.updated,
+				assert: [{ fn: assertEquals, expect: new Date('2003-12-13T18:30:02Z') }]
+      },
+			{
+        name: "Feed:Entry:0:Source:UpdatedRaw",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].source?.updatedRaw,
+				assert: [{ fn: assertEquals, expect: '2003-12-13T18:30:02Z' }]
+      },
+			{
+        name: "Feed:Entry:0:Contributor",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].contributors,
+				assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Entry:0:Contributor:Length",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].contributors?.length,
+				assert: [{ fn: assertEquals, expect: 1 }]
+      },
+			{
+        name: "Feed:Entry:0:Contributor:0:Name",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].contributors?.[0].name,
+				assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Entry:0:Contributor:Name' }]
+      },
+			// TODO: Add the other contributor fields
+			{
+        name: "Feed:Entry:0:Rights",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].rights,
+				assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+      },
+			{
+        name: "Feed:Entry:0:Rights:Type",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].rights?.type,
+				assert: [{ fn: assertEquals, expect: 'html' }]
+      },
+			{
+        name: "Feed:Entry:0:Rights:Value",
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].rights?.value,
+				assert: [{ fn: assertEquals, expect: '&amp;copy; 2020 Micke' }]
+      },
+		] as TestEntry<DeserializationResult<Atom>>[]
+	}
 ].forEach((workspace) => {
   workspace.tests.forEach((test) => {
     Deno.test(`parseFeed:${workspace.name}:${test.name}`, () => {

@@ -9,9 +9,9 @@
 	<logo>Atom-Logo.com</logo>
 	<subtitle>ATOM:Subtitle</subtitle>
   <author>
-    <name>John Doe</name>
-    <email>JohnDoe@example.com</email>
-    <uri>http://example.com/~johndoe</uri>
+    <name>ATOM:Feed:Author:Name</name>
+    <email>ATOM:Feed:Author:Email</email>
+    <uri>ATOM:Feed:Author:Uri</uri>
   </author>
   <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>
   <entry>
@@ -20,19 +20,19 @@
         HTML&amp;Test Brough to you by <b>Test</b>!
       </div>
     </title>
-    <link href="https://AtomLink.org/Entry/0/link"/>
+    <link href="https://AtomLink.org/Entry/0/link" rel="ATOM:Feed:Entry:0:Link:Rel" type="ATOM:Feed:Entry:0:Link:Type"/>
     <published>2003-12-13T18:30:02Z</published>
     <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da354efa6a</id>
     <updated>2003-12-13T18:30:02Z</updated>
-    <summary>Some text.</summary>
+    <summary>ATOM:Feed:Entry:0:Summary</summary>
     <author>
-      <name>John Doe</name>
-      <email>example@example.com</email>
-      <uri>www.example.com</uri>
+      <name>ATOM:Feed:Entry:0:Author:Name</name>
+      <email>ATOM:Feed:Entry:0:Author:Email</email>
+      <uri>ATOM:Feed:Entry:0:Author:Uri</uri>
     </author>
-    <content>Hello World</content>
-    <category term="tech"/>
-    <category term="sport"/>
+    <content>ATOM:Feed:Entry:0:Content</content>
+    <category term="ATOM:Feed:Entry:0:Category:0:Term" label="ATOM:Feed:Entry:0:Category:0:Label"/>
+    <category term="ATOM:Feed:Entry:0:Category:1:Term"/>
     <source>
       <id>http://example.org/</id>
       <title>Example, Inc.</title>

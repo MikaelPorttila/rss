@@ -16,7 +16,7 @@ import {
   resolveRss2Field,
 } from "./resolvers/mod.ts";
 import { toFeed, toJsonFeed } from "./mapper.ts";
-import { toLegacyRss1, toLegacyRss2 } from "./mapper-legacy.ts";
+import { toLegacyAtom, toLegacyRss1, toLegacyRss2 } from "./mapper-legacy.ts";
 export interface Options {
   outputJsonFeed?: boolean;
 }
@@ -52,6 +52,9 @@ export const deserializeFeed = (async (
 			break;
 		case FeedType.Rss2:
 			legacyFeed = toLegacyRss2(data) as any;
+			break;
+		case FeedType.Atom:
+			legacyFeed = toLegacyAtom(data) as any;
 			break;
 		default:
 			legacyFeed = data;

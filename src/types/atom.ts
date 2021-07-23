@@ -42,7 +42,7 @@ interface Entry {
   contributors?: Person[];
   summary?: Text;
   rights?: Text;
-  categories?: string[];
+  categories?: Category[];
   source?: Source;
   href?: string;
   "feedburner:origlink"?: string;

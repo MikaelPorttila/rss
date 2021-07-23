@@ -134,7 +134,6 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
 				}
 
 				copyDublinCoreValues(item, itemResult);
-
 				return itemResult;
 			})
 		};
@@ -142,6 +141,11 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
 		copyDublinCoreValues(rss.channel, result.channel);
 	}
 
+	return result;
+}
+
+export const toLegacyAtom = (atom: InternalAtom): Atom => {
+	const result = {} as Atom;
 	return result;
 }
 
