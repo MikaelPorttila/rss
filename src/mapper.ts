@@ -169,7 +169,7 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
       date_modified: entry.updated,
       date_modifiedRaw: entry.updatedRaw,
       summary: entry.summary?.value,
-      tags: entry.categories,
+      tags: entry.categories?.map(x => x.term),
       author,
       url,
       attachments,
