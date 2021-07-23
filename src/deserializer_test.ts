@@ -442,7 +442,7 @@ Deno.test(`Call signatures compile without error`, async () => {
   },
 	{
 		name: 'LegacyAtom',
-		source: '',
+		source: await deserializeFeed(atomTestSample),
 		tests: [
 			{
         name: "Root",
@@ -481,7 +481,7 @@ Deno.test(`Call signatures compile without error`, async () => {
 			{
         name: "Feed:Title:Value",
         getValue: (src: DeserializationResult<Atom>) => src.feed.title.value,
-        assert: [{ fn: assertEquals, expect: 'TOM:Title' }]
+        assert: [{ fn: assertEquals, expect: 'ATOM:Title' }]
       },
 			{
         name: "Feed:Title:Links",
@@ -526,7 +526,7 @@ Deno.test(`Call signatures compile without error`, async () => {
 			{
         name: "Feed:Category:0:Label",
         getValue: (src: DeserializationResult<Atom>) => src.feed.categories?.[0].label,
-        assert: [{ fn: assertEquals, expect: undefined }]
+        assert: [{ fn: assertEquals, expect: 'ATOM:Category:0:Label' }]
       },
 			{
         name: "Feed:Category:1:Term",
@@ -535,8 +535,8 @@ Deno.test(`Call signatures compile without error`, async () => {
       },
 			{
         name: "Feed:Category:1:Label",
-        getValue: (src: DeserializationResult<Atom>) => src.feed.categories?.[1].term,
-        assert: [{ fn: assertEquals, expect: undefined }]
+        getValue: (src: DeserializationResult<Atom>) => src.feed.categories?.[1].label,
+        assert: [{ fn: assertEquals, expect: 'ATOM:Category:1:Label'}]
       },
 			{
         name: "Feed:Updated",
@@ -570,7 +570,7 @@ Deno.test(`Call signatures compile without error`, async () => {
       },
 			{
         name: "Feed:Author:Email",
-        getValue: (src: DeserializationResult<Atom>) => src.feed.author?.name,
+        getValue: (src: DeserializationResult<Atom>) => src.feed.author?.email,
         assert: [{ fn: assertEquals, expect: 'ATOM:Feed:Author:Email' }]
       },
 			{
@@ -590,7 +590,7 @@ Deno.test(`Call signatures compile without error`, async () => {
       },
 			{
         name: "Feed:Entry:Length",
-        getValue: (src: DeserializationResult<Atom>) => src.feed.entries,
+        getValue: (src: DeserializationResult<Atom>) => src.feed.entries.length,
         assert: [{ fn: assertEquals, expect: 3 }]
       },
 			{
@@ -611,7 +611,7 @@ Deno.test(`Call signatures compile without error`, async () => {
 			{
         name: "Feed:Entry:0:Title:Value",
         getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].title.value,
-        assert: [{ fn: assertEquals, expect: '<div xmlns="http://www.w3.org/1999/xhtml">HTML&amp;Test Brough to you by <b>Test</b>!</div>' }]
+        assert: [{ fn: assertEquals, expect: '<div xmlns="http://www.w3.org/1999/xhtml">HTML&Test Brough to you by<b>Test</b>!</div>' }]
       },
 			{
         name: "Feed:Entry:0:Link",
@@ -797,7 +797,7 @@ Deno.test(`Call signatures compile without error`, async () => {
 			{
         name: "Feed:Entry:0:Rights:Value",
         getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].rights?.value,
-				assert: [{ fn: assertEquals, expect: '&amp;copy; 2020 Micke' }]
+				assert: [{ fn: assertEquals, expect: '&copy; 2020 Micke' }]
       },
 		] as TestEntry<DeserializationResult<Atom>>[]
 	}
@@ -817,55 +817,6 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
 
   assert(!!feed, "Result was undefined");
   assertEquals(feedType, FeedType.JsonFeed);
-});
-
-Deno.test("Deserialize ATOM", async (): Promise<void> => {
-  const { feed, feedType } =
-    (await deserializeFeed(atomTestSample)) as DeserializationResult<Atom>;
-
-  assert(!!feed, "Feed was undefined");
-  assert(!!feed.id, "Feed is missing id value");
-  assert(!!feed.title, "Feed is missing title value");
-  assert(!!feed.icon, "Feed is missing icon value");
-  assert(!!feed.entries, "Feed is missing entries value");
-  assert(!!feed.categories, "Feed is missing categories value");
-  assertEquals(
-    typeof (feed.updated),
-    typeof (new Date()),
-    "Feed is missing icon value",
-  );
-
-  assert(!!feed.author, "Feed is missing author");
-  assert(!!feed.author.email, "Feed Author is missing email value");
-  assert(!!feed.author.name, "Feed Author is missing name value");
-  assert(!!feed.author.uri, "Feed Author is missing uri value");
-
-  for (const category of feed.categories) {
-    assert(!!category.term, "Category is missing term value");
-  }
-
-  for (const entry of feed.entries) {
-    assert(!!entry.author, "Entry is missing author value");
-    assert(!!entry.title, "Entry is missing title value");
-    assert(!!entry.published, "Entry is missing published value");
-    assert(!!entry.updated, "Entry is missing updated value");
-    assert(!!entry.id, "Entry is missing id value");
-    assert(!!entry.content, "Entry is missing content value");
-    assert(!!entry.links, "Entry is missing links value");
-    assert(!!entry.contributors, "Entry is missing contributors value");
-    assert(!!entry.summary, "Entry is missing summary value");
-    assert(!!entry.rights, "Entry is missing rights value");
-    assert(!!entry.categories, "Entry is missing categories value");
-    assert(!!entry.source, "Entry is missing source value");
-    assert(!!entry.source.id, "Entry source is missing id value");
-    assert(!!entry.source.title, "Entry source is missing title value");
-    assert(!!entry.source.updated, "Entry source is missing updated value");
-    assert(!!entry.rights.type, "Entry rights is missing type value");
-    assert(!!entry.rights.value, "Entry rights is missing value");
-    assert(!!entry.author.email, "Entry Author is missing email value");
-    assert(!!entry.author.name, "Entry Author is missing name value");
-    assert(!!entry.author.uri, "Entry Author is missing uri value");
-  }
 });
 
 Deno.test("Deserialize ATOM with convertToJsonFeed option", async () => {

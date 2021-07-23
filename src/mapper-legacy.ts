@@ -16,7 +16,7 @@ import { InternalRSS2 } from "./types/internal-rss2.ts";
 import { InternalRSS1 } from "./types/internal-rss1.ts";
 
 export const toLegacyRss1 = (rss :InternalRSS1): RSS1 => {
-	const result = {} as RSS1;
+	const result = { } as RSS1;
 	if (rss.channel) {
 		result.channel = {
 			title: rss.channel.title?.value as string,
@@ -145,7 +145,87 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
 }
 
 export const toLegacyAtom = (atom: InternalAtom): Atom => {
-	const result = {} as Atom;
+	const result = {
+		title: {
+			type: atom.title?.type,
+			value: atom.title?.value
+		},
+		id: atom.id?.value,
+		icon: atom.icon?.value,
+		logo: atom.logo?.value,
+		updated: atom.updated?.value,
+		updatedRaw: atom.updatedRaw?.value,
+		links: atom.links?.map(x => ({
+			href: x.href,
+			rel: x.rel,
+			type: x.type,
+			length: x.length
+		})),
+		categories: atom.categories?.map(x => ({
+			term: x.term,
+			label: x.label
+		})),
+		subtitle: atom.subtitle?.value,
+		author: {
+			name: atom.author?.name?.value,
+			email: atom.author?.email?.value,
+			uri: atom.author?.uri?.value
+		},
+		entries: atom.entries?.map(entry => {
+			const entryResult = {
+				id: entry.id?.value,
+				title: {
+					type: entry.title?.type,
+					value: entry.title?.value
+				},
+				updated: entry.updated?.value,
+				updatedRaw: entry.updatedRaw?.value,
+				published: entry.published?.value,
+				publishedRaw: entry.publishedRaw?.value,
+				href: entry.href,
+				content: {
+					type: entry.content?.type,
+					src: entry.content?.src,
+					value: entry.content?.value
+				},
+				links: entry.links?.map(x => ({
+					type: x.type,
+					href: x.href,
+					rel: x.rel,
+					length: x.length
+				})),
+				author: {
+					name: entry.author?.name?.value,
+					email: entry.author?.email?.value,
+					uri: entry.author?.uri?.value
+				},
+				contributors: entry.contributors?.map(contributor => ({
+					name: contributor?.name?.value,
+					email: contributor?.email?.value,
+					uri: contributor?.uri?.value
+				})),
+				summary: {
+					type: entry.summary?.type,
+					value: entry.summary?.value
+				},
+				rights: {
+					type: entry.rights?.type,
+					value: entry.rights?.value
+				},
+				categories: entry.categories?.map(category => ({
+					label: category.label,
+					term: category.term
+				})),
+				source: {
+					id: entry.source?.id?.value,
+					title: entry.source?.title?.value,
+					updated: entry.source?.updated?.value,
+					updatedRaw: entry.source?.updatedRaw?.value
+				}
+			};
+			return entryResult;
+		})
+	} as Atom;
 	return result;
 }
 

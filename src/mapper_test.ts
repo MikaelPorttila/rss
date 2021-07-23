@@ -160,12 +160,10 @@ Deno.test("Mapper ATOM -> JSON Feed", () => {
   );
   assertEquals(
     jsonFeed.items[0].tags?.[0],
-    "entry.category1",
-    "Atom entry category 1 was not mapped",
-  );
+    "ATOM:Category:0:Term");
   assertEquals(
     jsonFeed.items[0].tags?.[1],
-    "entry.category2",
+    "ATOM:Category:1:Term",
     "Atom entry category 2 was not mapped",
   );
   assertEquals(
