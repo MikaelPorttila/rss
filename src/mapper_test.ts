@@ -46,7 +46,7 @@ Deno.test("Mapper ATOM -> JSON Feed", () => {
           type: "text",
           value: "entry.title.type.text.value",
         },
-        categories: [{value:"entry.category1"}, { value:"entry.category2" }] as any,
+        categories: [{term: "ATOM:Category:0:Term"}, { term: "ATOM:Category:1:Term" }] as any,
         summary: {
           type: "text",
           value: "entry.summary.type.text.value",

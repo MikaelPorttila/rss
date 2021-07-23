@@ -66,14 +66,10 @@ export const deserializeFeed = (async (
 	} = {
 		feed: options?.outputJsonFeed ? toJsonFeed(feedType, legacyFeed) : legacyFeed,
 		feedType: options?.outputJsonFeed ? FeedType.JsonFeed : feedType,
+		originalFeedType: feedType
 	};
 
-	if (options?.outputJsonFeed) {
-		result.originalFeedType = feedType;
-	}
-
 	return result;
-
 }) as {
 	(input: string): Promise<DeserializationResult<Atom | RSS1 | RSS2>>;
 	(

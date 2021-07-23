@@ -134,70 +134,59 @@ const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
 };
 
 const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
-  const items: JsonFeedItem[] = atom.entries.map((entry) => {
-
-    let url: string | undefined;
-    if (entry["feedburner:origlink"]) {
-      url = entry["feedburner:origlink"];
-    } else if (entry.href) {
-      url = entry.href;
-    } else if (isValidHttpURL(entry.id)) {
-      url = entry.id;
-    }
-
-		let author;
-    if (entry.author) {
-      author = {
-        name: entry.author.name,
-        url: entry.author.uri,
-      };
-    }
-
-    const attachments = entry.links
-      ?.filter((link) => link.rel === "enclosure")
-      .map((link) => ({
-        url: link.href,
-        mime_type: link.type,
-        size_in_bytes: link.length,
-      }));
-
-    const item: JsonFeedItem = {
-      id: entry.id,
-      title: entry.title?.value ?? entry.title,
-      date_published: entry.published,
-      date_publishedRaw: entry.publishedRaw,
-      date_modified: entry.updated,
-      date_modifiedRaw: entry.updatedRaw,
-      summary: entry.summary?.value,
-      tags: entry.categories?.map(x => x.term),
-      author,
-      url,
-      attachments,
-    };
-
-    if (entry.content) {
-      switch (entry.content.type?.toUpperCase()) {
-        case "XHTML":
-        case "HTML":
-          item.content_html = entry.content.value;
-          break;
-        default:
-          item.content_text = entry.content.value;
-          break;
-      }
-    }
-
-    return item;
-  });
-
   const feed = {
     icon: atom.icon,
     title: atom.title?.value ?? atom.title,
-    items,
     author: atom.author ? {
-      name: atom.author.name,
+			name: atom.author.name,
       url: atom.author.uri,
     } as JsonFeedAuthor : undefined,
+		items: atom.entries.map((entry) => {
+
+			let url: string | undefined;
+			if (entry["feedburner:origlink"]) {
+				url = entry["feedburner:origlink"];
+			} else if (entry.href) {
+				url = entry.href;
+			} else if (isValidHttpURL(entry.id)) {
+				url = entry.id;
+			}
+
+			const item: JsonFeedItem = {
+				id: entry.id,
+				title: entry.title?.value ?? entry.title,
+				date_published: entry.published,
+				date_publishedRaw: entry.publishedRaw,
+				date_modified: entry.updated,
+				date_modifiedRaw: entry.updatedRaw,
+				summary: entry.summary?.value,
+				tags: entry.categories?.map(x => x.term),
+				author: {
+					name: entry.author?.name,
+					url: entry.author?.uri,
+				},
+				url,
+				attachments: entry.links?.filter((link) => link.rel === "enclosure").map((link) => ({
+					url: link.href,
+					mime_type: link.type,
+					size_in_bytes: link.length,
+				})),
+			};
+
+			if (entry.content) {
+				switch (entry.content.type?.toUpperCase()) {
+					case "XHTML":
+					case "HTML":
+						item.content_html = entry.content.value;
+						break;
+					default:
+						item.content_text = entry.content.value;
+						break;
+				}
+			}
+
+			return item;
+		})
   } as JsonFeed;
 
   if (atom.links?.length) {
