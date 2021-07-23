@@ -2,8 +2,6 @@ import { assert, assertEquals } from "../test_deps.ts";
 import type { Atom, RSS2 } from "./types/mod.ts";
 import { FeedType } from "./types/mod.ts";
 import { toJsonFeed } from "./mapper.ts";
-import { ValueField } from "./types/value-field.ts";
-
 const dateRaw = "Mon, 22 Jun 2020 20:00:00 GMT";
 const date = new Date(1989, 1, 1);
 
@@ -378,6 +376,14 @@ Deno.test("Mapper RSS2 -> JSON Feed", () => {
   );
 });
 
-[
+const composeAtomSample = (setter: (data: Atom) => void): Atom => {
+	const result = {} as Atom;
+	setter && setter(result);
+	return result;
+}
 
-]
+const composeRss2Sample = (setter: (data: RSS2) => void): RSS2 => {
+	const result = {} as RSS2;
+	setter && setter(result);
+	return result;
+}
