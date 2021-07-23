@@ -34,12 +34,12 @@
     <category term="ATOM:Feed:Entry:0:Category:0:Term" label="ATOM:Feed:Entry:0:Category:0:Label"/>
     <category term="ATOM:Feed:Entry:0:Category:1:Term"/>
     <source>
-      <id>http://example.org/</id>
-      <title>Example, Inc.</title>
+      <id>ATOM:Feed:Entry:0:Source:Id</id>
+      <title>ATOM:Feed:Entry:0:Source:Title</title>
       <updated>2003-12-13T18:30:02Z</updated>
     </source>
     <contributor>
-      <name>Micke</name>
+      <name>ATOM:Feed:Entry:0:Contributor:Name</name>
     </contributor>
     <rights type="html">
       &amp;copy; 2020 Micke
