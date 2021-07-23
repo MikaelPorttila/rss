@@ -135,9 +135,8 @@ const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
 
 const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
   const items: JsonFeedItem[] = atom.entries.map((entry) => {
-    let author;
-    let url: string | undefined;
 
+    let url: string | undefined;
     if (entry["feedburner:origlink"]) {
       url = entry["feedburner:origlink"];
     } else if (entry.href) {
@@ -146,6 +145,7 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
       url = entry.id;
     }
 
+		let author;
     if (entry.author) {
       author = {
         name: entry.author.name,
@@ -190,18 +190,14 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
     return item;
   });
 
-  const author = atom.author
-    ? {
-      name: atom.author.name,
-      url: atom.author.uri,
-    } as JsonFeedAuthor
-    : undefined;
-
   const feed = {
     icon: atom.icon,
     title: atom.title?.value ?? atom.title,
     items,
-    author,
+    author: atom.author ? {
+      name: atom.author.name,
+      url: atom.author.uri,
+    } as JsonFeedAuthor : undefined,
   } as JsonFeed;
 
   if (atom.links?.length) {

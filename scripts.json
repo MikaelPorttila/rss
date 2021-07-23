@@ -4,7 +4,7 @@
     "read"
   ],
   "scripts": {
-    "start": "deno run dev.ts rss2",
+    "start": "deno run dev.ts atom",
     "test": "deno test"
   }
 }
