@@ -681,7 +681,7 @@ Deno.test(`Call signatures compile without error`, async () => {
 			{
         name: "Feed:Entry:0:Summary:Type",
         getValue: (src: DeserializationResult<Atom>) => src.feed.entries[0].summary?.type,
-        assert: [{ fn: assertEquals, expect: undefined }]
+        assert: [{ fn: assertEquals, expect: 'xhtml' }]
       },
 			{
         name: "Feed:Entry:0:Summary:Value",

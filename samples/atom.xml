@@ -24,7 +24,7 @@
     <published>2003-12-13T18:30:02Z</published>
     <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da354efa6a</id>
     <updated>2003-12-13T18:30:02Z</updated>
-    <summary>ATOM:Feed:Entry:0:Summary</summary>
+    <summary type="xhtml">ATOM:Feed:Entry:0:Summary</summary>
     <author>
       <name>ATOM:Feed:Entry:0:Author:Name</name>
       <email>ATOM:Feed:Entry:0:Author:Email</email>

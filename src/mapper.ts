@@ -207,7 +207,10 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
       updated: entry.updated?.value,
       updatedRaw: entry.updatedRaw?.value,
       link,
-      summary: entry.summary?.value,
+      description: {
+				type: entry.summary?.type,
+				value: entry.summary?.value
+			},
       source: entry.source
         ? {
           id: entry.source.id?.value,
@@ -228,6 +231,18 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
         email: x.email?.value,
         uri: x.uri?.value,
       })) ?? undefined,
+			categories: atom.categories?.map(x => ({
+				term: x.term,
+				label: x.label
+			})),
+			attachments: atom.links
+				?.filter(x => x.rel === 'enclosure')
+				?.map(x => ({
+					url: x.href,
+					mimeType: x.type,
+					sizeInBytes: x.length
+				}),
+			)
     } as FeedEntry;
   });
 
@@ -250,6 +265,10 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
       : undefined,
     updateDate: atom.updated?.value,
     updateDateRaw: atom.updatedRaw?.value,
+		published: atom.updated?.value,
+    publishedRaw: atom.updatedRaw?.value,
+		created: atom.updated.value,
+		createdRaw: atom.updatedRaw.value,
     categories: atom.categories?.map((category) => ({
       term: category.term,
       label: category.label,

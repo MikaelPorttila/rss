@@ -34,15 +34,14 @@ export interface Feed {
 export interface FeedEntry {
   title?: TextField;
   description?: TextField;
-  summary?: string;
   link: string;
   id: string;
   author?: Author;
   creators?: string[];
-  published: Date;
-  publishedRaw: string;
-  updated: Date;
-  updatedRaw: string;
+  published?: Date;
+  publishedRaw?: string;
+  updated?: Date;
+  updatedRaw?: string;
   categories?: Category[];
   content?: string;
   comments?: string;
