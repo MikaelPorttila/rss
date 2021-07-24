@@ -1008,6 +1008,47 @@ const testArrayLength = (
           expect: "RSS2:Channel:Item:0:MediaContent:Url",
         }],
       },
+			...DublinCoreFieldArray
+				.filter(x => ![
+					DublinCoreFields.Description,
+					DublinCoreFields.URI,
+					DublinCoreFields.Title,
+					DublinCoreFields.Language,
+					DublinCoreFields.CreatedRaw,
+					DublinCoreFields.DateSubmittedRaw,
+					DublinCoreFields.Title,
+					DublinCoreFields.Description,
+					DublinCoreFields.URI,
+					DublinCoreFields.Creator,
+					DublinCoreFields.Valid
+				].some(ignoreField => x === ignoreField ))
+				.flatMap((dcField) => {
+				const fieldName = formatNamespaceFieldName(dcField);
+				const [propertyName, isArray, isNumber, isDate] = resolveRss2Field(dcField);
+
+				let expectValue;
+
+				if (isNumber) {
+					expectValue = 1337;
+				}
+
+				if (isDate) {
+					expectValue = new Date('2020-06-22T20:03:00.000Z');
+				}
+
+				return [
+					{
+						name: `Items:0:${fieldName}`,
+						getValue: (src: Feed) => (src.dc as any)[dcField],
+						assert: [{ fn: assertEquals, expect: (expectValue || `RSS2:Channel:${fieldName}:Value`) }]
+					},
+					{
+						name: `Items:0:${fieldName}`,
+						getValue: (src: Feed) => (src.entries[0].dc as any)[dcField],
+						assert: [{ fn: assertEquals, expect: (expectValue || `RSS2:Channel:Item:0:${fieldName}:Value`) }]
+					}
+				]
+			})
     ],
   },
   {
