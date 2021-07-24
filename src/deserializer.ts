@@ -15,8 +15,8 @@ import {
   resolveRss1Field,
   resolveRss2Field,
 } from "./resolvers/mod.ts";
-import { toFeed, toJsonFeed } from "./mapper.ts";
-import { toLegacyAtom, toLegacyRss1, toLegacyRss2 } from "./mapper-legacy.ts";
+import { toFeed } from "./mapper.ts";
+import { toLegacyAtom, toLegacyRss1, toLegacyRss2, toJsonFeed } from "./mapper-legacy.ts";
 export interface Options {
   outputJsonFeed?: boolean;
 }

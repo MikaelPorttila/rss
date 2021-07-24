@@ -12,7 +12,6 @@ interface Channel extends DublinCore {
   title: ValueField<string>;
   link: ValueField<string>;
   description: ValueField<string>;
-  items: Item[];
   language?: ValueField<string>;
   copyright?: ValueField<string>;
   managingEditor?: ValueField<string>;
@@ -34,6 +33,7 @@ interface Channel extends DublinCore {
   skipDays?: {
     day?: ValueField<string>[];
   };
+	items: Item[];
 }
 
 interface Item extends DublinCore {

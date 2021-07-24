@@ -1,389 +1,232 @@
-import { assert, assertEquals } from "../test_deps.ts";
-import type { Atom, RSS2 } from "./types/mod.ts";
-import { FeedType } from "./types/mod.ts";
-import { toJsonFeed } from "./mapper.ts";
-const dateRaw = "Mon, 22 Jun 2020 20:00:00 GMT";
-const date = new Date(1989, 1, 1);
+import { assert, assertEquals, assertNotEquals } from "../test_deps.ts";
+import { toFeed } from './mapper.ts';
+import { Feed } from "./types/feed.ts";
+import { FeedType } from "./types/feed-type.ts";
+import { InternalAtom } from "./types/internal-atom.ts";
+import { InternalRSS2 } from "./types/internal-rss2.ts";
 
-Deno.test("Mapper ATOM -> JSON Feed", () => {
-  const atom: Atom = {
-    id: "id",
-    icon: "icon",
-    title: {
-      type: "text",
-      value: "title.value",
-    },
-    links: [{
-      href: "links.href.self",
-      rel: "self",
-      type: "",
-    }, {
-      href: "links.href.alternateOrEmpty",
-      rel: "alternate",
-      type: "",
-    }],
-    updated: date,
-    updatedRaw: dateRaw,
-    entries: [
-      {
-        id: "entry.id",
-        updated: date,
-        updatedRaw: dateRaw,
-        published: date,
-        publishedRaw: dateRaw,
-        href: "https://example.com",
-        links: [
-          {
-            href: "link.href.enclosure",
-            rel: "enclosure",
-            length: 1337,
-            type: "image/test",
-          },
-        ],
-        title: {
-          type: "text",
-          value: "entry.title.type.text.value",
-        },
-        categories: [{term: "ATOM:Category:0:Term"}, { term: "ATOM:Category:1:Term" }] as any,
-        summary: {
-          type: "text",
-          value: "entry.summary.type.text.value",
-        },
-        content: {
-          type: "text",
-          value: "entry.content.type.text.value",
-        },
-      },
-      {
-        id: "entry.id2",
-        updated: date,
-        updatedRaw: "Mon, 22 Jun 2020 20:00:00 GMT",
-        title: {
-          type: "text",
-          value: "text2",
-        },
-        summary: {
-          type: "xhtml",
-          value: "entry.summary.type.xhtml.value",
-        },
-        content: {
-          type: "xhtml",
-          value:
-            "<entry.content.type.xhtml.value></<entry.content.type.xhtml.value>",
-        },
-        "feedburner:origlink":
-          "https://security.googleblog.com/2021/05/introducing-security-by-design.html",
-      },
-    ],
-    author: {
-      name: "author.name",
-      uri: "author.url",
-    },
-  };
-
-  const jsonFeed = toJsonFeed(FeedType.Atom, atom);
-  assert(!!jsonFeed, "toJsonFeed result was undefined");
-  if (!jsonFeed) return;
-  assertEquals(jsonFeed.version, undefined, "version should be undefined");
-  assertEquals(jsonFeed.title, "title.value", "Atom title was not mapped");
-  assertEquals(jsonFeed.icon, "icon", "Atom icon was not mapped");
-  assertEquals(jsonFeed.home_page_url, "links.href.self");
-  assertEquals(jsonFeed.feed_url, "links.href.alternateOrEmpty");
-
-  assert(!!jsonFeed.author, "Atom author was not mapped");
-  if (!jsonFeed.author) return;
-  assertEquals(
-    jsonFeed.author.name,
-    "author.name",
-    "Atom author name was not mapped",
-  );
-  assertEquals(
-    jsonFeed.author.url,
-    "author.url",
-    "Atom author url was not mapped",
-  );
-
-  assert(!!jsonFeed.items, "Atom entries was not mapped");
-  assertEquals(
-    jsonFeed.items[0].id,
-    "entry.id",
-    "Atom entry id was not mapped",
-  );
-
-  assertEquals(
-    jsonFeed.items[0].url,
-    "https://example.com",
-    "Atom entry link was not mapped",
-  );
-
-  assertEquals(
-    jsonFeed.items[1].url,
-    "https://security.googleblog.com/2021/05/introducing-security-by-design.html",
-    "Atom entry feed burner link was not mapped.",
-  );
-
-  assertEquals(
-    jsonFeed.items[0].title,
-    "entry.title.type.text.value",
-    "Atom entry title was not mapped",
-  );
-  assertEquals(
-    jsonFeed.items[0].date_modified,
-    new Date(1989, 1, 1),
-    "Atom entry updated was not mapped",
-  );
-  assertEquals(
-    jsonFeed.items[0].date_modifiedRaw,
-    "Mon, 22 Jun 2020 20:00:00 GMT",
-    "Atom entry updated was not mapped",
-  );
-  assertEquals(
-    jsonFeed.items[0].date_published,
-    new Date(1989, 1, 1),
-    "Atom entry published was not mapped",
-  );
-  assertEquals(
-    jsonFeed.items[0].date_publishedRaw,
-    "Mon, 22 Jun 2020 20:00:00 GMT",
-    "Atom entry published was not mapped",
-  );
-  assert(
-    !!jsonFeed.items[0].tags,
-    "Atom entry category was not mapped",
-  );
-  assertEquals(
-    jsonFeed.items[0].tags?.length,
-    2,
-    "Atom entry category length was mismatching",
-  );
-  assertEquals(
-    jsonFeed.items[0].tags?.[0],
-    "ATOM:Category:0:Term");
-  assertEquals(
-    jsonFeed.items[0].tags?.[1],
-    "ATOM:Category:1:Term",
-    "Atom entry category 2 was not mapped",
-  );
-  assertEquals(
-    jsonFeed.items[0].summary,
-    "entry.summary.type.text.value",
-    "Atom entry summary was not mapped",
-  );
-  assertEquals(
-    jsonFeed.items[0].content_text,
-    "entry.content.type.text.value",
-    "Atom entry content with type text was not mapped",
-  );
-  assertEquals(
-    jsonFeed.items[1].content_html,
-    "<entry.content.type.xhtml.value></<entry.content.type.xhtml.value>",
-    "Atom entry content with type xhtml was not mapped",
-  );
-  assert(!!jsonFeed.items[0].attachments, "Atom enclosure link was not mapped");
-  assert(
-    !!jsonFeed.items[0].attachments?.[0],
-    "Atom enclosure link was not mapped",
-  );
-  assertEquals(
-    jsonFeed.items[0].attachments?.[0].url,
-    "link.href.enclosure",
-    "Atom enclosure link href was not mapped",
-  );
-  assertEquals(
-    jsonFeed.items[0].attachments?.[0].size_in_bytes,
-    1337,
-    "Atom enclosure link size was not mapped",
-  );
-  assertEquals(
-    jsonFeed.items[0].attachments?.[0].mime_type,
-    "image/test",
-    "Atom enclosure link type was not mapped",
-  );
-  assertEquals(
-    jsonFeed.items[0].attachments?.[0].title,
-    undefined,
-    "Attachment title was not undefined",
-  );
-  assertEquals(
-    jsonFeed.items[0].attachments?.[0].duration_in_seconds,
-    undefined,
-    "Attachment title was not undefined",
-  );
-});
-
-Deno.test("Mapper RSS2 -> JSON Feed", () => {
-  const rss: RSS2 = {
-    version: 2,
-    channel: {
-      title: "title",
-      link: "link",
-      description: "description",
-      managingEditor: "managingEditor",
-      webMaster: "webMaster",
-      image: {
-        url: "image.url",
-        title: "image.title",
-        link: "image.link",
-      },
-      items: [{
-        guid: "item.guid",
-        title: "item.title",
-        description: "item.description",
-        author: "item.author",
-        link: "item.link",
-        comments: "item.comments",
-        categories: ["item.link.category1", "item.link.category2"],
-        pubDate: new Date(1989, 1, 1),
-        pubDateRaw: dateRaw,
-        enclosure: {
-          url: "enclosure.url",
-          length: 1337,
-          type: "enclosure.type",
-        },
-      }, {
-        guid: "item.guid2",
-        title: "item.title",
-        description: "item.description",
-        "dc:creator": ["dccreator1", "dccreator2"] as any,
-        link: "item.link",
-        comments: "item.comments",
-        categories: ["item.link.category1", "item.link.category2"],
-        pubDate: new Date(1989, 1, 1),
-        enclosure: {
-          url: "enclosure.url",
-          length: 1337,
-          type: "enclosure.type",
-        },
-      }],
-      cloud: {
-        domain: "cloud.domain",
-        port: 1337,
-        path: "/cloud.path",
-        registerProcedure: "cloud.registerProcedure",
-        protocol: "cloud.protocol",
-      },
-    },
-  };
-
-  const jsonFeed = toJsonFeed(FeedType.Rss2, rss);
-  // Channel
-  assert(!!jsonFeed, "toJsonFeed result was undefined");
-  if (!jsonFeed) return;
-  assertEquals(jsonFeed.title, "title", "RSS title was not mapped");
-  assertEquals(
-    jsonFeed.description,
-    "description",
-    "RSS description was not mapped",
-  );
-  // Author
-  assert(
-    !!jsonFeed.author,
-    "author field is undefined, RSS webMaster or managingEditor was not mapped",
-  );
-  assertEquals(
-    jsonFeed.author?.url,
-    "managingEditor",
-    "RSS webMaster or managingEditor was not mapped",
-  );
-  assert(!!jsonFeed.icon, "RSS Image was not mapped");
-  assertEquals(jsonFeed.icon, "image.url", "RSS Image was not mapped");
-  assertEquals(jsonFeed.home_page_url, "link", "RSS link was not mapped");
-  // hub
-  assert(!!jsonFeed.hubs, "RSS cloud was not mapped");
-  assertEquals(jsonFeed.hubs?.[0].type, "cloud.protocol");
-  assertEquals(jsonFeed.hubs?.[0].url, "cloud.domain:1337/cloud.path");
-  // Items
-  assert(!!jsonFeed.items, "RSS Items were not mapped");
-  const item = jsonFeed.items[0];
-  assertEquals(item.id, "item.guid", "Item guid was not mapped");
-  assertEquals(item.title, "item.title", "Item title was not mapped");
-  assertEquals(item.external_url, "item.link", "Item link was not mapped");
-  assertEquals(item.content_html, "item.link", "Item link was not mapped");
-  assertEquals(
-    item.date_published,
-    new Date(1989, 1, 1),
-    "Item PubDate was not mapped",
-  );
-  assertEquals(
-    item.date_publishedRaw,
-    "Mon, 22 Jun 2020 20:00:00 GMT",
-    "Item PubDate was not mapped",
-  );
-
-  assert(!!item.author, "RSS Item author was not mapped");
-  assertEquals(
-    item.author?.name,
-    "item.author",
-    "RSS Item author was not mapped",
-  );
-  assertEquals(
-    item.author?.avatar,
-    undefined,
-    "Author avatar should be undefined",
-  );
-
-  const item2 = jsonFeed.items[1];
-  assertEquals(
-    item2.authors?.length,
-    2,
-    `Item Author count expected to be 2 but was actually ${item2.authors
-      ?.length}`,
-  );
-  assertEquals(
-    item2.authors?.[0].name,
-    "dccreator1",
-    `Creator1 was not mapped correctly, Expected dccreator1 but was actually ${
-      item2.authors?.[0].name
-    }`,
-  );
-  assertEquals(
-    item2.authors?.[1].name,
-    "dccreator2",
-    `Creator2 was not mapped correctly, Expected dccreator2 but was actually ${
-      item2.authors?.[1].name
-    }`,
-  );
-
-  assertEquals(item.author?.url, undefined, "Author url should be undefined");
-
-  assert(!!item.attachments, "Enclosure was not mapped");
-  if (!item.attachments) return;
-  const attachment = item.attachments[0];
-  assertEquals(
-    attachment.url,
-    "enclosure.url",
-    "Item Enclosure Url was not mapped",
-  );
-  assertEquals(
-    attachment.size_in_bytes,
-    1337,
-    "Item Enclosure length was not mapped",
-  );
-  assertEquals(
-    attachment.mime_type,
-    "enclosure.type",
-    "Item Enclosure type was not mapped",
-  );
-  assertEquals(
-    attachment.duration_in_seconds,
-    undefined,
-    "Attachment duration_in_seconds was not undefined",
-  );
-  assertEquals(
-    attachment.title,
-    undefined,
-    "Attachment title was not undefined",
-  );
-});
-
-const composeAtomSample = (setter: (data: Atom) => void): Atom => {
-	const result = {} as Atom;
+const composeAtom = (setter: (data: InternalAtom) => void  = () => {}): InternalAtom => {
+	const result = { } as InternalAtom;
 	setter && setter(result);
 	return result;
 }
 
-const composeRss2Sample = (setter: (data: RSS2) => void): RSS2 => {
-	const result = {} as RSS2;
+const composeRss2 = (setter: (data: InternalRSS2) => void = () => {}): InternalRSS2 => {
+	const result = {
+		version: 1,
+		channel: {
+			title: {
+				value: 'RSS2:Channel:Title:Value'
+			},
+			link: {
+				value: 'RSS2:Channel:Link:Value'
+			},
+			description: {
+				value: 'RSS2:Channel:Description:Value'
+			},
+			language: {
+				value: 'RSS2:Channel:Language:Value'
+			},
+			copyright: {
+				value: 'RSS2:Channel:Copyright:Value'
+			},
+			managingEditor: {
+				value: 'RSS2:Channel:ManagingEditor:Value'
+			},
+			webMaster: {
+				value: 'RSS2:Channel:WebMaster:Value'
+			},
+			pubDate: {
+				value: new Date('Mon, 22 Jun 2020 20:03:00 GMT')
+			},
+			pubDateRaw: {
+				value: 'Mon, 22 Jun 2020 20:03:00 GMT'
+			},
+			docs: {
+				value: 'RSS2:Channel:Docs:Value'
+			},
+			generator: {
+				value: 'RSS2:Channel:Generator:Value'
+			},
+			lastBuildDate: {
+				value: new Date('Mon, 22 Jun 2020 20:03:00 GMT')
+			},
+			lastBuildDateRaw: {
+				value: 'Mon, 22 Jun 2020 20:03:00 GMT'
+			},
+			skipDays: {
+				day: [
+					{ value: 'RSS2:Channel:SkipDays:Day:0' },
+					{ value: 'RSS2:Channel:SkipDays:Day:1' },
+					{ value: 'RSS2:Channel:SkipDays:Day:2' },
+					{ value: 'RSS2:Channel:SkipDays:Day:3' },
+					{ value: 'RSS2:Channel:SkipDays:Day:4' },
+					{ value: 'RSS2:Channel:SkipDays:Day:4' },
+					{ value: 'RSS2:Channel:SkipDays:Day:5' },
+					{ value: 'RSS2:Channel:SkipDays:Day:6' }
+				]
+			},
+			skipHours: {
+				hour: [
+					{value: 0},
+					{value: 1},
+					{value: 2},
+					{value: 3},
+					{value: 4},
+					{value: 5},
+					{value: 6},
+					{value: 7},
+					{value: 8},
+					{value: 9},
+					{value: 10},
+					{value: 11},
+					{value: 12},
+					{value: 13},
+					{value: 14},
+					{value: 15},
+					{value: 16},
+					{value: 17},
+					{value: 18},
+					{value: 19},
+					{value: 20},
+					{value: 21},
+					{value: 22},
+					{value: 23},
+				]
+			},
+			ttl: {
+				value: 100
+			},
+			image: {
+				url: {
+					value: 'RSS2:Channel:Image:Url:Value'
+				},
+				title: {
+					value: 'RSS2:Channel:Image:Title:Value'
+				},
+				link: {
+					value: 'RSS2:Channel:Image:Link:Value'
+				},
+				height: {
+					value: 69
+				},
+				width: {
+					value: 34
+				}
+			},
+			items: [
+				{
+					title: {
+						value: 'RSS2:Channel:Item:0:Title:Value'
+					},
+					description: {
+						value: 'RSS2:Channel:Item:0:Description:Value'
+					},
+					link: {
+						value: 'RSS2:Channel:Item:0:Link:Value'
+					},
+					guid: {
+						value: 'RSS2:Channel:Item:0:Guid:Value'
+					},
+					comments: {
+						value: 'RSS2:Channel:Item:0:Comments:Value'
+					},
+					categories: [
+						{ value: 'RSS2:Channel:Item:0:Categories:0:Value' },
+						{ value: 'RSS2:Channel:Item:0:Categories:1:Value' }
+					],
+					"media:content": {
+						height: 69,
+						width: 32,
+						medium: 'RSS2:Channel:Item:0:MediaContent:Medium',
+						url: 'RSS2:Channel:Item:0:MediaContent:Url',
+					},
+					"media:credit": {
+						value: 'RSS2:Channel:Item:0:MediaCredit:Value'
+					},
+					"media:description": {
+						value: 'RSS2:Channel:Item:0:MediaDescription:Value'
+					}
+				}
+			]
+		}
+	} as InternalRSS2;
 	setter && setter(result);
 	return result;
 }
+
+const testTextField = (fieldName: string, target: any, type: string | undefined, value: string) => {
+	return [
+		{
+			name: fieldName,
+			getValue: (src: Feed) => target(src),
+			assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+		},
+		{
+			name: `${fieldName}:Type`,
+			getValue: (src: Feed) => target(src).type,
+			assert: [{ fn: assertEquals, expect: type}]
+		},
+		{
+			name: `${fieldName}:Value`,
+			getValue: (src: Feed) => target(src).value,
+			assert: [{ fn: assertEquals, expect: value }]
+		},
+	];
+}
+
+const testArrayLength = (fieldName: string, target: any, expectedLength: number) => {
+	return [
+		{
+			name: fieldName,
+			getValue: (src: Feed) => target(src),
+			assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+		},
+		{
+			name: `${fieldName}:Length`,
+			getValue: (src: Feed) => target(src).length,
+			assert: [{ fn: assertEquals, expect: expectedLength }]
+		}
+	];
+}
+
+[
+	{
+		name: 'RSS2',
+		source: toFeed(FeedType.Rss2, composeRss2()) as Feed,
+		tests: [
+			{
+				name: 'Root',
+				getValue: (src: Feed) => src,
+				assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+			},
+			...testTextField('Title', (src: Feed) => src.title, undefined, 'RSS2:Channel:Title:Value'),
+			{
+				name: 'Description',
+				getValue: (src: Feed) => src.description,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Description:Value' }]
+			},
+			{
+				name: 'Language',
+				getValue: (src: Feed) => src.language,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Language:Value' }]
+			},
+			...testArrayLength('Link', (src:Feed) => src.links, 1),
+			{
+				name: 'Link:Value:0',
+				getValue: (src: Feed) => src.links[0],
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Link:Value' }]
+			},
+
+		]
+	}
+].forEach((workspace) => {
+	workspace.tests.forEach((test) => {
+		Deno.test(`toFeed-${workspace.name}:${test.name}`, () => {
+      const target = test.getValue(workspace.source);
+      test.assert.forEach((x) => x.fn(target, x.expect));
+    });
+	});
+});
+
+
