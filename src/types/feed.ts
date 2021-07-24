@@ -44,7 +44,7 @@ export interface FeedEntry {
   updated?: Date;
   updatedRaw?: string;
   categories?: Category[];
-  content?: string;
+  content?: TextField;
   comments?: string;
   source?: {
     id: string;

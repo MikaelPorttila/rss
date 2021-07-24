@@ -257,6 +257,11 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
           uri: entry.author.uri?.value,
         }
         : undefined,
+			content: entry.content ?
+			{
+				type: entry.content?.type,
+				value: entry.content?.value
+			}: undefined,
       contributors: entry.contributors?.map((x) => ({
         name: x.name?.value,
         email: x.email?.value,
