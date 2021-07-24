@@ -16,7 +16,12 @@ import {
   resolveRss2Field,
 } from "./resolvers/mod.ts";
 import { toFeed } from "./mapper.ts";
-import { toLegacyAtom, toLegacyRss1, toLegacyRss2, toJsonFeed } from "./mapper-legacy.ts";
+import {
+  toJsonFeed,
+  toLegacyAtom,
+  toLegacyRss1,
+  toLegacyRss2,
+} from "./mapper-legacy.ts";
 export interface Options {
   outputJsonFeed?: boolean;
 }
@@ -39,57 +44,61 @@ export const parseFeed = (
  * @deprecated The method should not be used, please use the parseFeed method instead.
  */
 export const deserializeFeed = (async (
-	input: string,
-  options?: Options
+  input: string,
+  options?: Options,
 ) => {
-	console.warn('RSS: deserializeFeed is deprecated, please use parseFeed instead.');
-	const { data, feedType } = await parse(input);
+  console.warn(
+    "RSS: deserializeFeed is deprecated, please use parseFeed instead.",
+  );
+  const { data, feedType } = await parse(input);
 
-	let legacyFeed;
-	switch(feedType) {
-		case FeedType.Rss1:
-			legacyFeed = toLegacyRss1(data) as any;
-			break;
-		case FeedType.Rss2:
-			legacyFeed = toLegacyRss2(data) as any;
-			break;
-		case FeedType.Atom:
-			legacyFeed = toLegacyAtom(data) as any;
-			break;
-		default:
-			legacyFeed = data;
-			break;
-	}
+  let legacyFeed;
+  switch (feedType) {
+    case FeedType.Rss1:
+      legacyFeed = toLegacyRss1(data) as any;
+      break;
+    case FeedType.Rss2:
+      legacyFeed = toLegacyRss2(data) as any;
+      break;
+    case FeedType.Atom:
+      legacyFeed = toLegacyAtom(data) as any;
+      break;
+    default:
+      legacyFeed = data;
+      break;
+  }
 
-	const result: DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed> & {
-		originalFeedType?: FeedType;
-	} = {
-		feed: options?.outputJsonFeed ? toJsonFeed(feedType, legacyFeed) : legacyFeed,
-		feedType: options?.outputJsonFeed ? FeedType.JsonFeed : feedType,
-		originalFeedType: feedType
-	};
+  const result: DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed> & {
+    originalFeedType?: FeedType;
+  } = {
+    feed: options?.outputJsonFeed
+      ? toJsonFeed(feedType, legacyFeed)
+      : legacyFeed,
+    feedType: options?.outputJsonFeed ? FeedType.JsonFeed : feedType,
+    originalFeedType: feedType,
+  };
 
-	return result;
+  return result;
 }) as {
-	(input: string): Promise<DeserializationResult<Atom | RSS1 | RSS2>>;
-	(
-		input: string,
-		options: Options & { outputJsonFeed: false },
-	): Promise<DeserializationResult<Atom | RSS1 | RSS2>>;
-	(
-		input: string,
-		options: Options & { outputJsonFeed: true },
-	): Promise<
-		DeserializationResult<JsonFeed> & { originalFeedType: FeedType }
-	>;
-	(
-		input: string,
-		options?: Options,
-	): Promise<DeserializationResult<Atom | JsonFeed | RSS1 | RSS2>>;
+  (input: string): Promise<DeserializationResult<Atom | RSS1 | RSS2>>;
+  (
+    input: string,
+    options: Options & { outputJsonFeed: false },
+  ): Promise<DeserializationResult<Atom | RSS1 | RSS2>>;
+  (
+    input: string,
+    options: Options & { outputJsonFeed: true },
+  ): Promise<
+    DeserializationResult<JsonFeed> & { originalFeedType: FeedType }
+  >;
+  (
+    input: string,
+    options?: Options,
+  ): Promise<DeserializationResult<Atom | JsonFeed | RSS1 | RSS2>>;
 };
 
 const parse = (input: string) =>
-  new Promise<{feedType: FeedType, data: any}>(
+  new Promise<{ feedType: FeedType; data: any }>(
     (resolve, reject) => {
       if (!input) {
         reject(new Error("Input was undefined, null or empty"));
@@ -124,7 +133,7 @@ const parse = (input: string) =>
         if (cDataActive) {
           cDataBuilder += text;
         } else {
-					stack[stack.length - 1].value = text.trim();
+          stack[stack.length - 1].value = text.trim();
         }
       };
 
@@ -190,19 +199,19 @@ const parse = (input: string) =>
             onopentag: undefined,
             onclosetag: undefined,
             ontext: undefined,
-            oncdata: undefined
+            oncdata: undefined,
           });
 
-					const result = {
-						feedType: feedType,
-						data: node
-					};
+          const result = {
+            feedType: feedType,
+            data: node,
+          };
           resolve(result);
           return;
         }
 
-				const targetNode = stack[stack.length - 1];
-				const [
+        const targetNode = stack[stack.length - 1];
+        const [
           propertyName,
           isArray,
           isNumber,
@@ -211,7 +220,7 @@ const parse = (input: string) =>
 
         if (cDataActive) {
           node.value = cDataBuilder;
-					targetNode[propertyName] = node;
+          targetNode[propertyName] = node;
           cDataBuilder = "";
           cDataActive = false;
           cDataLevel = 0;
@@ -273,9 +282,9 @@ const parse = (input: string) =>
       };
 
       parser
-				.write(input)
-				.close()
-				.flush();
+        .write(input)
+        .close()
+        .flush();
     },
   );
 

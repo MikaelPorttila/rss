@@ -33,7 +33,7 @@ interface Channel extends DublinCore {
   skipDays?: {
     day?: ValueField<string>[];
   };
-	items: Item[];
+  items: Item[];
 }
 
 interface Item extends DublinCore {

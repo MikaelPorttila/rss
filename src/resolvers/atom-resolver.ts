@@ -30,25 +30,25 @@ export const resolveAtomField = (
       isDate = true;
       break;
     default:
-			const dublinCoreResult = resolveDublinCoreField(propertyName);
-			if (dublinCoreResult.handled) {
-				if (dublinCoreResult.isArray) {
-					isArray = true;
-				}
+      const dublinCoreResult = resolveDublinCoreField(propertyName);
+      if (dublinCoreResult.handled) {
+        if (dublinCoreResult.isArray) {
+          isArray = true;
+        }
 
-				if (dublinCoreResult.isDate) {
-					isDate = true;
-				}
+        if (dublinCoreResult.isDate) {
+          isDate = true;
+        }
 
-				if (dublinCoreResult.isNumber) {
-					isNumber = true;
-				}
+        if (dublinCoreResult.isNumber) {
+          isNumber = true;
+        }
 
-				if (!!dublinCoreResult.newName) {
-					propertyName = dublinCoreResult.newName;
-				}
-			}
-			break;
+        if (!!dublinCoreResult.newName) {
+          propertyName = dublinCoreResult.newName;
+        }
+      }
+      break;
   }
 
   return [propertyName, isArray, isNumber, isDate];

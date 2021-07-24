@@ -44,7 +44,9 @@ Deno.test("Mapper ATOM -> JSON Feed", () => {
           type: "text",
           value: "entry.title.type.text.value",
         },
-        categories: [{term: "ATOM:Category:0:Term"}, { term: "ATOM:Category:1:Term" }] as any,
+        categories: [{ term: "ATOM:Category:0:Term" }, {
+          term: "ATOM:Category:1:Term",
+        }] as any,
         summary: {
           type: "text",
           value: "entry.summary.type.text.value",
@@ -158,7 +160,8 @@ Deno.test("Mapper ATOM -> JSON Feed", () => {
   );
   assertEquals(
     jsonFeed.items[0].tags?.[0],
-    "ATOM:Category:0:Term");
+    "ATOM:Category:0:Term",
+  );
   assertEquals(
     jsonFeed.items[0].tags?.[1],
     "ATOM:Category:1:Term",
@@ -377,7 +380,7 @@ Deno.test("Mapper RSS2 -> JSON Feed", () => {
 });
 
 const composeAtomSample = (setter: (data: Atom) => void): Atom => {
-	const result = {
+  const result = {
     id: "id",
     icon: "icon",
     title: {
@@ -416,9 +419,9 @@ const composeAtomSample = (setter: (data: Atom) => void): Atom => {
           value: "entry.title.type.text.value",
         },
         categories: [
-					{term: "ATOM:Category:0:Term", label: 'ATOM:Category:0:Label'},
-					{ term: "ATOM:Category:0:Term" , label: 'ATOM:Category:1:Label' }
-				] as any,
+          { term: "ATOM:Category:0:Term", label: "ATOM:Category:0:Label" },
+          { term: "ATOM:Category:0:Term", label: "ATOM:Category:1:Label" },
+        ] as any,
         summary: {
           type: "text",
           value: "entry.summary.type.text.value",
@@ -454,12 +457,12 @@ const composeAtomSample = (setter: (data: Atom) => void): Atom => {
       uri: "author.url",
     },
   };
-	setter && setter(result);
-	return result;
-}
+  setter && setter(result);
+  return result;
+};
 
 const composeRss2Sample = (setter: (data: RSS2) => void): RSS2 => {
-	const result = {
+  const result = {
     version: 2,
     channel: {
       title: "title",
@@ -510,7 +513,7 @@ const composeRss2Sample = (setter: (data: RSS2) => void): RSS2 => {
         protocol: "cloud.protocol",
       },
     },
-  };;
-	setter && setter(result);
-	return result;
-}
+  };
+  setter && setter(result);
+  return result;
+};
