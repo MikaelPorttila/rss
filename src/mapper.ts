@@ -95,6 +95,12 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
       result.createdRaw = createdRaw;
     }
 
+		if (rss.channel.webMaster?.value) {
+			result.author = {
+				email: rss.channel.webMaster?.value
+			}
+		}
+
 		result.docs = rss.channel.docs?.value;
     result.links = [(rss.channel[DublinCoreFields.URI]?.value || (rss.channel.link?.value as string))];
     result.language = rss.channel[DublinCoreFields.Language]?.value || rss.channel.language?.value;

@@ -102,7 +102,7 @@ enum ContentType {
 }
 
 interface Person {
-  name: string;
+  name?: string;
   email?: string;
   uri?: string;
 }

@@ -419,6 +419,16 @@ const testArrayLength = (fieldName: string, target: any, expectedLength: number)
 				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:WebMaster:Value' }]
 			},
 			{
+				name: 'WebMaster (Author, For Author mapping)',
+				getValue: (src: Feed) => src.author,
+				assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+			},
+			{
+				name: 'WebMaster (Author:Email For Author mapping)',
+				getValue: (src: Feed) => src.author.email,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:WebMaster:Value' }]
+			},
+			{
 				name: 'PubDate',
 				getValue: (src: Feed) => src.published,
 				assert: [{ fn: assertEquals, expect: new Date('Mon, 22 Jun 2020 20:03:00 GMT') }]
