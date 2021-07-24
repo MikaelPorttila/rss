@@ -26,6 +26,7 @@ export interface Feed {
   webMasterMail?: string;
   managingEditorMail?: string;
   image?: FeedImage;
+	docs: string;
   entries: FeedEntry[];
   dc: DublinCore;
 }

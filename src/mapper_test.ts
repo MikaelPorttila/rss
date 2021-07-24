@@ -61,7 +61,6 @@ const composeRss2 = (setter: (data: InternalRSS2) => void = () => {}): InternalR
 					{ value: 'RSS2:Channel:SkipDays:Day:2' },
 					{ value: 'RSS2:Channel:SkipDays:Day:3' },
 					{ value: 'RSS2:Channel:SkipDays:Day:4' },
-					{ value: 'RSS2:Channel:SkipDays:Day:4' },
 					{ value: 'RSS2:Channel:SkipDays:Day:5' },
 					{ value: 'RSS2:Channel:SkipDays:Day:6' }
 				]
@@ -147,6 +146,48 @@ const composeRss2 = (setter: (data: InternalRSS2) => void = () => {}): InternalR
 					"media:description": {
 						value: 'RSS2:Channel:Item:0:MediaDescription:Value'
 					}
+				},
+				{
+					title: {
+						value: 'RSS2:Channel:Item:1:Title:Value'
+					},
+					description: {
+						value: 'RSS2:Channel:Item:1:Description:Value'
+					},
+					link: {
+						value: 'RSS2:Channel:Item:1:Link:Value'
+					},
+					guid: {
+						value: 'RSS2:Channel:Item:1:Guid:Value'
+					},
+					comments: {
+						value: 'RSS2:Channel:Item:1:Comments:Value'
+					},
+					categories: [
+						{ value: 'RSS2:Channel:Item:1:Categories:0:Value' },
+						{ value: 'RSS2:Channel:Item:1:Categories:1:Value' }
+					]
+				},
+				{
+					title: {
+						value: 'RSS2:Channel:Item:2:Title:Value'
+					},
+					description: {
+						value: 'RSS2:Channel:Item:2:Description:Value'
+					},
+					link: {
+						value: 'RSS2:Channel:Item:2:Link:Value'
+					},
+					guid: {
+						value: 'RSS2:Channel:Item:2:Guid:Value'
+					},
+					comments: {
+						value: 'RSS2:Channel:Item:2:Comments:Value'
+					},
+					categories: [
+						{ value: 'RSS2:Channel:Item:2:Categories:0:Value' },
+						{ value: 'RSS2:Channel:Item:2:Categories:1:Value' }
+					]
 				}
 			]
 		}
@@ -217,7 +258,109 @@ const testArrayLength = (fieldName: string, target: any, expectedLength: number)
 				getValue: (src: Feed) => src.links[0],
 				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Link:Value' }]
 			},
-
+			{
+				name: 'Copyright',
+				getValue: (src: Feed) => src.copyright,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Copyright:Value' }]
+			},
+			{
+				name: 'ManagingEditor',
+				getValue: (src: Feed) => src.managingEditorMail,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:ManagingEditor:Value' }]
+			},
+			{
+				name: 'WebMaster',
+				getValue: (src: Feed) => src.webMasterMail,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:WebMaster:Value' }]
+			},
+			{
+				name: 'PubDate',
+				getValue: (src: Feed) => src.published,
+				assert: [{ fn: assertEquals, expect: new Date('Mon, 22 Jun 2020 20:03:00 GMT') }]
+			},
+			{
+				name: 'PubDateRaw',
+				getValue: (src: Feed) => src.publishedRaw,
+				assert: [{ fn: assertEquals, expect: 'Mon, 22 Jun 2020 20:03:00 GMT' }]
+			},
+			{
+				name: 'Docs',
+				getValue: (src: Feed) => src.docs,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Docs:Value' }]
+			},
+			{
+				name: 'Generator',
+				getValue: (src: Feed) => src.generator,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Generator:Value' }]
+			},
+			{
+				name: 'LastBuildDate',
+				getValue: (src: Feed) => src.created,
+				assert: [{ fn: assertEquals, expect: new Date('Mon, 22 Jun 2020 20:03:00 GMT') }]
+			},
+			{
+				name: 'LastBuildDateRaw',
+				getValue: (src: Feed) => src.createdRaw,
+				assert: [{ fn: assertEquals, expect: 'Mon, 22 Jun 2020 20:03:00 GMT' }]
+			},
+			...testArrayLength('SkipDays', (src:Feed) => src.skipDays, 7),
+			...testArrayLength('SkipHours', (src:Feed) => src.skipHours, 24),
+			{
+				name: 'SkipDays:0',
+				getValue: (src: Feed) => src.skipDays?.[0],
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:SkipDays:Day:0' }]
+			},
+			{
+				name: 'SkipDays:6',
+				getValue: (src: Feed) => src.skipDays?.[6],
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:SkipDays:Day:6' }]
+			},
+			{
+				name: 'SkipHours:0',
+				getValue: (src: Feed) => src.skipDays?.[0],
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:SkipDays:Day:0' }]
+			},
+			{
+				name: 'SkipHours:23',
+				getValue: (src: Feed) => src.skipHours?.[23],
+				assert: [{ fn: assertEquals, expect: 23 }]
+			},
+			{
+				name: 'Ttl',
+				getValue: (src: Feed) => src.ttl,
+				assert: [{ fn: assertEquals, expect: 100 }]
+			},
+			{
+				name: 'Image',
+				getValue: (src: Feed) => src.image,
+				assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+			},
+			{
+				name: 'Image:Url',
+				getValue: (src: Feed) => src.image?.url,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Image:Url:Value' }]
+			},
+			{
+				name: 'Image:Title',
+				getValue: (src: Feed) => src.image?.title,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Image:Title:Value' }]
+			},
+			{
+				name: 'Image:Link',
+				getValue: (src: Feed) => src.image?.link,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Image:Link:Value' }]
+			},
+			{
+				name: 'Image:Height',
+				getValue: (src: Feed) => src.image?.height,
+				assert: [{ fn: assertEquals, expect: 69 }]
+			},
+			{
+				name: 'Image:Width',
+				getValue: (src: Feed) => src.image?.width,
+				assert: [{ fn: assertEquals, expect: 34 }]
+			},
+			...testArrayLength('Items', (src:Feed) => src.entries, 3),
 		]
 	}
 ].forEach((workspace) => {
