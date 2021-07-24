@@ -40,30 +40,33 @@ Deno.test("Atom Resolver", () => {
   });
 });
 
-Deno.test("Atom CData field checker", () => {
-  ["title", "summary", "content", "rights"].forEach((field) => {
-    assert(isAtomCDataField(field), `${field} was not marked as CData field`);
-  });
+["title", "summary", "content", "rights"].forEach((field) => {
+	Deno.test(`AtomResolver:CData:${field}`, () => {
+		assert(isAtomCDataField(field));
+	});
+});
 
-  [
-    "id",
-    "icon",
-    "updated",
-    "link",
-    "entry",
-    "category",
-    "type",
-    "href",
-    "rel",
-    "author",
-    "contributor",
-    "source",
-    "src",
-    "value",
-    "name",
-    "published",
-    "email",
-  ].forEach((field) => {
-    assert(!isAtomCDataField(field), `${field} was marked as CData field`);
-  });
+[
+	"id",
+	"icon",
+	"updated",
+	"link",
+	"entry",
+	"category",
+	"type",
+	"href",
+	"rel",
+	"author",
+	"contributor",
+	"source",
+	"src",
+	"value",
+	"name",
+	"published",
+	"email",
+].forEach((field) => {
+	Deno.test(`AtomResolver:NonCData:${field}`, () => {
+		assert(!isAtomCDataField(field));
+	});
+
 });
