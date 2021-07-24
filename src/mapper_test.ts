@@ -5,8 +5,10 @@ import { FeedType } from "./types/feed-type.ts";
 import { InternalAtom } from "./types/internal-atom.ts";
 import { InternalRSS2 } from "./types/internal-rss2.ts";
 import { InternalRSS1 } from "./types/internal-rss1.ts";
-import { DublinCoreFieldArray } from "./types/dublin-core.ts";
+import { DublinCoreFieldArray, DublinCoreFields } from "./types/dublin-core.ts";
 import { resolveRss1Field } from "./resolvers/rss1-resolver.ts";
+import { SlashFieldArray } from "./types/slash.ts";
+import { resolveRss2Field } from "./resolvers/rss2-resolver.ts";
 const composeAtom = (
   setter: (data: InternalAtom) => void = () => {},
 ): InternalAtom => {
@@ -349,6 +351,33 @@ const composeRss2 = (
       ],
     },
   } as InternalRSS2;
+
+	DublinCoreFieldArray.forEach((dcField => {
+		const fieldName = formatNamespaceFieldName(dcField);
+		const [propertyName, isArray, isNumber, isDate] = resolveRss2Field(dcField);
+
+		let channelValue: any = { value: `RSS2:Channel:${fieldName}:Value` } ;
+		let itemValue: any = { value: `RSS2:Channel:Item:0:${fieldName}:Value` };
+
+		if (isDate) {
+			channelValue = { value: new Date("Mon, 22 Jun 2020 20:03:00 GMT") };
+			itemValue = { value: new Date("Mon, 22 Jun 2020 20:03:00 GMT") };
+		}
+
+		if (isNumber) {
+			channelValue = { value: 1337 };
+			itemValue = 1337;
+		}
+
+		if (isArray) {
+			channelValue = [{ value: `RSS2:Channel:${fieldName}:0:Value`}, {value: `RSS2:Channel:${fieldName}:1:Value`}];
+			itemValue = [{ value: `RSS2:Channel:${fieldName}:0:Value`}, {value: `RSS2:Channel:${fieldName}:1:Value`}];
+		}
+
+		(result.channel as any)[dcField] = channelValue;
+		(result.channel.items[0] as any)[dcField] = itemValue;
+	}));
+
   setter && setter(result);
   return result;
 };
@@ -400,26 +429,51 @@ const composeRss1 = (
 	} as InternalRSS1;
 
 	DublinCoreFieldArray.forEach((dcField => {
-		const nameSplit = dcField.split(':');
-		const field = nameSplit[1].charAt(0).toUpperCase() + nameSplit[1].slice(1);
-
+		const fieldName = formatNamespaceFieldName(dcField);
 		const [propertyName, isArray, isNumber, isDate] = resolveRss1Field(dcField);
 
-		let channelValue: string | number | Date = `RSS1:Channel:${nameSplit[0].toUpperCase() + field}:Value`;
-		let itemValue: string | number | Date= `RSS1:Item:0:${nameSplit[0].toUpperCase() + field}:Value`;
+		let channelValue: string | number | Date = `RSS1:Channel:${fieldName}:Value`;
+		let itemValue: string | number | Date= `RSS1:Item:0:${fieldName}:Value`;
 
 		if (isDate) {
 			channelValue = new Date("Mon, 22 Jun 2020 20:03:00 GMT");
 			itemValue = new Date("Mon, 22 Jun 2020 20:03:00 GMT");
 		}
 
+		if (isNumber) {
+			channelValue = 1337;
+			itemValue = 1337;
+		}
+
 		(result.channel as any)[dcField] = { value: channelValue };
 		(result.item[0] as any)[dcField] = { value: itemValue };
 	}));
 
+	SlashFieldArray.forEach(slashField => {
+		const fieldName = formatNamespaceFieldName(slashField);
+		const [propertyName, isArray, isNumber, isDate] = resolveRss1Field(slashField);
+
+		let value: string | number | Date= `RSS1:Item:0:${fieldName}:Value`;
+
+		if (isDate) {
+			value = new Date("Mon, 22 Jun 2020 20:03:00 GMT");
+		}
+
+		if (isNumber) {
+			value = 1337
+		}
+
+		(result.item[0] as any)[slashField] = { value };
+	});
+
   setter && setter(result);
   return result;
 };
+
+const formatNamespaceFieldName = (field: string) => {
+	const nameSplit = field.split(':');
+	return nameSplit[0].toUpperCase() + nameSplit[1].charAt(0).toUpperCase() + nameSplit[1].slice(1);
+}
 
 const testTextField = (
   fieldName: string,
@@ -475,13 +529,13 @@ const testArrayLength = (
 	{
 		name: 'RSS1',
 		source: toFeed(FeedType.Rss1, composeRss1((data) => {
-			data.channel["dc:title"] = undefined;
-			data.channel["dc:description"] = undefined;
-			data.channel["dc:URI"] = undefined;
-			data.channel["dc:title"] = undefined;
-			data.item[0]["dc:title"] = undefined;
-			data.item[0]["dc:description"] = undefined;
-			data.item[0]["dc:URI"] = undefined;
+			data.channel[DublinCoreFields.Title] = undefined;
+			data.channel[DublinCoreFields.Description] = undefined;
+			data.channel[DublinCoreFields.URI] = undefined;
+			data.channel[DublinCoreFields.Title] = undefined;
+			data.item[0][DublinCoreFields.Title] = undefined;
+			data.item[0][DublinCoreFields.Description] = undefined;
+			data.item[0][DublinCoreFields.URI] = undefined;
 		})) as Feed,
 		tests: [
 			{
@@ -666,12 +720,38 @@ const testArrayLength = (
         name: "Items:0:MediaContent:Url",
         getValue: (src: Feed) => src.entries[0].mediaContent?.url,
         assert: [{ fn: assertEquals, expect: undefined }],
-      }
+      },
+			...SlashFieldArray.map((slashField) => {
+				const fieldName = formatNamespaceFieldName(slashField);
+				const [propertyName, isArray, isNumber, isDate] = resolveRss1Field(slashField);
+
+				let expectValue: string | number | Date  = `RSS1:Item:0:${fieldName}:Value`;
+				if (isNumber) {
+					expectValue = 1337;
+				}
+
+				return {
+					name: `Items:0:${fieldName}`,
+					getValue: (src: Feed) => src.entries[0].slash[slashField],
+					assert: [{ fn: assertEquals, expect: expectValue }],
+				}
+			})
 		]
 	},
   {
     name: "RSS2",
-    source: toFeed(FeedType.Rss2, composeRss2()) as Feed,
+    source: toFeed(FeedType.Rss2, composeRss2((data) => {
+			data.channel[DublinCoreFields.Creator] = undefined;
+			data.channel[DublinCoreFields.Description] = undefined;
+			data.channel[DublinCoreFields.URI] = undefined;
+			data.channel[DublinCoreFields.Title] = undefined;
+			data.channel[DublinCoreFields.Language] = undefined;
+			data.channel[DublinCoreFields.CreatedRaw] = undefined;
+			data.channel[DublinCoreFields.DateSubmittedRaw] = undefined;
+			data.channel.items[0][DublinCoreFields.Title] = undefined;
+			data.channel.items[0][DublinCoreFields.Description] = undefined;
+			data.channel.items[0][DublinCoreFields.URI] = undefined;
+		})) as Feed,
     tests: [
       {
         name: "Root",
