@@ -21,6 +21,7 @@ interface Link {
   type: string;
   href: string;
   rel: string;
+	hreflang?: string;
   length?: number;
 }
 

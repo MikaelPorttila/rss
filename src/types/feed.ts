@@ -35,7 +35,7 @@ export interface Feed {
 export interface FeedEntry {
   title?: TextField;
   description?: TextField;
-  link: string;
+  links: Link[];
   id: string;
   author?: Author;
   creators?: string[];
@@ -81,6 +81,13 @@ interface FeedMedia {
   width?: number;
   height?: number;
   medium?: string;
+}
+
+interface Link {
+	rel?: string;
+	type?: string;
+	href?: string;
+	title?: string;
 }
 
 interface TextField {

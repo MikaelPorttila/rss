@@ -1426,7 +1426,7 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       },
       {
         name: "Items:[0]:Link",
-        getValue: (src: Feed) => src.entries[0].link,
+        getValue: (src: Feed) => src.entries[0].links[0].href,
         assert: [{
           fn: assertEquals,
           expect: "https://RSS2-entry-0-link.com/0",
@@ -1679,7 +1679,7 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       },
       {
         name: "Entry:[0]:Link",
-        getValue: (src: Feed) => src.entries[0].link,
+        getValue: (src: Feed) => src.entries[0].links[0].href,
         assert: [{
           fn: assertEquals,
           expect: "https://AtomLink.org/Entry/0/link",
@@ -1687,7 +1687,7 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       },
       {
         name: "Entry:[1]:Feedburner:OrigLink",
-        getValue: (src: Feed) => src.entries[1].link,
+        getValue: (src: Feed) => src.entries[1].links[0].href,
         assert: [{
           fn: assertEquals,
           expect: "https://AtomFeedburner.org/Entry/1",

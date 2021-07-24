@@ -669,8 +669,8 @@ const testArrayLength = (
         "RSS1:Item:0:Description:Value",
       ),
       {
-        name: "Items:0:Link",
-        getValue: (src: Feed) => src.entries[0].link,
+        name: "Items:0:Link:0",
+        getValue: (src: Feed) => src.entries[0].links[0].href,
         assert: [{
           fn: assertEquals,
           expect: "RSS1:Item:0:Link:Value",
@@ -930,8 +930,8 @@ const testArrayLength = (
         "RSS2:Channel:Item:0:Description:Value",
       ),
       {
-        name: "Items:0:Link",
-        getValue: (src: Feed) => src.entries[0].link,
+        name: "Items:0:Link:0",
+        getValue: (src: Feed) => src.entries[0].links[0].href,
         assert: [{
           fn: assertEquals,
           expect: "RSS2:Channel:Item:0:Link:Value",
@@ -1194,7 +1194,7 @@ const testArrayLength = (
       ),
       {
         name: "Items:0:Link",
-        getValue: (src: Feed) => src.entries[0].link,
+        getValue: (src: Feed) => src.entries[0].links[0].href,
         assert: [{
           fn: assertEquals,
           expect: "Atom:Entries:0:Feedburner:Origlink",

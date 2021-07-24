@@ -55,6 +55,19 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
       }
       : undefined;
     result.entries = rss?.item?.map((item) => {
+
+			const links: any = [];
+			if (item[DublinCoreFields.URI]?.value) {
+				links.push({
+					href: item[DublinCoreFields.URI]?.value
+				});
+			}
+			if (item.link.value) {
+				links.push({
+					href: item.link.value
+				});
+			}
+
       const feedEntry = {
         title: {
           type: undefined,
@@ -65,7 +78,7 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
           value: item[DublinCoreFields.Description]?.value ||
             item.description.value,
         },
-        link: item[DublinCoreFields.URI]?.value || item.link.value,
+        links,
 				id: item[DublinCoreFields.URI]?.value || item.link.value
       } as FeedEntry;
 
@@ -116,10 +129,15 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
     }
 
     result.docs = rss.channel.docs?.value;
-    result.links = [
-      (rss.channel[DublinCoreFields.URI]?.value ||
-        (rss.channel.link?.value as string)),
-    ];
+    result.links = [];
+
+		if (rss.channel[DublinCoreFields.URI]?.value) {
+			result.links.push(rss.channel[DublinCoreFields.URI]?.value as string);
+		}
+		if (rss.channel.link?.value) {
+			result.links.push(rss.channel.link?.value);
+		}
+
     result.language = rss.channel[DublinCoreFields.Language]?.value ||
       rss.channel.language?.value;
     result.updateDate = rss.channel.lastBuildDate?.value;
@@ -166,7 +184,9 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
 
     const entryResult = {
       id: item.guid?.value,
-      link: item.link?.value,
+      links: item.link?.value ? [{
+				href: item.link?.value
+			}]: undefined,
       published,
       publishedRaw,
       updated: item.pubDate?.value,
@@ -216,16 +236,35 @@ const copyFields = (fields: string[], source: any, target: any) => {
 
 const mapAtomToFeed = (atom: InternalAtom): Feed => {
   const entries = atom.entries?.map((entry) => {
-    let link;
+    let links = [];
     if (entry["feedburner:origlink"]) {
-      link = entry["feedburner:origlink"]?.value;
-    } else if (entry.links?.[0]?.href) {
-      link = entry.links?.[0]?.href;
-    } else if (entry.href) {
-      link = entry.href;
-    } else if (isValidHttpURL(entry.id.value as string)) {
-      link = entry.id.value;
+      links.push({
+				href: entry["feedburner:origlink"]?.value
+			});
     }
+
+		if (entry.links && entry.links.length > 0) {
+			for(const link of entry.links) {
+				links.push({
+					href: link.href,
+					rel: link.rel,
+					type: link.type,
+					length: link.length
+				});
+			}
+		}
+
+		if (entry.href) {
+			links.push({
+				href: entry.href
+			});
+		}
+
+		if (isValidHttpURL(entry.id.value as string)) {
+			links.push({
+				href: entry.id.value
+			});
+		}
 
     return {
       title: {
@@ -237,7 +276,7 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
       id: entry.id.value,
       updated: entry.updated?.value,
       updatedRaw: entry.updatedRaw?.value,
-      link,
+      links,
       description: {
         type: entry.summary?.type,
         value: entry.summary?.value,
