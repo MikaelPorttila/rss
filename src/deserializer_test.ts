@@ -805,7 +805,7 @@ Deno.test(`Call signatures compile without error`, async () => {
         name: "Feed:Entry:0:Link:Length",
         getValue: (src: DeserializationResult<Atom>) =>
           src.feed.entries[0].links?.length,
-        assert: [{ fn: assertEquals, expect: 1 }],
+        assert: [{ fn: assertEquals, expect: 2 }],
       },
       {
         name: "Feed:Entry:0:Link:0",
