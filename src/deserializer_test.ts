@@ -6,7 +6,7 @@ import {
 } from "../test_deps.ts";
 import { deserializeFeed, parseFeed } from "./deserializer.ts";
 import { Feed, FeedType, RSS1 } from "../mod.ts";
-import type { Atom, DeserializationResult, Options, RSS2 } from "../mod.ts";
+import type { Atom, DeserializationResult, Options, RSS2, JsonFeed } from "../mod.ts";
 import type { TestEntry } from "./test/test-entry.ts";
 
 const rss1TestSample = await Deno.readTextFile("./samples/rss1.xml");
@@ -601,11 +601,6 @@ Deno.test(`Call signatures compile without error`, async () => {
         getValue: (src: DeserializationResult<Atom>) => src.feed.links?.length,
         assert: [{ fn: assertEquals, expect: 1 }],
       },
-      /* 			{
-        name: "Feed:Title:Links:0",
-        getValue: (src: DeserializationResult<Atom>) => src.feed.links[0].,
-        assert: [{ fn: assertEquals, expect: 1 }]
-      }, */
       {
         name: "Feed:Icon",
         getValue: (src: DeserializationResult<Atom>) => src.feed.icon,
@@ -1044,6 +1039,21 @@ Deno.test(`Call signatures compile without error`, async () => {
       },
     ] as TestEntry<DeserializationResult<Atom>>[],
   },
+	{
+		name: "JsonFeed(Atom)",
+    source: await deserializeFeed(atomTestSample, { outputJsonFeed: true }),
+    tests: [
+			{
+				name: 'OriginalFeedType',
+				getValue: (src: DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed> & {
+					originalFeedType?: FeedType;
+				}) => src.originalFeedType,
+        assert: [{ fn: assertEquals, expect: FeedType.Atom }],
+			}
+		] as TestEntry<DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed> & {
+			originalFeedType?: FeedType;
+		}>[]
+	}
 ].forEach((workspace) => {
   workspace.tests.forEach((test) => {
     Deno.test(`parseFeed:${workspace.name}:${test.name}`, () => {
@@ -1060,31 +1070,6 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
 
   assert(!!feed, "Result was undefined");
   assertEquals(feedType, FeedType.JsonFeed);
-});
-
-Deno.test("Deserialize ATOM with convertToJsonFeed option", async () => {
-  const { feed, feedType } = await deserializeFeed(atomTestSample, {
-    outputJsonFeed: true,
-  });
-
-  assert(!!feed, "Result was undefined");
-  assertEquals(feedType, FeedType.JsonFeed);
-  assertEquals(
-    feed.items[0].title,
-    '<div xmlns="http://www.w3.org/1999/xhtml">HTML&Test Brough to you by<b>Test</b>!</div>',
-    "Title was not mapped correctly",
-  );
-});
-
-Deno.test("Returns correct original feedType with outputJsonFeed option", async () => {
-  const atomJsonFeed = await deserializeFeed(atomTestSample, {
-    outputJsonFeed: true,
-  });
-  assertEquals(FeedType.Atom, atomJsonFeed.originalFeedType);
-  const rssJsonFeed = await deserializeFeed(rss2TestSample, {
-    outputJsonFeed: true,
-  });
-  assertEquals(FeedType.Rss2, rssJsonFeed.originalFeedType);
 });
 
 /*
