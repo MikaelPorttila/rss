@@ -6,7 +6,138 @@ import { InternalAtom } from "./types/internal-atom.ts";
 import { InternalRSS2 } from "./types/internal-rss2.ts";
 
 const composeAtom = (setter: (data: InternalAtom) => void  = () => {}): InternalAtom => {
-	const result = { } as InternalAtom;
+	const result = {
+		id: {
+			value: 'Atom:Id:Value'
+		},
+		title: {
+			value: 'Atom:Title:Value',
+			type: 'Atom:Title:Type'
+		},
+		updated: {
+			value: new Date('Mon, 22 Jun 2020 20:03:00 GMT')
+		},
+		updatedRaw: {
+			value: 'Mon, 22 Jun 2020 20:03:00 GMT'
+		},
+		icon: {
+			value: 'Atom:Icon:Value'
+		},
+		links: [
+			{
+				type: 'Atom:Links:0:Type',
+				href: 'Atom:Links:0:Href',
+				rel: 'Atom:Links:0:Rel',
+				length: 0
+			},
+			{
+				type: 'Atom:Links:1:Type',
+				href: 'Atom:Links:1:Href',
+				rel: 'Atom:Links:1:Rel',
+				length: 1
+			}
+		],
+		categories: [
+			{ term: 'Atom:Categories:0:Term', label: 'Atom:Categories:0:Label' },
+			{ term: 'Atom:Categories:1:Term', label: 'Atom:Categories:1:Label' }
+		],
+		contributors: [
+			{
+				name: { value: 'Atom:Contributors:0:Name:Value' },
+				email: { value: 'Atom:Contributors:0:Email:Value' },
+				uri: { value: 'Atom:Contributors:0:Uri:Value' },
+			},
+			{
+				name: { value: 'Atom:Contributors:1:Name:Value' },
+				email: { value: 'Atom:Contributors:1:Email:Value' },
+				uri: { value: 'Atom:Contributors:1:Uri:Value' },
+			}
+		],
+		generator: { value : 'Atom:Generator:Value' },
+		author: {
+			name: { value: 'Atom:Author:Name:Value' },
+			email: { value: 'Atom:Author:Email:Value' },
+			uri: { value: 'Atom:Author:Uri:Value' },
+		},
+		logo: {
+			value: 'Atom:Logo:Value',
+			type: 'Atom:Logo:Type'
+		},
+		rights: {
+			value: 'Atom:Rights:Value',
+			type: 'Atom:Rights:Type'
+		},
+		subtitle: {
+			value: 'Atom:Subtitle:Value',
+		},
+		entries: [
+			{
+				id: {
+					value: 'Atom:Entries:0:Id:value'
+				},
+				title: {
+					type: 'Atom:Entries:0:Title:Type',
+					value: 'Atom:Entries:0:Title:Value'
+				},
+				summary: {
+					type: 'Atom:Entries:0:Summary:Type',
+					value: 'Atom:Entries:0:Summary:Value'
+				},
+				content: {
+					type: 'Atom:Entries:0:Content:Type',
+					value: 'Atom:Entries:0:Content:Value',
+					src: 'Atom:Entries:0:Src:Value'
+				},
+				rights: {
+					type: 'Atom:Entries:0:Rights:Type',
+					value: 'Atom:Entries:0:Rights:Value'
+				},
+				updated: {
+					value: new Date('Mon, 22 Jun 2020 20:03:00 GMT')
+				},
+				updatedRaw: {
+					value: 'Mon, 22 Jun 2020 20:03:00 GMT'
+				},
+				published: {
+					value: new Date('Mon, 22 Jun 2020 20:03:00 GMT')
+				},
+				publishedRaw: {
+					value: 'Mon, 22 Jun 2020 20:03:00 GMT'
+				},
+				author: {
+					name: { value: 'Atom:Entries:Author:Name:Value' },
+					email: { value: 'Atom:Entries:Author:Email:Value' },
+					uri: { value: 'Atom:Entries:Author:Uri:Value' },
+				},
+				contributors: [
+					{
+						name: { value: 'Atom:Entries:0:Contributors:0:Name:Value' },
+						email: { value: 'Atom:Entries:0:Contributors:0:Email:Value' },
+						uri: { value: 'Atom:Entries:0:Contributors:0:Uri:Value' },
+					},
+					{
+						name: { value: 'Atom:Entries:0:Contributors:1:Name:Value' },
+						email: { value: 'Atom:Entries:0:Contributors:1:Email:Value' },
+						uri: { value: 'Atom:Entries:0:Contributors:1:Uri:Value' },
+					}
+				],
+				categories: [
+					{ term: 'Atom:Entries:0:Categories:0:Term', label: 'Atom:Entries:0:Categories:0:Label' },
+					{ term: 'Atom:Entries:0:Categories:1:Term', label: 'Atom:Entries:0:Categories:1:Label' }
+				],
+				source: {
+					id: { value: 'Atom:Entries:0:Source:Id:Value' },
+					title: { value: 'Atom:Entries:0:Source:Title:Value' },
+					updated: { value: new Date('Mon, 22 Jun 2020 20:03:00 GMT') },
+					updatedRaw: { value: 'Mon, 22 Jun 2020 20:03:00 GMT' }
+				},
+				href: 'Atom:Entries:0:Href',
+				"feedburner:origlink": {
+					value: 'Atom:Entries:0:Feedburner:Origlink'
+				}
+			}
+		]
+	} as InternalAtom;
 	setter && setter(result);
 	return result;
 }
@@ -361,11 +492,69 @@ const testArrayLength = (fieldName: string, target: any, expectedLength: number)
 				assert: [{ fn: assertEquals, expect: 34 }]
 			},
 			...testArrayLength('Items', (src:Feed) => src.entries, 3),
+			...testTextField('Items:0:Title', (src: Feed) => src.entries[0].title, undefined, 'RSS2:Channel:Item:0:Title:Value'),
+			...testTextField('Items:0:Description', (src: Feed) => src.entries[0].description, undefined, 'RSS2:Channel:Item:0:Description:Value'),
+			{
+				name: 'Items:0:Link',
+				getValue: (src: Feed) => src.entries[0].link,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Item:0:Link:Value' }]
+			},
+			{
+				name: 'Items:0:Guid',
+				getValue: (src: Feed) => src.entries[0].id,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Item:0:Guid:Value' }]
+			},
+			{
+				name: 'Items:0:Comments',
+				getValue: (src: Feed) => src.entries[0].comments,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Item:0:Comments:Value' }]
+			},
+			...testArrayLength('Items:0:Categories', (src:Feed) => src.entries[0].categories, 2),
+			{
+				name: 'Items:0:MediaCredit',
+				getValue: (src: Feed) => src.entries[0].mediaCredit,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Item:0:MediaCredit:Value' }]
+			},
+			{
+				name: 'Items:0:MediaDescription',
+				getValue: (src: Feed) => src.entries[0].mediaDescription,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Item:0:MediaDescription:Value' }]
+			},
+			{
+				name: 'Items:0:MediaContent',
+				getValue: (src: Feed) => src.entries[0].mediaContent,
+				assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }]
+			},
+			{
+				name: 'Items:0:MediaContent:Height',
+				getValue: (src: Feed) => src.entries[0].mediaContent?.height,
+				assert: [{ fn: assertEquals, expect: 69 }]
+			},
+			{
+				name: 'Items:0:MediaContent:Width',
+				getValue: (src: Feed) => src.entries[0].mediaContent?.width,
+				assert: [{ fn: assertEquals, expect: 32 }]
+			},
+			{
+				name: 'Items:0:MediaContent:Medium',
+				getValue: (src: Feed) => src.entries[0].mediaContent?.medium,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Item:0:MediaContent:Medium' }]
+			},
+			{
+				name: 'Items:0:MediaContent:Url',
+				getValue: (src: Feed) => src.entries[0].mediaContent?.url,
+				assert: [{ fn: assertEquals, expect: 'RSS2:Channel:Item:0:MediaContent:Url' }]
+			},
 		]
+	},
+	{
+		name: 'Atom',
+		source: toFeed(FeedType.Atom, composeAtom()) as Feed,
+		tests: []
 	}
 ].forEach((workspace) => {
 	workspace.tests.forEach((test) => {
-		Deno.test(`toFeed-${workspace.name}:${test.name}`, () => {
+		Deno.test(`toFeed:${workspace.name}:${test.name}`, () => {
       const target = test.getValue(workspace.source);
       test.assert.forEach((x) => x.fn(target, x.expect));
     });

@@ -75,7 +75,7 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
 
 const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
   const result = {
-    type: FeedType.Rss2,
+    type: FeedType.Rss2
   } as Feed;
 
   if (rss.channel) {
@@ -95,6 +95,7 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
       result.createdRaw = createdRaw;
     }
 
+		result.docs = rss.channel.docs?.value;
     result.links = [(rss.channel[DublinCoreFields.URI]?.value || (rss.channel.link?.value as string))];
     result.language = rss.channel[DublinCoreFields.Language]?.value || rss.channel.language?.value;
     result.updateDate = rss.channel.lastBuildDate?.value;

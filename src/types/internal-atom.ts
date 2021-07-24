@@ -7,7 +7,6 @@ export interface InternalAtom {
   updatedRaw: ValueField<string>;
   icon?: ValueField<string>;
   links?: Link[];
-  entries: Entry[];
   categories?: Category[];
   contributors?: Person[];
   generator?: ValueField<string>;
@@ -15,6 +14,7 @@ export interface InternalAtom {
   logo?: ValueField<string>;
   rights?: Text;
   subtitle?: ValueField<string>;
+  entries: Entry[];
 }
 
 interface Link {
@@ -62,10 +62,10 @@ interface Source {
   id?: ValueField<string>;
   title?: ValueField<string>;
   updated?: ValueField<Date>;
-  updatedRaw?: ValueField<Date>;
+  updatedRaw?: ValueField<string>;
 }
 
 interface Text {
-  type: string;
+  type?: string;
   value?: string;
 }
