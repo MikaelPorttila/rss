@@ -119,9 +119,48 @@ Deno.test(`Call signatures compile without error`, async () => {
       },
       {
         name: "Feed:Item:0:Description",
-        getValue: (src: DeserializationResult<RSS1>) =>
-          src.feed.item[0].description,
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0].description,
         assert: [{ fn: assertEquals, expect: "RSS1:Item:0:Description" }],
+      },
+			{
+        name: "Feed:Item:0:DcCreator",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["dc:creator"],
+        assert: [{ fn: assertEquals, expect: "RSS1:Item:0:DCCreator" }],
+      },
+			{
+        name: "Feed:Item:0:DcDate",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["dc:date"],
+        assert: [{ fn: assertEquals, expect: new Date('2021-07-24T10:00:00+00:00') }],
+      },
+			{
+        name: "Feed:Item:0:DcDateRaw",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["dc:dateRaw"],
+        assert: [{ fn: assertEquals, expect: '2021-07-24T10:00:00+00:00' }],
+      },
+			{
+        name: "Feed:Item:0:DcSubject",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["dc:subject"],
+        assert: [{ fn: assertEquals, expect: "RSS1:Item:0:SlashSubject" }],
+      },
+			{
+        name: "Feed:Item:0:SlashDepartment",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["slash:department"],
+        assert: [{ fn: assertEquals, expect: "RSS1:Item:0:SlashDepartment" }],
+      },
+			{
+        name: "Feed:Item:0:SlashSection",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["slash:section"],
+        assert: [{ fn: assertEquals, expect: "RSS1:Item:0:SlashSection" }],
+      },
+			{
+        name: "Feed:Item:0:SlashComments",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["slash:comments"],
+        assert: [{ fn: assertEquals, expect: 1337 }],
+      },
+			{
+        name: "Feed:Item:0:SlashHitParade",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["slash:hit_parade"],
+        assert: [{ fn: assertEquals, expect: '140,131,115,99,29,13,5' }],
       },
       {
         name: "Feed:TextInput",
