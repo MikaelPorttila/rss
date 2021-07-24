@@ -11,6 +11,7 @@ import type {
 import { isValidHttpURL } from "./util.ts";
 import { FeedType } from "./types/mod.ts";
 import { DublinCoreFieldArray, DublinCoreFields } from "./types/dublin-core.ts";
+import { SlashFieldArray, SlashFields } from "./types/slash.ts";
 import { InternalAtom } from "./types/internal-atom.ts";
 import { InternalRSS2 } from "./types/internal-rss2.ts";
 import { InternalRSS1 } from "./types/internal-rss1.ts";
@@ -37,11 +38,16 @@ export const toLegacyRss1 = (rss: InternalRSS1): RSS1 => {
   }
 
   result.item = rss.item?.map((item) => {
-    return {
+
+		const itemResult = {
       title: item.title?.value as string,
       description: item.description?.value as string,
       link: item.link?.value as string,
     };
+
+		copyFields(DublinCoreFieldArray, item, itemResult);
+		copyFields(SlashFieldArray, item, itemResult);
+    return itemResult;
   });
 
   if (rss.textInput) {
@@ -142,12 +148,11 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
           };
         }
 
-        copyDublinCoreValues(item, itemResult);
+        copyFields(DublinCoreFieldArray, item, itemResult);
         return itemResult;
       }),
     };
-
-    copyDublinCoreValues(rss.channel, result.channel);
+		copyFields(DublinCoreFieldArray, rss.channel, result.channel);
   }
 
   return result;
@@ -408,11 +413,11 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
   return feed;
 };
 
-const copyDublinCoreValues = (source: any, target: any): void => {
-  DublinCoreFieldArray.forEach((field: string) => {
-    const val = source[field];
+const copyFields = (fields: string[], source: any, target: any) => {
+  fields.forEach((fieldName: string) => {
+    const val = source[fieldName];
     if (val) {
-      target[field] = val?.value || val;
+      target[fieldName] = val?.value || val;
     }
   });
-};
+}

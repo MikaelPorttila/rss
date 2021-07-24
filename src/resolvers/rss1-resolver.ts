@@ -1,5 +1,5 @@
-import { DublinCoreFields } from "../types/dublin-core.ts";
 import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
+import { resolveSlashField } from "./slash-resolver.ts";
 
 export const resolveRss1Field = (
   nodeName: string,
@@ -37,7 +37,23 @@ export const resolveRss1Field = (
         if (!!dublinCoreResult.newName) {
           propertyName = dublinCoreResult.newName;
         }
-      }
+      } else {
+				const slashResult = resolveSlashField(propertyName);
+				if (slashResult.handled) {
+					if (slashResult.isArray) {
+						isArray = true;
+					}
+					if (slashResult.isDate) {
+						isDate = true;
+					}
+					if (slashResult.isNumber) {
+						isNumber = true;
+					}
+					if (!!slashResult.newName) {
+						propertyName = slashResult.newName;
+					}
+				}
+			}
       break;
   }
 

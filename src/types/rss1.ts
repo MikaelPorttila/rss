@@ -1,4 +1,5 @@
 import { DublinCore } from "./dublin-core.ts";
+import { Slash } from './slash.ts';
 
 // https://validator.w3.org/feed/docs/rss1.html
 export interface RSS1 {
@@ -14,14 +15,14 @@ export interface RSS1 {
   };
 }
 
-interface Channel extends DublinCore {
+interface Channel extends DublinCore  {
   title: string;
   link: string;
   description: string;
   about: string; // Mapped rdf:about
 }
 
-interface Item extends DublinCore {
+interface Item extends DublinCore, Slash {
   title: string;
   link: string;
   description: string;

@@ -1,4 +1,5 @@
 import { DublinCore } from "./dublin-core.ts";
+import { Slash } from './slash.ts';
 import { FeedType } from "./feed-type.ts";
 
 export interface Feed {
@@ -58,6 +59,7 @@ export interface FeedEntry {
   mediaCredit?: string;
   mediaDescription?: string;
   dc: DublinCore;
+	slash: Slash;
 }
 
 interface FeedImage {

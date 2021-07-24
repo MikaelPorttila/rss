@@ -2,6 +2,7 @@ import type { Feed, FeedEntry, JsonFeed } from "./types/mod.ts";
 import { isValidHttpURL } from "./util.ts";
 import { FeedType } from "./types/mod.ts";
 import { DublinCoreFieldArray, DublinCoreFields } from "./types/dublin-core.ts";
+import { SlashFieldArray, SlashFields } from './types/slash.ts';
 import { InternalAtom } from "./types/internal-atom.ts";
 import { InternalRSS2 } from "./types/internal-rss2.ts";
 import { InternalRSS1 } from "./types/internal-rss1.ts";
@@ -68,14 +69,18 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
       } as FeedEntry;
 
       feedEntry.dc = {};
-      copyDublinCoreValues(item, feedEntry.dc);
+      feedEntry.slash = {};
+
+      copyFields(DublinCoreFieldArray, item, feedEntry.dc);
+      copyFields(SlashFieldArray, item, feedEntry.slash);
 
       return feedEntry;
     }) || undefined;
   }
 
   result.dc = {};
-  copyDublinCoreValues(rss.channel, result.dc);
+  copyFields(DublinCoreFieldArray, rss.channel, result.dc);
+
   return result;
 };
 
@@ -145,7 +150,7 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
       : undefined;
 
     result.dc = {};
-    copyDublinCoreValues(rss.channel, result.dc);
+    copyFields(DublinCoreFieldArray, rss.channel, result.dc);
   }
 
   result.entries = rss.channel?.items?.map((item) => {
@@ -190,21 +195,23 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
       creators: creator,
     } as FeedEntry;
     entryResult.dc = {};
-    copyDublinCoreValues(item, entryResult.dc);
+    copyFields(DublinCoreFieldArray, item, entryResult.dc);
+
     return entryResult;
   });
 
   return result;
 };
 
-const copyDublinCoreValues = (source: any, target: any): void => {
-  DublinCoreFieldArray.forEach((field: string) => {
-    const val = source[field];
+
+const copyFields = (fields: string[], source: any, target: any) => {
+  fields.forEach((fieldName: string) => {
+    const val = source[fieldName];
     if (val) {
-      target[field] = val?.value || val;
+      target[fieldName] = val?.value || val;
     }
   });
-};
+}
 
 const mapAtomToFeed = (atom: InternalAtom): Feed => {
   const entries = atom.entries?.map((entry) => {
