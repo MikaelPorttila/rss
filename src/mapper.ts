@@ -66,6 +66,7 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
             item.description.value,
         },
         link: item[DublinCoreFields.URI]?.value || item.link.value,
+				id: item[DublinCoreFields.URI]?.value || item.link.value
       } as FeedEntry;
 
       feedEntry.dc = {};

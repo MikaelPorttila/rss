@@ -4,7 +4,9 @@ import { Feed } from "./types/feed.ts";
 import { FeedType } from "./types/feed-type.ts";
 import { InternalAtom } from "./types/internal-atom.ts";
 import { InternalRSS2 } from "./types/internal-rss2.ts";
-
+import { InternalRSS1 } from "./types/internal-rss1.ts";
+import { DublinCoreFieldArray } from "./types/dublin-core.ts";
+import { resolveRss1Field } from "./resolvers/rss1-resolver.ts";
 const composeAtom = (
   setter: (data: InternalAtom) => void = () => {},
 ): InternalAtom => {
@@ -351,6 +353,74 @@ const composeRss2 = (
   return result;
 };
 
+const composeRss1 = (
+  setter: (data: InternalRSS1) => void = () => {},
+): InternalRSS1 => {
+  const result = {
+		channel: {
+			title: {
+				value: 'RSS1:Channel:Title:Value'
+			},
+			link: {
+				value: 'RSS1:Channel:Link:Value'
+			},
+			description: {
+				value: 'RSS1:Channel:Description:Value'
+			},
+			about: {
+				value: 'RSS1:Channel:About:Value'
+			}
+		},
+		image: {
+			about: 'RSS1:Image:About',
+			resource: 'RSS1:Image:Resource',
+			title: {
+				value: 'RSS1:Image:Title:Value'
+			},
+			link: {
+				value: 'RSS1:Image:Link:Value'
+			},
+			url: {
+				value: 'RSS1:Image:Url:Value'
+			}
+		},
+		item: [
+			{
+				title: {
+					value: 'RSS1:Item:0:Title:Value'
+				},
+				link: {
+					value: 'RSS1:Item:0:Link:Value'
+				},
+				description: {
+					value: 'RSS1:Item:0:Description:Value'
+				}
+			}
+		]
+	} as InternalRSS1;
+
+	DublinCoreFieldArray.forEach((dcField => {
+		const nameSplit = dcField.split(':');
+		const field = nameSplit[1].charAt(0).toUpperCase() + nameSplit[1].slice(1);
+
+		const [propertyName, isArray, isNumber, isDate] = resolveRss1Field(dcField);
+
+		let channelValue: string | number | Date = `RSS1:Channel:${nameSplit[0].toUpperCase() + field}:Value`;
+		let itemValue: string | number | Date= `RSS1:Item:0:${nameSplit[0].toUpperCase() + field}:Value`;
+
+		if (isDate) {
+			channelValue = new Date("Mon, 22 Jun 2020 20:03:00 GMT");
+			itemValue = new Date("Mon, 22 Jun 2020 20:03:00 GMT");
+		}
+
+		(result.channel as any)[dcField] = { value: channelValue };
+		(result.item[0] as any)[dcField] = { value: itemValue };
+	}));
+
+  setter && setter(result);
+  return result;
+};
+
 const testTextField = (
   fieldName: string,
   target: any,
@@ -395,13 +465,210 @@ const testArrayLength = (
     },
     {
       name: `${fieldName}:Length`,
-      getValue: (src: Feed) => target(src).length,
+      getValue: (src: Feed) => target(src)?.length,
       assert: [{ fn: assertEquals, expect: expectedLength }],
     },
   ];
 };
 
 [
+	{
+		name: 'RSS1',
+		source: toFeed(FeedType.Rss1, composeRss1((data) => {
+			data.channel["dc:title"] = undefined;
+			data.channel["dc:description"] = undefined;
+			data.channel["dc:URI"] = undefined;
+			data.channel["dc:title"] = undefined;
+			data.item[0]["dc:title"] = undefined;
+			data.item[0]["dc:description"] = undefined;
+			data.item[0]["dc:URI"] = undefined;
+		})) as Feed,
+		tests: [
+			{
+        name: "Root",
+        getValue: (src: Feed) => src,
+        assert: [{ fn: assertNotEquals, expect: undefined }, {
+          fn: assertNotEquals,
+          expect: null,
+        }],
+      },
+			...testTextField("Title", (src: Feed) => src.title, undefined, "RSS1:Channel:Title:Value"),
+			{
+        name: "Description",
+        getValue: (src: Feed) => src.description,
+        assert: [{
+          fn: assertEquals,
+          expect: "RSS1:Channel:Description:Value",
+        }],
+      },
+			{
+        name: "Language",
+        getValue: (src: Feed) => src.language,
+        assert: [{ fn: assertEquals, expect: 'RSS1:Channel:DCLanguage:Value' }],
+      },
+      ...testArrayLength("Link", (src: Feed) => src.links, 1),
+      {
+        name: "Link:Value:0",
+        getValue: (src: Feed) => src.links[0],
+        assert: [{ fn: assertEquals, expect: "RSS1:Channel:Link:Value" }],
+      },
+      {
+        name: "Copyright",
+        getValue: (src: Feed) => src.copyright,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      {
+        name: "ManagingEditor",
+        getValue: (src: Feed) => src.managingEditorMail,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      {
+        name: "WebMaster",
+        getValue: (src: Feed) => src.webMasterMail,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      {
+        name: "PubDate",
+        getValue: (src: Feed) => src.published,
+        assert: [{
+          fn: assertEquals,
+          expect: undefined,
+        }],
+      },
+      {
+        name: "PubDateRaw",
+        getValue: (src: Feed) => src.publishedRaw,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      {
+        name: "Docs",
+        getValue: (src: Feed) => src.docs,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      {
+        name: "Generator",
+        getValue: (src: Feed) => src.generator,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      {
+        name: "LastBuildDate",
+        getValue: (src: Feed) => src.created,
+        assert: [{
+          fn: assertEquals,
+          expect: undefined,
+        }],
+      },
+      {
+        name: "LastBuildDateRaw",
+        getValue: (src: Feed) => src.createdRaw,
+        assert: [{ fn: assertEquals, expect: undefined}],
+      },
+      {
+        name: "Ttl",
+        getValue: (src: Feed) => src.ttl,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      {
+        name: "Image",
+        getValue: (src: Feed) => src.image,
+        assert: [{ fn: assertNotEquals, expect: undefined }, {
+          fn: assertNotEquals,
+          expect: null,
+        }],
+      },
+      {
+        name: "Image:Url",
+        getValue: (src: Feed) => src.image?.url,
+        assert: [{ fn: assertEquals, expect: "RSS1:Image:Url:Value" }],
+      },
+      {
+        name: "Image:Title",
+        getValue: (src: Feed) => src.image?.title,
+        assert: [{ fn: assertEquals, expect: 'RSS1:Image:Title:Value' }],
+      },
+      {
+        name: "Image:Link",
+        getValue: (src: Feed) => src.image?.link,
+        assert: [{ fn: assertEquals, expect: "RSS1:Image:Link:Value" }],
+      },
+      {
+        name: "Image:Height",
+        getValue: (src: Feed) => src.image?.height,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      {
+        name: "Image:Width",
+        getValue: (src: Feed) => src.image?.width,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      ...testArrayLength("Items", (src: Feed) => src.entries, 1),
+      ...testTextField(
+        "Items:0:Title",
+        (src: Feed) => src.entries[0].title,
+        undefined,
+        "RSS1:Item:0:Title:Value",
+      ),
+      ...testTextField(
+        "Items:0:Description",
+        (src: Feed) => src.entries[0].description,
+        undefined,
+        "RSS1:Item:0:Description:Value",
+      ),
+      {
+        name: "Items:0:Link",
+        getValue: (src: Feed) => src.entries[0].link,
+        assert: [{
+          fn: assertEquals,
+          expect: "RSS1:Item:0:Link:Value",
+        }],
+      },
+      {
+        name: "Items:0:Id",
+        getValue: (src: Feed) => src.entries[0].id,
+        assert: [{ fn: assertEquals, expect: "RSS1:Item:0:Link:Value" }],
+      },
+      {
+        name: "Items:0:Comments",
+        getValue: (src: Feed) => src.entries[0].comments,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      {
+        name: "Items:0:MediaCredit",
+        getValue: (src: Feed) => src.entries[0].mediaCredit,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      {
+        name: "Items:0:MediaDescription",
+        getValue: (src: Feed) => src.entries[0].mediaDescription,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      {
+        name: "Items:0:MediaContent",
+        getValue: (src: Feed) => src.entries[0].mediaContent,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      {
+        name: "Items:0:MediaContent:Height",
+        getValue: (src: Feed) => src.entries[0].mediaContent?.height,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      {
+        name: "Items:0:MediaContent:Width",
+        getValue: (src: Feed) => src.entries[0].mediaContent?.width,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      {
+        name: "Items:0:MediaContent:Medium",
+        getValue: (src: Feed) => src.entries[0].mediaContent?.medium,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      },
+      {
+        name: "Items:0:MediaContent:Url",
+        getValue: (src: Feed) => src.entries[0].mediaContent?.url,
+        assert: [{ fn: assertEquals, expect: undefined }],
+      }
+		]
+	},
   {
     name: "RSS2",
     source: toFeed(FeedType.Rss2, composeRss2()) as Feed,

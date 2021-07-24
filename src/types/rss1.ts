@@ -4,22 +4,22 @@ import { Slash } from './slash.ts';
 // https://validator.w3.org/feed/docs/rss1.html
 export interface RSS1 {
   channel: Channel;
-  item: Item[];
-  image: Image;
+	image: Image;
   textInput: {
-    title: string;
-    description: string;
-    name: string;
-    link: string;
     about: string; //Mapped from rdf:about
+		title: string;
+    description: string;
+    link: string;
+    name: string;
   };
+	item: Item[];
 }
 
 interface Channel extends DublinCore  {
+  about: string; // Mapped rdf:about
   title: string;
   link: string;
   description: string;
-  about: string; // Mapped rdf:about
 }
 
 interface Item extends DublinCore, Slash {
@@ -30,8 +30,8 @@ interface Item extends DublinCore, Slash {
 
 interface Image extends DublinCore {
   about: string;
-  resource: string;
   title: string;
+  resource: string;
   link: string;
   url: string;
 }
