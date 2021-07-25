@@ -25,113 +25,60 @@ const { feed } = await parseFeed(xml);
 // Your code...
 ```
 
-## Parsed feed object type
+## Mapping
 
-Opinionated type definition which RSS and Atom are mapped into.
 
-This is a readable copy of the real type definition, Please check **feed.ts**
-for the actual defintion.
+### Feed
 
-```typescript
-{
-	version?: string;
-	id: string;
-	type: FeedType;
-	title: {
-		type?: string | ContentType;
-		value: string;
-	};
-	description?: string;
-	generator?: string;
-	language?: string;
-	icon?: string;
-	links: string[];
-	publishedRaw?: string;
-	updateDate?: Date;
-	updateDateRaw?: string;
-	copyright?: string;
-	author: {
-		name?: string;
-		email?: string;
-		uri?: string;
-		avatar?: string;
-	};
-	ttl?: number;
-	categories: [{
-		term: string;
-		label: string;
-	}];
-	skipHours?: number[];
-	skipDays?: string[];
-	webMasterMail?: string;
-	managingEditorMail?: string;
-	image?: {
-		url: string;
-		title: string;
-		link: string;
-		width?: number;
-		height?: number;
-	};
-	entries: [{
-		title?: {
-			type?: string | ContentType;
-			value: string;
-		};
-		description?: {
-			type?: string | ContentType;
-			value: string;
-		};
-		summary?: string;
-		link: string;
-		id: string;
-		author?: {
-			name?: string;
-			email?: string;
-			uri?: string;
-			avatar?: string;
-		};
-		creators?: string[];
-		published: Date;
-		publishedRaw: string;
-		updated: Date;
-		updatedRaw: string;
-		categories?: [{
-			term: string;
-			label: string;
-		}];
-		content?: string;
-		comments?: string;
-		source?: {
-			id: string;
-			title: string;
-			updated: Date;
-			updatedRaw: Date;
-		};
-		contributors?: [{
-			name: string;
-			email?: string;
-			uri?: string;
-		}];
-		rights: {
-			type?: string | ContentType;
-			value?: string;
-		};
-		attachments?: [{
-			url?: string;
-			mimeType?: string;
-			sizeInBytes?: number;
-		}];
-		mediaContent?: {
-			url?: string;
-			width?: number;
-			height?: number;
-			medium?: string;
-		};
-		mediaCredit?: string;
-		mediaDescription?: string;
-	}];
-}
-```
+| Feed | Atom | RSS2 | RSS |
+|------|------|------|-----|
+| Id | Id | N/A | N/A |
+| Title | Title | Title or dc:title | Title or dc:title |
+| Description | Subtitle | Description or dc:description | Description or dc:description |
+| Links | Links | Link, dc:URI | Link or dc:URI |
+| Image | Logo | Image | Image |
+| Icon | Icon | N/A | N/A |
+| Language | N/A | Language or dc:language | dc:language |
+| Created | Updated |  LastBuildDate or dc:created or PubDate or dc:dateSubmitted | N/A |
+| Published | Updated | PubDate or dc:dateSubmitted | N/A |
+| UpdateDate | Updated | LastBuildDate | N/A |
+| Generator | Generator | Generator | N/A |
+| Ttl | N/A | Ttl | N/A |
+| Categories | Category | N/A | N/A |
+| Author | Author | WebMaster | N/A |
+| Copyright | N/A | Copyright | N/A |
+| SkipDays | N/A | SkipDays | N/A |
+| SkipHours | N/A |SkipHours | N/A |
+| WebMasterMail | N/A | WebMaster | N/A |
+| ManagingEditorMail | N/A | ManagingEditor | N/A |
+| Docs | N/A | Docs | N/A |
+| dc | N/A | All Dublin Core fields | All Dublin Core fields  |
+| slash | N/A | N/A | All Slash fields |
+
+### Entries/Items
+
+| Feed | Atom | RSS2 | RSS |
+|------|------|------|-----|
+| Id | Id | Guid | dc:URI or Link |
+| Title | Title | Title | Title or dc:title |
+| Description | Summary | Description | Description or dc:description |
+| Content | Content | N/A | N/A |
+| Attachments | Links (marked as enclosure) | N/A | N/A |
+| Links | Links, feedburner:origlink, href,  (Id if URL) | Href | Link, dc:URI |
+| Published | Published | dc:dateSubmitted or PubDate | N/A |
+| Updated | Updated | PubDate | N/A |
+| Comments | N/A | Comments | N/A |
+| Contributors | Contributors | N/A | N/A |
+| Categories | Category | Category | N/A |
+| Author | Author | N/A | N/A |
+| MediaCredit | N/A | media:credit | N/A |
+| MediaDescription | N/A | media:description | N/A |
+| MediaContent | N/A | media:content | N/A |
+| Creators | N/A | dc:creator | N/A |
+| Source | Source | N/A | N/A |
+| dc | N/A | All Dublin Core fields | All Dublin Core fields |
+| slash | N/A | N/A | All Slash fields |
+
 
 ## Benchmark
 

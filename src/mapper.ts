@@ -174,21 +174,15 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
 
   result.entries = rss.channel?.items?.map((item) => {
     const title = item[DublinCoreFields.Title] || item.title?.value;
-    const description = item[DublinCoreFields.Description] ||
-      item.description?.value;
-    const creator = item[DublinCoreFields.Creator]?.map((x) => x.value);
-    const publishedRaw = item[DublinCoreFields.DateSubmittedRaw] ||
-      item.pubDateRaw?.value;
-    const published = item[DublinCoreFields.DateSubmitted] ||
-      item.pubDate?.value;
+    const description = item[DublinCoreFields.Description] || item.description?.value;
 
     const entryResult = {
       id: item.guid?.value,
       links: item.link?.value ? [{
 				href: item.link?.value
 			}]: undefined,
-      published,
-      publishedRaw,
+      published: item[DublinCoreFields.DateSubmitted] || item.pubDate?.value,
+      publishedRaw: item[DublinCoreFields.DateSubmittedRaw] || item.pubDateRaw?.value,
       updated: item.pubDate?.value,
       updatedRaw: item.pubDateRaw?.value,
       comments: item.comments?.value,
@@ -213,7 +207,7 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
       mediaContent: item["media:content"]
         ? { ...item["media:content"] }
         : undefined,
-      creators: creator,
+      creators: item[DublinCoreFields.Creator]?.map((x) => x.value),
     } as FeedEntry;
     entryResult.dc = {};
     copyFields(DublinCoreFieldArray, item, entryResult.dc);
