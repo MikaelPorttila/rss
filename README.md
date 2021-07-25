@@ -39,9 +39,9 @@ const { feed } = await parseFeed(xml);
 | Image | Logo | Image | Image |
 | Icon | Icon | - | - |
 | Language | N/A | Language or dc:language | dc:language |
-| Created | Updated |  LastBuildDate or dc:created or PubDate or dc:dateSubmitted | - |
-| Published | Updated | PubDate or dc:dateSubmitted | - |
-| UpdateDate | Updated | LastBuildDate | - |
+| Created | Updated |  LastBuildDate or dc:created or PubDate or dc:dateSubmitted or dc:date | dc:created or dc:dateSubmitted or dc:date |
+| Published | Updated | PubDate or dc:dateSubmitted or dc:date | dc:dateSubmitted or dc:date |
+| UpdateDate | Updated | LastBuildDate or dc:date | dc:date  |
 | Generator | Generator | Generator | - |
 | Ttl | - | Ttl | - |
 | Categories | Category | - | - |
@@ -66,7 +66,7 @@ const { feed } = await parseFeed(xml);
 | Content | Content | - | -|
 | Links | Links, feedburner:origlink, Href,  (Id if URL) | Href | Link, dc:URI |
 | Attachments | Links (marked as enclosure) | - | - |
-| Published | Published | dc:dateSubmitted or PubDate | dc:dateSubmitted |
+| Published | Published | dc:dateSubmitted or PubDate or dc:date | dc:dateSubmitted or dc:date |
 | Updated | Updated | PubDate | - |
 | Categories | Category | Category | - |
 | Contributors | Contributors | - | - |

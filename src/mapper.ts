@@ -48,6 +48,13 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
     ];
 		result.copyright = rss.channel[DublinCoreFields.Rights]?.value;
     result.language = rss.channel[DublinCoreFields.Language]?.value;
+		result.created = rss.channel[DublinCoreFields.Created]?.value || rss.channel[DublinCoreFields.DateSubmitted]?.value || rss.channel[DublinCoreFields.Date]?.value;
+		result.createdRaw = rss.channel[DublinCoreFields.CreatedRaw]?.value || rss.channel[DublinCoreFields.DateSubmittedRaw]?.value || rss.channel[DublinCoreFields.DateRaw]?.value;
+		result.published = rss.channel[DublinCoreFields.DateSubmitted]?.value || rss.channel[DublinCoreFields.Date]?.value;
+		result.publishedRaw = rss.channel[DublinCoreFields.DateSubmittedRaw]?.value || rss.channel[DublinCoreFields.DateRaw]?.value;
+		result.updateDate = rss.channel[DublinCoreFields.Date]?.value;
+		result.updateDateRaw = rss.channel[DublinCoreFields.DateRaw]?.value;
+
     result.image = rss.image
       ? {
         link: rss.image.link?.value as string,
@@ -81,8 +88,8 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
             item.description.value,
         },
         links,
-				published: item[DublinCoreFields.DateSubmitted]?.value,
-				publishedRaw: item[DublinCoreFields.DateSubmittedRaw]?.value,
+				published: item[DublinCoreFields.DateSubmitted]?.value || item[DublinCoreFields.Date]?.value,
+				publishedRaw: item[DublinCoreFields.DateSubmittedRaw]?.value || item[DublinCoreFields.DateRaw]?.value,
       } as FeedEntry;
 
       feedEntry.dc = {};
@@ -107,23 +114,10 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
   } as Feed;
 
   if (rss.channel) {
-    result.created = result.published =
-      rss.channel[DublinCoreFields.DateSubmitted]?.value ||
-      rss.channel.pubDate?.value;
-    result.createdRaw = result.publishedRaw =
-      rss.channel[DublinCoreFields.DateSubmittedRaw]?.value ||
-      rss.channel.pubDateRaw?.value;
-
-    let created = rss.channel[DublinCoreFields.Created]?.value ||
-      rss.channel.lastBuildDate?.value;
-    let createdRaw = rss.channel[DublinCoreFields.CreatedRaw]?.value ||
-      rss.channel.lastBuildDateRaw?.value;
-    if (created) {
-      result.created = created;
-    }
-    if (createdRaw) {
-      result.createdRaw = createdRaw;
-    }
+    result.published = rss.channel[DublinCoreFields.DateSubmitted]?.value || rss.channel[DublinCoreFields.Date]?.value || rss.channel.pubDate?.value;
+    result.publishedRaw = rss.channel[DublinCoreFields.DateSubmittedRaw]?.value || rss.channel[DublinCoreFields.DateRaw]?.value || rss.channel.pubDateRaw?.value;
+		result.created = rss.channel[DublinCoreFields.Created]?.value || rss.channel.lastBuildDate?.value || result.published;
+		result.createdRaw = rss.channel[DublinCoreFields.CreatedRaw]?.value || rss.channel.lastBuildDateRaw?.value || result.publishedRaw;
 
     if (rss.channel.webMaster?.value) {
       result.author = {
@@ -143,8 +137,8 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
 
     result.language = rss.channel[DublinCoreFields.Language]?.value ||
       rss.channel.language?.value;
-    result.updateDate = rss.channel.lastBuildDate?.value;
-    result.updateDateRaw = rss.channel.lastBuildDateRaw?.value;
+    result.updateDate = rss.channel.lastBuildDate?.value || rss.channel[DublinCoreFields.Date]?.value;
+    result.updateDateRaw = rss.channel.lastBuildDateRaw?.value || rss.channel[DublinCoreFields.DateRaw]?.value;
     result.generator = rss.channel.generator?.value;
     result.ttl = rss.channel.ttl?.value || 60;
     result.title = {

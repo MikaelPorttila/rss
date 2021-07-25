@@ -591,13 +591,13 @@ const testArrayLength = (
         getValue: (src: Feed) => src.published,
         assert: [{
           fn: assertEquals,
-          expect: undefined,
+          expect: new Date('2020-06-22T20:03:00.000Z'),
         }],
       },
       {
         name: "PubDateRaw",
         getValue: (src: Feed) => src.publishedRaw,
-        assert: [{ fn: assertEquals, expect: undefined }],
+        assert: [{ fn: assertEquals, expect: 'RSS1:Channel:DCDateSubmittedRaw:Value' }],
       },
       {
         name: "Docs",
@@ -614,13 +614,29 @@ const testArrayLength = (
         getValue: (src: Feed) => src.created,
         assert: [{
           fn: assertEquals,
-          expect: undefined,
+          expect: new Date('2020-06-22T20:03:00.000Z'),
+        }],
+      },
+			{
+        name: "DcDate",
+        getValue: (src: Feed) => src.updateDate,
+        assert: [{
+          fn: assertEquals,
+          expect: new Date('2020-06-22T20:03:00.000Z'),
+        }],
+      },
+			{
+        name: "DcDateRaw",
+        getValue: (src: Feed) => src.updateDateRaw,
+        assert: [{
+          fn: assertEquals,
+          expect: 'RSS1:Channel:DCDateRaw:Value',
         }],
       },
       {
         name: "LastBuildDateRaw",
         getValue: (src: Feed) => src.createdRaw,
-        assert: [{ fn: assertEquals, expect: undefined}],
+        assert: [{ fn: assertEquals, expect: 'RSS1:Channel:DCCreatedRaw:Value'}],
       },
       {
         name: "Ttl",
@@ -843,7 +859,7 @@ const testArrayLength = (
       {
         name: "PubDateRaw",
         getValue: (src: Feed) => src.publishedRaw,
-        assert: [{ fn: assertEquals, expect: "Mon, 22 Jun 2020 20:03:00 GMT" }],
+        assert: [{ fn: assertEquals, expect: "RSS2:Channel:DCDateRaw:Value" }],
       },
       {
         name: "Docs",
