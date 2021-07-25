@@ -280,6 +280,9 @@ const composeRss2 = (
           description: {
             value: "RSS2:Channel:Item:0:Description:Value",
           },
+					author: {
+						value: 'RSS2:Channel:Item:0:Author:Value'
+					},
           link: {
             value: "RSS2:Channel:Item:0:Link:Value",
           },
@@ -931,6 +934,14 @@ const testArrayLength = (
         undefined,
         "RSS2:Channel:Item:0:Description:Value",
       ),
+			{
+        name: "Items:0:Author:Name",
+        getValue: (src: Feed) => src.entries[0].author?.name,
+        assert: [{
+          fn: assertEquals,
+          expect: "RSS2:Channel:Item:0:Author:Value",
+        }],
+      },
       {
         name: "Items:0:Link:0",
         getValue: (src: Feed) => src.entries[0].links[0].href,

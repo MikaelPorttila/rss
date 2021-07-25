@@ -61,6 +61,7 @@
 					<title><![CDATA[RSS2:Item:0:Title:CData]]></title>
 					<description><![CDATA[RSS2:Item:0:Description:CData]]></description>
 					<link>https://RSS2-entry-0-link.com/0</link>
+					<author>RSS2:Item:0:Author</author>
 					<guid isPermaLink="true">https://RSS2-entry-0-link.com/0</guid>
 					<dc:creator><![CDATA[RSS2:Item:0:DC:Creator]]></dc:creator>
 					<pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>

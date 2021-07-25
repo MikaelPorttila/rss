@@ -177,6 +177,9 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
     const description = item[DublinCoreFields.Description] || item.description?.value;
 
     const entryResult = {
+			author: item.author?.value ? {
+				name: item.author?.value
+			}: undefined,
       id: item.guid?.value,
       links: item.link?.value ? [{
 				href: item.link?.value

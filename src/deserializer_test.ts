@@ -1355,6 +1355,26 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
         getValue: (src: Feed) => src.entries[0].title?.value,
         assert: [{ fn: assertEquals, expect: "RSS2:Item:0:Title:CData" }],
       },
+			{
+        name: "Items:[0]:Author",
+        getValue: (src: Feed) => src.entries[0].author,
+        assert: [{
+          fn: assertNotEquals,
+          expect: undefined,
+        },
+				{
+          fn: assertNotEquals,
+          expect: null,
+        }],
+      },
+			{
+        name: "Items:[0]:Author:Name",
+        getValue: (src: Feed) => src.entries[0]?.author?.name,
+        assert: [{
+          fn: assertEquals,
+          expect: 'RSS2:Item:0:Author',
+        }],
+      },
       {
         name: "Items:[0]:Guid",
         getValue: (src: Feed) => src.entries[0].id,
