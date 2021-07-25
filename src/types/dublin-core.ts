@@ -1,6 +1,6 @@
 import { ValueField } from "./value-field.ts";
 
-// Based of https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
+// Based on https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
 export interface DublinCoreValueFields {
   "dc:contributor"?: ValueField<string>[];
   "dc:coverage"?: ValueField<string>;
