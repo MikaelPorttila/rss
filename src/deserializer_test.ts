@@ -123,8 +123,8 @@ Deno.test(`Call signatures compile without error`, async () => {
         assert: [{ fn: assertEquals, expect: "RSS1:Item:0:Description" }],
       },
 			{
-        name: "Feed:Item:0:DcCreator",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["dc:creator"],
+        name: "Feed:Item:0:DcCreator:0",
+        getValue: (src: DeserializationResult<RSS1>) => src.feed?.item[0]?.["dc:creator"]?.[0],
         assert: [{ fn: assertEquals, expect: "RSS1:Item:0:DCCreator" }],
       },
 			{
@@ -1406,12 +1406,12 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       },
       {
         name: "Items:[0]:DC:Creator:Length",
-        getValue: (src: Feed) => src.entries[0].creators?.length,
+        getValue: (src: Feed) => src.entries[0].dc["dc:creator"]?.length,
         assert: [{ fn: assertEquals, expect: 1 }],
       },
       {
         name: "Items:[0]:DC:Creator[0]:Value",
-        getValue: (src: Feed) => src.entries[0].creators?.[0],
+        getValue: (src: Feed) => src.entries[0].dc["dc:creator"]?.[0],
         assert: [{ fn: assertEquals, expect: "RSS2:Item:0:DC:Creator" }],
       },
       {
@@ -1497,7 +1497,7 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       },
       {
         name: "Items:[9]:Creators - Multiple DCCreators",
-        getValue: (src: Feed) => src.entries[9].creators?.length,
+        getValue: (src: Feed) => src.entries[9].dc["dc:creator"]?.length,
         assert: [{ fn: assertEquals, expect: 2 }],
       },
       {

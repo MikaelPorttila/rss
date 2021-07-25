@@ -38,7 +38,6 @@ export interface FeedEntry {
   links: Link[];
   id: string;
   author?: Author;
-  creators?: string[];
   published?: Date;
   publishedRaw?: string;
   updated?: Date;
@@ -47,10 +46,11 @@ export interface FeedEntry {
   content?: TextField;
   comments?: string;
   source?: {
-    id: string;
-    title: string;
-    updated: Date;
-    updatedRaw: Date;
+    id?: string;
+    title?: string;
+    updated?: Date;
+    updatedRaw?: Date;
+		url?: string
   };
   contributors?: Person[];
   rights: TextField;

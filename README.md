@@ -27,11 +27,11 @@ const { feed } = await parseFeed(xml);
 
 ## Mapping
 
-
 ### Feed
 
 | Feed | Atom | RSS2 | RSS |
 |------|------|------|-----|
+| FeedType | Atom | RSS2 | RSS1 |
 | Id | Id | N/A | N/A |
 | Title | Title | Title or dc:title | Title or dc:title |
 | Description | Subtitle | Description or dc:description | Description or dc:description |
@@ -52,8 +52,8 @@ const { feed } = await parseFeed(xml);
 | WebMasterMail | N/A | WebMaster | N/A |
 | ManagingEditorMail | N/A | ManagingEditor | N/A |
 | Docs | N/A | Docs | N/A |
-| dc | N/A | All Dublin Core fields | All Dublin Core fields  |
-| slash | N/A | N/A | All Slash fields |
+| dc (Dublin Core Namespace) | N/A | All Dublin Core fields | All Dublin Core fields  |
+| Slash | N/A | N/A | All Slash fields |
 
 ### Entries/Items
 
@@ -74,10 +74,9 @@ const { feed } = await parseFeed(xml);
 | MediaCredit | N/A | media:credit | N/A |
 | MediaDescription | N/A | media:description | N/A |
 | MediaContent | N/A | media:content | N/A |
-| Creators | N/A | dc:creator | N/A |
 | Source | Source | N/A | N/A |
-| dc | N/A | All Dublin Core fields | All Dublin Core fields |
-| slash | N/A | N/A | All Slash fields |
+| dc (Dublin Core Namespace) | N/A | All Dublin Core fields | All Dublin Core fields |
+| Slash | N/A | N/A | All Slash fields |
 
 
 ## Benchmark

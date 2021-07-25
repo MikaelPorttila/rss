@@ -432,21 +432,23 @@ const composeRss1 = (
 		const fieldName = formatNamespaceFieldName(dcField);
 		const [propertyName, isArray, isNumber, isDate] = resolveRss1Field(dcField);
 
-		let channelValue: string | number | Date = `RSS1:Channel:${fieldName}:Value`;
-		let itemValue: string | number | Date= `RSS1:Item:0:${fieldName}:Value`;
+		let channelValue: any;
+		let itemValue: any;
 
-		if (isDate) {
-			channelValue = new Date("Mon, 22 Jun 2020 20:03:00 GMT");
-			itemValue = new Date("Mon, 22 Jun 2020 20:03:00 GMT");
+		if (isArray) {
+			channelValue = [{ value: `RSS1:Channel:${fieldName}:0:Value` }, { value: `RSS1:Channel:${fieldName}:1:Value` }]
+			itemValue = [{ value: `RSS1:Channel:${fieldName}:0:Value` }, { value: `RSS1:Channel:${fieldName}:1:Value` }];
+		}
+		else if (isDate) {
+			channelValue = { value: new Date("Mon, 22 Jun 2020 20:03:00 GMT") }
+			itemValue = { value: new Date("Mon, 22 Jun 2020 20:03:00 GMT") };
+		} else if (isNumber) {
+			channelValue = { value: 1337 };
+			itemValue = { value: 1337 };
 		}
 
-		if (isNumber) {
-			channelValue = 1337;
-			itemValue = 1337;
-		}
-
-		(result.channel as any)[dcField] = { value: channelValue };
-		(result.item[0] as any)[dcField] = { value: itemValue };
+		(result.channel as any)[dcField] = channelValue || { value: `RSS1:Channel:${fieldName}:Value` };
+		(result.item[0] as any)[dcField] = itemValue || { value: `RSS1:Item:0:${fieldName}:Value` };
 	}));
 
 	SlashFieldArray.forEach(slashField => {

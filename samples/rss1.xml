@@ -26,6 +26,7 @@
         <link>RSS1:Item:0:Link</link>
         <description>RSS1:Item:0:Description</description>
         <dc:creator>RSS1:Item:0:DCCreator</dc:creator>
+				<dc:creator>RSS1:Item:1:DCCreator</dc:creator>
         <dc:date>2021-07-24T10:00:00+00:00</dc:date>
         <dc:subject>RSS1:Item:0:SlashSubject</dc:subject>
         <slash:department>RSS1:Item:0:SlashDepartment</slash:department>

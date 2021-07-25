@@ -417,7 +417,13 @@ const copyFields = (fields: string[], source: any, target: any) => {
   fields.forEach((fieldName: string) => {
     const val = source[fieldName];
     if (val) {
-      target[fieldName] = val?.value || val;
+      target[fieldName] = Array.isArray(val)
+				? val.map(x => (x?.value || x))
+				: (val?.value || val);
+
+			if (fieldName === DublinCoreFields.Creator) {
+				console.log(DublinCoreFields.Creator, target[fieldName]);
+			}
     }
   });
 }
