@@ -24,8 +24,6 @@ export interface Feed {
   categories: Category[];
   skipHours?: number[];
   skipDays?: string[];
-  webMasterMail?: string;
-  managingEditorMail?: string;
   image?: FeedImage;
   docs?: string;
   entries: FeedEntry[];

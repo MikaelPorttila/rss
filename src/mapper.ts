@@ -153,8 +153,6 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
     result.skipHours = rss.channel.skipHours?.hour?.map((x) =>
       x.value as number
     );
-    result.webMasterMail = rss.channel.webMaster?.value;
-    result.managingEditorMail = rss.channel.managingEditor?.value;
     result.image = rss.channel.image
       ? {
         link: rss.channel.image.link?.value as string,

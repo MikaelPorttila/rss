@@ -577,16 +577,6 @@ const testArrayLength = (
         assert: [{ fn: assertEquals, expect: 'RSS1:Channel:DCRights:Value' }],
       },
       {
-        name: "ManagingEditor",
-        getValue: (src: Feed) => src.managingEditorMail,
-        assert: [{ fn: assertEquals, expect: undefined }],
-      },
-      {
-        name: "WebMaster",
-        getValue: (src: Feed) => src.webMasterMail,
-        assert: [{ fn: assertEquals, expect: undefined }],
-      },
-      {
         name: "PubDate",
         getValue: (src: Feed) => src.published,
         assert: [{
@@ -821,19 +811,6 @@ const testArrayLength = (
         name: "Copyright",
         getValue: (src: Feed) => src.copyright,
         assert: [{ fn: assertEquals, expect: "RSS2:Channel:Copyright:Value" }],
-      },
-      {
-        name: "ManagingEditor",
-        getValue: (src: Feed) => src.managingEditorMail,
-        assert: [{
-          fn: assertEquals,
-          expect: "RSS2:Channel:ManagingEditor:Value",
-        }],
-      },
-      {
-        name: "WebMaster",
-        getValue: (src: Feed) => src.webMasterMail,
-        assert: [{ fn: assertEquals, expect: "RSS2:Channel:WebMaster:Value" }],
       },
       {
         name: "WebMaster (Author, For Author mapping)",
@@ -1132,16 +1109,6 @@ const testArrayLength = (
       {
         name: "Copyright",
         getValue: (src: Feed) => src.copyright,
-        assert: [{ fn: assertEquals, expect: undefined }],
-      },
-      {
-        name: "ManagingEditor",
-        getValue: (src: Feed) => src.managingEditorMail,
-        assert: [{ fn: assertEquals, expect: undefined }],
-      },
-      {
-        name: "WebMaster",
-        getValue: (src: Feed) => src.webMasterMail,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {

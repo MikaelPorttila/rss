@@ -1323,16 +1323,6 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
         assert: [{ fn: assertEquals, expect: 24 }],
       },
       {
-        name: "WebMaster",
-        getValue: (src: Feed) => src.webMasterMail,
-        assert: [{ fn: assertEquals, expect: "mail@RSS2-webMaster.com" }],
-      },
-      {
-        name: "ManagingEditor",
-        getValue: (src: Feed) => src.managingEditorMail,
-        assert: [{ fn: assertEquals, expect: "mail@wRSS2-managingEditor.com" }],
-      },
-      {
         name: "Ttl",
         getValue: (src: Feed) => src.ttl,
         assert: [{ fn: assertEquals, expect: 100 }],
