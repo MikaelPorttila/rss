@@ -7,6 +7,7 @@
         <title>RSS1:Title</title>
         <link>RSS1:Link</link>
         <description>RSS1:Description</description>
+				<dc:rights>RSS1:DcRights</dc:rights>
         <image rdf:resource="http://xml.com/universal/images/xml_tiny.gif" />
         <items>
             <rdf:Seq>

@@ -574,7 +574,7 @@ const testArrayLength = (
       {
         name: "Copyright",
         getValue: (src: Feed) => src.copyright,
-        assert: [{ fn: assertEquals, expect: undefined }],
+        assert: [{ fn: assertEquals, expect: 'RSS1:Channel:DCRights:Value' }],
       },
       {
         name: "ManagingEditor",
@@ -690,6 +690,16 @@ const testArrayLength = (
         name: "Items:0:Comments",
         getValue: (src: Feed) => src.entries[0].comments,
         assert: [{ fn: assertEquals, expect: undefined }],
+      },
+			{
+        name: "Items:0:Published",
+        getValue: (src: Feed) => src.entries[0].published,
+        assert: [{ fn: assertEquals, expect: new Date("Mon, 22 Jun 2020 20:03:00 GMT") }],
+      },
+			{
+        name: "Items:0:PublishedRaw",
+        getValue: (src: Feed) => src.entries[0].publishedRaw,
+        assert: [{ fn: assertEquals, expect: "RSS1:Item:0:DCDateSubmittedRaw:Value" }],
       },
       {
         name: "Items:0:MediaCredit",

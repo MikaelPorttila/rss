@@ -1138,6 +1138,11 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
         getValue: (src: Feed) => src.title.value,
         assert: [{ fn: assertEquals, expect: "RSS1:Title" }],
       },
+			{
+        name: "DCRights",
+        getValue: (src: Feed) => src.copyright,
+        assert: [{ fn: assertEquals, expect: "RSS1:DcRights" }],
+      },
       {
         name: "Link",
         getValue: (src: Feed) => src.links,

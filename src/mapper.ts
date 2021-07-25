@@ -46,6 +46,7 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
       (rss.channel[DublinCoreFields.URI]?.value as string ||
         rss.channel.link.value as string),
     ];
+		result.copyright = rss.channel[DublinCoreFields.Rights]?.value;
     result.language = rss.channel[DublinCoreFields.Language]?.value;
     result.image = rss.image
       ? {
@@ -69,6 +70,7 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
 			}
 
       const feedEntry = {
+				id: item[DublinCoreFields.URI]?.value || item.link.value,
         title: {
           type: undefined,
           value: item[DublinCoreFields.Title]?.value || item.title.value,
@@ -79,7 +81,8 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
             item.description.value,
         },
         links,
-				id: item[DublinCoreFields.URI]?.value || item.link.value
+				published: item[DublinCoreFields.DateSubmitted]?.value,
+				publishedRaw: item[DublinCoreFields.DateSubmittedRaw]?.value,
       } as FeedEntry;
 
       feedEntry.dc = {};
@@ -151,7 +154,7 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
     };
     result.description = rss.channel[DublinCoreFields.Description]?.value ||
       rss.channel.description?.value;
-    result.copyright = rss.channel.copyright?.value;
+    result.copyright = rss.channel.copyright?.value || rss.channel[DublinCoreFields.Rights]?.value;
     result.skipDays = rss.channel.skipDays?.day?.map((x) => x.value as string);
     result.skipHours = rss.channel.skipHours?.hour?.map((x) =>
       x.value as number
