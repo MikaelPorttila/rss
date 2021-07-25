@@ -1044,11 +1044,14 @@ const testArrayLength = (
 
 				let expectValue;
 
-				if (isNumber) {
+				if (isArray) {
+					expectValue = [
+						`RSS2:Channel:${fieldName}:0:Value`,
+						`RSS2:Channel:${fieldName}:1:Value`
+					];
+				} else if (isNumber) {
 					expectValue = 1337;
-				}
-
-				if (isDate) {
+				} else if (isDate) {
 					expectValue = new Date('2020-06-22T20:03:00.000Z');
 				}
 

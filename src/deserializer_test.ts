@@ -9,12 +9,12 @@ import { Feed, FeedType, RSS1 } from "../mod.ts";
 import type { Atom, DeserializationResult, Options, RSS2, JsonFeed } from "../mod.ts";
 import type { TestEntry } from "./test/test-entry.ts";
 
+const atomTestSample = await Deno.readTextFile("./samples/atom.xml");
 const rss1TestSample = await Deno.readTextFile("./samples/rss1.xml");
 const rss2TestSample = await Deno.readTextFile("./samples/rss2.xml");
 const rss2DublinCoreTestSample = await Deno.readTextFile(
   "./samples/rss2_dublin-core.xml",
 );
-const atomTestSample = await Deno.readTextFile("./samples/atom.xml");
 
 [undefined, null, ""].forEach((input: any) => {
   Deno.test(`Bad input: ${input}`, () => {
@@ -465,10 +465,10 @@ Deno.test(`Call signatures compile without error`, async () => {
         }],
       },
       {
-        name: "Feed:Channel:Item:0:DCCreator",
+        name: "Feed:Channel:Item:0:Author",
         getValue: (src: DeserializationResult<RSS2>) =>
           src.feed.channel.items[0].author,
-        assert: [{ fn: assertEquals, expect: "RSS2:Item:0:DC:Creator" }],
+        assert: [{ fn: assertEquals, expect: "RSS2:Item:0:Author" }],
       },
       {
         name: "Feed:Channel:Item:0:PubDate",
@@ -838,7 +838,7 @@ Deno.test(`Call signatures compile without error`, async () => {
         assert: [{ fn: assertEquals, expect: "ATOM:Feed:Entry:0:Link:Type" }],
       },
       {
-        name: "Feed:Entry:0:0:Published",
+        name: "Feed:Entry:0:Published",
         getValue: (src: DeserializationResult<Atom>) =>
           src.feed.entries[0].published,
         assert: [{
@@ -1361,6 +1361,31 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
           fn: assertNotEquals,
           expect: null,
         }],
+      },
+			{
+        name: "Items:[0]:Enclosure",
+        getValue: (src: Feed) => src.entries[0].attachments,
+        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }],
+      },
+			{
+        name: "Items:[0]:Enclosure:Length",
+        getValue: (src: Feed) => src.entries[0].attachments?.length,
+        assert: [{ fn: assertEquals, expect: 2 }],
+      },
+			{
+        name: "Items:[0]:Enclosure:0:Url",
+        getValue: (src: Feed) => src.entries[0].attachments?.[0].url,
+        assert: [{ fn: assertEquals, expect: 'https://RSS2-entry-0-enclosure-url.mp3' }],
+      },
+			{
+        name: "Items:[0]:Enclosure:0:Type",
+        getValue: (src: Feed) => src.entries[0].attachments?.[0].mimeType,
+        assert: [{ fn: assertEquals, expect: 'audio/mpeg' }],
+      },
+			{
+        name: "Items:[0]:Enclosure:0:Length",
+        getValue: (src: Feed) => src.entries[0].attachments?.[0].sizeInBytes,
+        assert: [{ fn: assertEquals, expect: 24986239}],
       },
 			{
         name: "Items:[0]:Author:Name",

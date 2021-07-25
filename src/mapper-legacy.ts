@@ -113,16 +113,6 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
       generator: rss.channel.generator?.value,
       category: rss.channel.category?.map((x) => x.value as string),
       items: rss.channel.items?.map((item, index) => {
-        let author;
-        const dublinCoreCreator = item[DublinCoreFields.Creator];
-        if (dublinCoreCreator && dublinCoreCreator.length > 0) {
-          author = dublinCoreCreator[0].value;
-        }
-
-        if (!author) {
-          author = item.author?.value;
-        }
-
         const itemResult = {
           guid: item.guid?.value,
           pubDate: item.pubDate?.value,
@@ -130,7 +120,12 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
           title: item.title?.value,
           description: item.description?.value,
           link: item.link?.value,
-          author,
+          author: item.author?.value || ((item[DublinCoreFields.Creator]?.length || 0) > 0 ? item[DublinCoreFields.Creator]?.[0].value : undefined ),
+					enclosure: item.enclosure?.[0] ? {
+						url: item.enclosure?.[0].url,
+						type: item.enclosure?.[0].type,
+						length: item.enclosure?.[0].length,
+					} : undefined,
           comments: item.comments?.value,
           categories: item.categories?.map((x) => x.value as string),
           "media:credit": item["media:credit"]?.value,
@@ -420,10 +415,6 @@ const copyFields = (fields: string[], source: any, target: any) => {
       target[fieldName] = Array.isArray(val)
 				? val.map(x => (x?.value || x))
 				: (val?.value || val);
-
-			if (fieldName === DublinCoreFields.Creator) {
-				console.log(DublinCoreFields.Creator, target[fieldName]);
-			}
     }
   });
 }

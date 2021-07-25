@@ -43,7 +43,7 @@ interface Item extends DublinCoreValueFields {
   author?: ValueField<string>;
   categories?: ValueField<string>[];
   comments?: ValueField<string>;
-  enclosure?: Enclosure;
+  enclosure?: Enclosure[];
   guid?: ValueField<string>;
   pubDate?: ValueField<Date>;
   pubDateRaw?: ValueField<string>;
@@ -59,9 +59,9 @@ interface Item extends DublinCoreValueFields {
 }
 
 interface Enclosure {
-  url: ValueField<string>;
-  length: ValueField<number>;
-  type: ValueField<string>;
+  url?: string;
+  length?: number;
+  type?: string;
 }
 
 interface Source {

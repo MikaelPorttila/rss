@@ -2,7 +2,7 @@ import { ValueField } from "./value-field.ts";
 
 // Based of https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
 export interface DublinCoreValueFields {
-  "dc:contributor"?: ValueField<string>;
+  "dc:contributor"?: ValueField<string>[];
   "dc:coverage"?: ValueField<string>;
   "dc:creator"?: ValueField<string>[];
   "dc:date"?: ValueField<Date>;
@@ -84,7 +84,7 @@ export interface DublinCoreValueFields {
 }
 
 export interface DublinCore {
-  "dc:contributor"?: string;
+  "dc:contributor"?: string[];
   "dc:coverage"?: string;
   "dc:creator"?: string[];
   "dc:date"?: Date;

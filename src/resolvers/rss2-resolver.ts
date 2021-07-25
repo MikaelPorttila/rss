@@ -37,6 +37,9 @@ export const resolveRss2Field = (
       propertyName = "items";
       isArray = true;
       break;
+		case Field.Enclosure:
+			isArray = true;
+			break;
     case Field.Category:
       propertyName = "categories";
       isArray = true;

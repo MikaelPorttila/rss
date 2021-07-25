@@ -90,6 +90,11 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
         links,
 				published: item[DublinCoreFields.DateSubmitted]?.value || item[DublinCoreFields.Date]?.value,
 				publishedRaw: item[DublinCoreFields.DateSubmittedRaw]?.value || item[DublinCoreFields.DateRaw]?.value,
+				updated: item[DublinCoreFields.Date]?.value || item[DublinCoreFields.DateSubmitted]?.value,
+				updatedRaw: item[DublinCoreFields.DateRaw]?.value || item[DublinCoreFields.DateSubmittedRaw]?.value,
+				contributors: item[DublinCoreFields.Contributor]?.map((contributor) => ({
+					name: contributor
+				})),
       } as FeedEntry;
 
       feedEntry.dc = {};
@@ -135,8 +140,7 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
 			result.links.push(rss.channel.link?.value);
 		}
 
-    result.language = rss.channel[DublinCoreFields.Language]?.value ||
-      rss.channel.language?.value;
+    result.language = rss.channel[DublinCoreFields.Language]?.value || rss.channel.language?.value;
     result.updateDate = rss.channel.lastBuildDate?.value || rss.channel[DublinCoreFields.Date]?.value;
     result.updateDateRaw = rss.channel.lastBuildDateRaw?.value || rss.channel[DublinCoreFields.DateRaw]?.value;
     result.generator = rss.channel.generator?.value;
@@ -144,10 +148,10 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
     result.title = {
       type: undefined,
       value: rss.channel[DublinCoreFields.Title]?.value ||
-        rss.channel.title?.value,
+			rss.channel.title?.value,
     };
-    result.description = rss.channel[DublinCoreFields.Description]?.value ||
-      rss.channel.description?.value;
+
+    result.description = rss.channel[DublinCoreFields.Description]?.value || rss.channel.description?.value;
     result.copyright = rss.channel.copyright?.value || rss.channel[DublinCoreFields.Rights]?.value;
     result.skipDays = rss.channel.skipDays?.day?.map((x) => x.value as string);
     result.skipHours = rss.channel.skipHours?.hour?.map((x) =>
@@ -182,6 +186,11 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
       published: item[DublinCoreFields.DateSubmitted] || item.pubDate?.value,
       publishedRaw: item[DublinCoreFields.DateSubmittedRaw] || item.pubDateRaw?.value,
       updated: item.pubDate?.value,
+			attachments: item.enclosure ? item.enclosure.map(x => ({
+				url: x.url,
+				mimeType: x.type,
+				sizeInBytes: x.length
+			}))  : undefined,
       updatedRaw: item.pubDateRaw?.value,
       comments: item.comments?.value,
       categories: item.categories?.map((category) => ({
@@ -200,6 +209,9 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
           value: description,
         }
         : undefined,
+			contributors: item[DublinCoreFields.Contributor]?.map((contributor) => ({
+				name: contributor
+			})),
       mediaCredit: item["media:credit"]?.value,
       mediaDescription: item["media:description"]?.value,
       mediaContent: item["media:content"]
@@ -215,19 +227,13 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
   return result;
 };
 
-
 const copyFields = (fields: string[], source: any, target: any) => {
   fields.forEach((fieldName: string) => {
     const val = source[fieldName];
     if (val) {
-
       target[fieldName] = Array.isArray(val)
 				? val.map(x => (x?.value || x))
 				: (val?.value || val);
-
-			if (fieldName === DublinCoreFields.Creator) {
-				console.log(DublinCoreFields.Creator, target[fieldName]);
-			}
     }
   });
 }

@@ -58,9 +58,9 @@ interface Item extends DublinCore {
 }
 
 interface Enclosure {
-  url: string;
-  length: number;
-  type: string;
+  url?: string;
+  length?: number;
+  type?: string;
 }
 
 interface Source {

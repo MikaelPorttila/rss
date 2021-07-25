@@ -33,24 +33,22 @@ const { feed } = await parseFeed(xml);
 |------|------|------|-----|
 | FeedType | Atom | RSS2 | RSS1 |
 | Id | Id | - | - |
-| Title | Title | Title or dc:title | Title or dc:title |
-| Description | Subtitle | Description or dc:description | Description or dc:description |
-| Links | Links | Link, dc:URI | Link or dc:URI |
+| Title | Title | Title or DC:Title | Title or DC:Title |
+| Description | Subtitle | Description or DC:Description | Description or DC:Description |
+| Links | Links | Link, DC:URI | Link or DC:URI |
 | Image | Logo | Image | Image |
 | Icon | Icon | - | - |
-| Language | N/A | Language or dc:language | dc:language |
-| Created | Updated |  LastBuildDate or dc:created or PubDate or dc:dateSubmitted or dc:date | dc:created or dc:dateSubmitted or dc:date |
-| Published | Updated | PubDate or dc:dateSubmitted or dc:date | dc:dateSubmitted or dc:date |
-| UpdateDate | Updated | LastBuildDate or dc:date | dc:date  |
+| Language | N/A | Language or DC:Language | DC:Language |
+| Created | Updated |  LastBuildDate or DC:Created or PubDate or DC:DateSubmitted or DC:Date | DC:Created or DC:DateSubmitted or DC:Date |
+| Published | Updated | PubDate or DC:DateSubmitted or DC:Date | DC:DateSubmitted or DC:Date |
+| UpdateDate | Updated | LastBuildDate or DC:Date | DC:Date  |
 | Generator | Generator | Generator | - |
 | Ttl | - | Ttl | - |
 | Categories | Category | - | - |
 | Author | Author | WebMaster | - |
-| Copyright | - | Copyright or dc:rights | dc:rights |
+| Copyright | - | Copyright or DC:Rights | DC:Rights |
 | SkipDays | - | SkipDays | - |
 | SkipHours | - |SkipHours | - |
-| WebMasterMail | - | WebMaster | - |
-| ManagingEditorMail | - | ManagingEditor | - |
 | Docs | - | Docs | - |
 | dc (Dublin Core Namespace) | - | All Dublin Core fields | All Dublin Core fields  |
 | Slash | - | - | All Slash fields |
@@ -59,17 +57,17 @@ const { feed } = await parseFeed(xml);
 
 | Feed | Atom | RSS2 | RSS |
 |------|------|------|-----|
-| Id | Id | Guid | dc:URI or Link |
+| Id | Id | Guid | DC:URI or Link |
 | Author | Author | Author | - |
-| Title | Title | Title | Title or dc:title |
-| Description | Summary | Description | Description or dc:description |
+| Title | Title | Title or DC:Title | Title or DC:Title |
+| Description | Summary | Description or DC:Description | Description or DC:Description |
 | Content | Content | - | -|
-| Links | Links, feedburner:origlink, Href,  (Id if URL) | Href | Link, dc:URI |
-| Attachments | Links (marked as enclosure) | - | - |
-| Published | Published | dc:dateSubmitted or PubDate or dc:date | dc:dateSubmitted or dc:date |
-| Updated | Updated | PubDate | - |
+| Links | Links, feedburner:origlink, Href,  (Id if URL) | Href | Link, DC:URI |
+| Attachments | Links (marked as enclosure) | Enclosure | - |
+| Published | Published | DC:DateSubmitted or PubDate or DC:date | DC:DateSubmitted or DC:Date |
+| Updated | Updated | PubDate | DC:DateSubmitted or DC:Date |
 | Categories | Category | Category | - |
-| Contributors | Contributors | - | - |
+| Contributors | Contributors | DC:Contributor | DC:Contributor |
 | Comments | - | Comments | - |
 | MediaCredit | - | media:credit | - |
 | MediaDescription | - | media:description | - |
