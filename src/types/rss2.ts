@@ -1,6 +1,7 @@
 // https://validator.w3.org/feed/docs/rss2.html#requiredChannelElements
 
 import { DublinCore } from "./dublin-core.ts";
+import { MediaRss } from "./media-rss.ts";
 
 export interface RSS2 {
   version: number;
@@ -35,7 +36,7 @@ interface Channel extends DublinCore {
   };
 }
 
-interface Item extends DublinCore {
+interface Item extends DublinCore, MediaRss {
   title?: string;
   description?: string;
   link?: string;
@@ -47,14 +48,6 @@ interface Item extends DublinCore {
   pubDate?: Date;
   pubDateRaw?: string;
   source?: Source;
-  "media:content"?: {
-    width?: number;
-    height?: number;
-    medium?: string;
-    url?: string;
-  };
-  "media:credit"?: string;
-  "media:description"?: string;
 }
 
 interface Enclosure {

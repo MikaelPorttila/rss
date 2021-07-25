@@ -1,6 +1,7 @@
 // https://validator.w3.org/feed/docs/rss2.html#requiredChannelElements
 
 import { DublinCoreValueFields } from "./dublin-core.ts";
+import { MediaRssValueFields } from "./media-rss.ts";
 import { ValueField } from "./value-field.ts";
 
 export interface InternalRSS2 {
@@ -36,7 +37,7 @@ interface Channel extends DublinCoreValueFields {
   items: Item[];
 }
 
-interface Item extends DublinCoreValueFields {
+interface Item extends DublinCoreValueFields, MediaRssValueFields {
   title?: ValueField<string>;
   description?: ValueField<string>;
   link?: ValueField<string>;
@@ -48,14 +49,6 @@ interface Item extends DublinCoreValueFields {
   pubDate?: ValueField<Date>;
   pubDateRaw?: ValueField<string>;
   source?: Source;
-  "media:content"?: {
-    width?: number;
-    height?: number;
-    medium?: string;
-    url?: string;
-  };
-  "media:credit"?: ValueField<string>;
-  "media:description"?: ValueField<string>;
 }
 
 interface Enclosure {

@@ -22,8 +22,8 @@ export interface MediaRssValueFields {
 		samplingrate?: string;
 		channels?: string;
 		duration?: string;
-		height?: string;
-		width?: string;
+		height?: number;
+		width?: number;
 		lang?: string;
 	};
 	'media:group'?: ValueField<string>;
@@ -45,6 +45,7 @@ export interface MediaRssValueFields {
 		width?: string;
 	};
 	'media:credit'?: {
+		value?: string;
 		role?: string;
 		scheme?: string;
 	};
@@ -130,6 +131,140 @@ export interface MediaRssValueFields {
 			sceneDescription?: ValueField<string>;
 			sceneStartTime?: ValueField<string>;
 			sceneEndTime?: ValueField<string>;
+		}[];
+	};
+}
+
+export interface MediaRss {
+	'media:rating'?: string;
+	'media:title'?: {
+		value?: string;
+		type?: string;
+	};
+	'media:description'?: {
+		value?: string;
+		type?: string;
+	};
+	'media:content'?: {
+		url?: string;
+		fileSize?: string;
+		type?: string;
+		medium?: string;
+		isDefault?: string;
+		expression?: string;
+		bitrate?: string;
+		samplingrate?: string;
+		channels?: string;
+		duration?: string;
+		height?: number;
+		width?: number;
+		lang?: string;
+	};
+	'media:group'?: string;
+	'media:keywords'?: string;
+	'media:thumbnails'?: {
+		url?: string;
+		width?: string;
+		height?: string;
+		time?: string;
+	};
+	'media:category'?: string;
+	'media:hash'?: {
+		value?: string;
+		algo?: string;
+	};
+	'media:player'?: {
+		url?: string;
+		height?: string;
+		width?: string;
+	};
+	'media:credit'?: {
+		value?: string;
+		role?: string;
+		scheme?: string;
+	};
+	'media:copyright'?: {
+		url?: string;
+		value?: string;
+	};
+	'media:text'?: {
+		value?: string;
+		type?: string;
+		lang?: string;
+		start?: string;
+		end?: string;
+	};
+	'media:restriction'?: {
+		value?: string;
+		relationship?: string;
+		type?: string;
+	};
+	'media:community'?: {
+		'media:starRating'?: {
+			average?: string;
+			count?: string;
+			min?: string;
+			max?: string;
+		},
+		'media:statistics'?: {
+			views?: string;
+			favorites?: string;
+		},
+		'media:tags'?: {
+			value?: string;
+		}
+	};
+	'media:comments'?: {
+		'media:comment'?: string[];
+	};
+	'media:embed'?: {
+		url?: string;
+		height?: string;
+		width?: string;
+		'media:param'?: {
+			value?: string;
+			name?: string;
+		}[];
+	};
+	'media:responses'?: {
+		'media:response'?: string[];
+	};
+	'media:backLinks'?: {
+		'media:backLink'?: string[];
+	};
+	'media:status'?: {
+		state?: string;
+		reason?: string;
+	};
+	'media:price'?: {
+		type?: string;
+		price?: string;
+		info?: string;
+		currency?: string;
+	};
+	'media:license'?: {
+		value?: string;
+		type?: string;
+		href?: string;
+	};
+	'media:subTitle'?: {
+		type?: string;
+		lang?: string;
+		href?: string;
+	};
+	'media:peerLink'?: {
+		type?: string;
+		href?: string;
+	};
+	'media:rights'?: {
+		status?: string;
+	};
+	'media:scenes'?: {
+		'media:scene'?: {
+			sceneTitle?: string;
+			sceneDescription?: string;
+			sceneStartTime?: string;
+			sceneEndTime?: string;
 		}[];
 	};
 }

@@ -6,6 +6,7 @@ import { SlashFieldArray, SlashFields } from './types/slash.ts';
 import { InternalAtom } from "./types/internal-atom.ts";
 import { InternalRSS2 } from "./types/internal-rss2.ts";
 import { InternalRSS1 } from "./types/internal-rss1.ts";
+import { MediaRss, MediaRssFields, MediaRssValueFields } from "./types/media-rss.ts";
 
 export const toFeed = (
   feedType: FeedType,
@@ -211,13 +212,12 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
         : undefined,
 			contributors: item[DublinCoreFields.Contributor]?.map((contributor) => ({
 				name: contributor
-			})),
-      mediaCredit: item["media:credit"]?.value,
-      mediaDescription: item["media:description"]?.value,
-      mediaContent: item["media:content"]
-        ? { ...item["media:content"] }
-        : undefined,
+			}))
     } as FeedEntry;
+
+		entryResult.media = {};
+		copyMedia(item, entryResult.media);
+
     entryResult.dc = {};
     copyFields(DublinCoreFieldArray, item, entryResult.dc);
 
@@ -226,6 +226,44 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
 
   return result;
 };
+
+const copyMedia = (source: MediaRssValueFields, target: MediaRss) => {
+	const credit = source[MediaRssFields.Credit];
+	if (credit) {
+		target[MediaRssFields.Credit] = {
+			value: credit.value,
+			role: credit.role,
+			scheme: credit.scheme
+		};
+	}
+
+	const description = source[MediaRssFields.Description];
+	if (description) {
+		target[MediaRssFields.Description] = {
+			value: description.value,
+			type: description.type
+		};
+	}
+
+	const content = source[MediaRssFields.Content];
+	if (content) {
+		target[MediaRssFields.Content] = {
+			bitrate: content.bitrate,
+			channels: content.channels,
+			duration: content.duration,
+			expression: content.expression,
+			fileSize: content.fileSize,
+			height: content.height,
+			width: content.width,
+			isDefault: content.isDefault,
+			lang: content.lang,
+			medium: content.medium,
+			samplingrate: content.samplingrate,
+			type: content.type,
+			url: content.url
+		}
+	}
+}
 
 const copyFields = (fields: string[], source: any, target: any) => {
   fields.forEach((fieldName: string) => {

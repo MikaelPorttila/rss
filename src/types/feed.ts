@@ -1,6 +1,7 @@
 import { DublinCore } from "./dublin-core.ts";
 import { Slash } from './slash.ts';
 import { FeedType } from "./feed-type.ts";
+import { MediaRss } from "./media-rss.ts";
 
 export interface Feed {
   version?: string;
@@ -53,9 +54,7 @@ export interface FeedEntry {
   contributors?: Person[];
   rights: TextField;
   attachments?: Attachment[];
-  mediaContent?: FeedMedia;
-  mediaCredit?: string;
-  mediaDescription?: string;
+	media: MediaRss;
   dc: DublinCore;
 	slash: Slash;
 }

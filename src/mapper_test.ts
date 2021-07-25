@@ -9,6 +9,7 @@ import { DublinCoreFieldArray, DublinCoreFields } from "./types/dublin-core.ts";
 import { resolveRss1Field } from "./resolvers/rss1-resolver.ts";
 import { SlashFieldArray } from "./types/slash.ts";
 import { resolveRss2Field } from "./resolvers/rss2-resolver.ts";
+import { MediaRssFields } from "./types/media-rss.ts";
 const composeAtom = (
   setter: (data: InternalAtom) => void = () => {},
 ): InternalAtom => {
@@ -709,37 +710,37 @@ const testArrayLength = (
       },
       {
         name: "Items:0:MediaCredit",
-        getValue: (src: Feed) => src.entries[0].mediaCredit,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Credit],
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Items:0:MediaDescription",
-        getValue: (src: Feed) => src.entries[0].mediaDescription,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Description],
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Items:0:MediaContent",
-        getValue: (src: Feed) => src.entries[0].mediaContent,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Content],
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Items:0:MediaContent:Height",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.height,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Content]?.height,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Items:0:MediaContent:Width",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.width,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Content]?.width,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Items:0:MediaContent:Medium",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.medium,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Content]?.medium,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Items:0:MediaContent:Url",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.url,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Content]?.url,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
 			...SlashFieldArray.map((slashField) => {
@@ -976,7 +977,7 @@ const testArrayLength = (
       ),
       {
         name: "Items:0:MediaCredit",
-        getValue: (src: Feed) => src.entries[0].mediaCredit,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Credit]?.value,
         assert: [{
           fn: assertEquals,
           expect: "RSS2:Channel:Item:0:MediaCredit:Value",
@@ -984,7 +985,7 @@ const testArrayLength = (
       },
       {
         name: "Items:0:MediaDescription",
-        getValue: (src: Feed) => src.entries[0].mediaDescription,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Description]?.value,
         assert: [{
           fn: assertEquals,
           expect: "RSS2:Channel:Item:0:MediaDescription:Value",
@@ -992,7 +993,7 @@ const testArrayLength = (
       },
       {
         name: "Items:0:MediaContent",
-        getValue: (src: Feed) => src.entries[0].mediaContent,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Content],
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -1000,17 +1001,17 @@ const testArrayLength = (
       },
       {
         name: "Items:0:MediaContent:Height",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.height,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Content]?.height,
         assert: [{ fn: assertEquals, expect: 69 }],
       },
       {
         name: "Items:0:MediaContent:Width",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.width,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Content]?.width,
         assert: [{ fn: assertEquals, expect: 32 }],
       },
       {
         name: "Items:0:MediaContent:Medium",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.medium,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Content]?.medium,
         assert: [{
           fn: assertEquals,
           expect: "RSS2:Channel:Item:0:MediaContent:Medium",
@@ -1018,7 +1019,7 @@ const testArrayLength = (
       },
       {
         name: "Items:0:MediaContent:Url",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.url,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Content]?.url,
         assert: [{
           fn: assertEquals,
           expect: "RSS2:Channel:Item:0:MediaContent:Url",
@@ -1226,37 +1227,37 @@ const testArrayLength = (
       ),
       {
         name: "Items:0:MediaCredit",
-        getValue: (src: Feed) => src.entries[0].mediaCredit,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Credit],
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Items:0:MediaDescription",
-        getValue: (src: Feed) => src.entries[0].mediaDescription,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Description],
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Items:0:MediaContent",
-        getValue: (src: Feed) => src.entries[0].mediaContent,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Content],
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Items:0:MediaContent:Height",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.height,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Content]?.height,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Items:0:MediaContent:Width",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.width,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Content]?.width,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Items:0:MediaContent:Medium",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.medium,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Content]?.medium,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
       {
         name: "Items:0:MediaContent:Url",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.url,
+        getValue: (src: Feed) => src.entries[0].media?.[MediaRssFields.Content]?.url,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
     ],

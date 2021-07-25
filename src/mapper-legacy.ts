@@ -1,7 +1,5 @@
 import type {
   Atom,
-  Feed,
-  FeedEntry,
   JsonFeed,
   JsonFeedAuthor,
   JsonFeedItem,
@@ -11,10 +9,11 @@ import type {
 import { isValidHttpURL } from "./util.ts";
 import { FeedType } from "./types/mod.ts";
 import { DublinCoreFieldArray, DublinCoreFields } from "./types/dublin-core.ts";
-import { SlashFieldArray, SlashFields } from "./types/slash.ts";
+import { SlashFieldArray } from "./types/slash.ts";
 import { InternalAtom } from "./types/internal-atom.ts";
 import { InternalRSS2 } from "./types/internal-rss2.ts";
 import { InternalRSS1 } from "./types/internal-rss1.ts";
+import { MediaRssFields } from "./types/media-rss.ts";
 
 export const toLegacyRss1 = (rss: InternalRSS1): RSS1 => {
   const result = {} as RSS1;
@@ -112,8 +111,9 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
       pubDateRaw: rss.channel.pubDateRaw?.value,
       generator: rss.channel.generator?.value,
       category: rss.channel.category?.map((x) => x.value as string),
-      items: rss.channel.items?.map((item, index) => {
-        const itemResult = {
+      items: rss.channel.items?.map((item) => {
+
+        const itemResult: any = {
           guid: item.guid?.value,
           pubDate: item.pubDate?.value,
           pubDateRaw: item.pubDateRaw?.value,
@@ -128,19 +128,43 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
 					} : undefined,
           comments: item.comments?.value,
           categories: item.categories?.map((x) => x.value as string),
-          "media:credit": item["media:credit"]?.value,
-          "media:description": item["media:description"]?.value,
-          "media:content": {},
+          /* "media:description": item[MediaRssFields.Description]?.value, */
         };
 
-        const mediaContent = item["media:content"];
+				const mediaCredit = item[MediaRssFields.Credit];
+				if (mediaCredit) {
+					itemResult[MediaRssFields.Credit] = {
+						value: mediaCredit.value,
+						role: mediaCredit.role,
+						scheme: mediaCredit.scheme
+					}
+				}
+
+				const mediaDescription = item[MediaRssFields.Description];
+				if (mediaDescription) {
+					itemResult[MediaRssFields.Description] = {
+						value: mediaDescription.value,
+						type: mediaDescription.type
+					}
+				}
+
+
+        const mediaContent = item[MediaRssFields.Content];
         if (mediaContent) {
-          itemResult["media:content"] = {
-            height: mediaContent.height,
-            width: mediaContent.width,
-            medium: mediaContent.medium,
-            url: mediaContent.url,
-          };
+					itemResult[MediaRssFields.Content] = {
+						url: mediaContent.url,
+						fileSize: mediaContent.fileSize,
+						type: mediaContent.type,
+						medium: mediaContent.medium,
+						isDefault: mediaContent.isDefault,
+						expression: mediaContent.expression,
+						bitrate: mediaContent.bitrate,
+						samplingrate: mediaContent.samplingrate,
+						channels: mediaContent.channels,
+						duration: mediaContent.duration,
+						height: mediaContent.height,
+						width: mediaContent.width
+					};
         }
 
         copyFields(DublinCoreFieldArray, item, itemResult);

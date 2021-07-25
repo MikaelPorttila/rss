@@ -8,6 +8,7 @@ import { deserializeFeed, parseFeed } from "./deserializer.ts";
 import { Feed, FeedType, RSS1 } from "../mod.ts";
 import type { Atom, DeserializationResult, Options, RSS2, JsonFeed } from "../mod.ts";
 import type { TestEntry } from "./test/test-entry.ts";
+import { MediaRssFields } from "./types/media-rss.ts";
 
 const atomTestSample = await Deno.readTextFile("./samples/atom.xml");
 const rss1TestSample = await Deno.readTextFile("./samples/rss1.xml");
@@ -524,19 +525,19 @@ Deno.test(`Call signatures compile without error`, async () => {
       {
         name: "Feed:Channel:Item:0:MediaCredit",
         getValue: (src: DeserializationResult<RSS2>) =>
-          src.feed.channel.items[0]["media:credit"],
+          src.feed.channel.items[0][MediaRssFields.Credit]?.value,
         assert: [{ fn: assertEquals, expect: "RSS2:Media:Credit" }],
       },
       {
         name: "Feed:Channel:Item:0:MediaDescription",
         getValue: (src: DeserializationResult<RSS2>) =>
-          src.feed.channel.items[0]["media:description"],
+          src.feed.channel.items[0][MediaRssFields.Description]?.value,
         assert: [{ fn: assertEquals, expect: "RSS2:Media:Description" }],
       },
       {
         name: "Feed:Channel:Item:0:MediaContent",
         getValue: (src: DeserializationResult<RSS2>) =>
-          src.feed.channel.items[0]["media:content"],
+          src.feed.channel.items[0][MediaRssFields.Content],
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -545,25 +546,25 @@ Deno.test(`Call signatures compile without error`, async () => {
       {
         name: "Feed:Channel:Item:0:MediaContent:Height",
         getValue: (src: DeserializationResult<RSS2>) =>
-          src.feed.channel.items[0]["media:content"]?.height,
+          src.feed.channel.items[0][MediaRssFields.Content]?.height,
         assert: [{ fn: assertEquals, expect: 1337 }],
       },
       {
         name: "Feed:Channel:Item:0:MediaContent:Width",
         getValue: (src: DeserializationResult<RSS2>) =>
-          src.feed.channel.items[0]["media:content"]?.width,
+          src.feed.channel.items[0][MediaRssFields.Content]?.width,
         assert: [{ fn: assertEquals, expect: 1337 }],
       },
       {
         name: "Feed:Channel:Item:0:MediaContent:Medium",
         getValue: (src: DeserializationResult<RSS2>) =>
-          src.feed.channel.items[0]["media:content"]?.medium,
+          src.feed.channel.items[0][MediaRssFields.Content]?.medium,
         assert: [{ fn: assertEquals, expect: "image" }],
       },
       {
         name: "Feed:Channel:Item:0:MediaContent:Url",
         getValue: (src: DeserializationResult<RSS2>) =>
-          src.feed.channel.items[0]["media:content"]?.url,
+          src.feed.channel.items[0][MediaRssFields.Content]?.url,
         assert: [{
           fn: assertEquals,
           expect: "https://RSS2-media-content.com/",
@@ -1405,17 +1406,17 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       },
       {
         name: "Items:[0]:Media:Credit",
-        getValue: (src: Feed) => src.entries[0].mediaCredit,
+        getValue: (src: Feed) => src.entries[0].media[MediaRssFields.Credit]?.value,
         assert: [{ fn: assertEquals, expect: "RSS2:Media:Credit" }],
       },
       {
         name: "Items:[0]:Media:Description",
-        getValue: (src: Feed) => src.entries[0].mediaDescription,
+        getValue: (src: Feed) => src.entries[0]?.media?.[MediaRssFields.Description]?.value,
         assert: [{ fn: assertEquals, expect: "RSS2:Media:Description" }],
       },
       {
         name: "Items:[0]:Media:Content",
-        getValue: (src: Feed) => src.entries[0].mediaContent,
+        getValue: (src: Feed) => src.entries[0].media[MediaRssFields.Content],
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -1423,7 +1424,7 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       },
       {
         name: "Items:[0]:Media:Content:Url",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.url,
+        getValue: (src: Feed) => src.entries[0].media[MediaRssFields.Content]?.url,
         assert: [{
           fn: assertEquals,
           expect: "https://RSS2-media-content.com/",
@@ -1431,17 +1432,17 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       },
       {
         name: "Items:[0]:Media:Content:Medium",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.medium,
+        getValue: (src: Feed) => src.entries[0].media[MediaRssFields.Content]?.medium,
         assert: [{ fn: assertEquals, expect: "image" }],
       },
       {
         name: "Items:[0]:Media:Content:Width",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.width,
+        getValue: (src: Feed) => src.entries[0].media[MediaRssFields.Content]?.width,
         assert: [{ fn: assertEquals, expect: 1337 }],
       },
       {
         name: "Items:[0]:Media:Content:Height",
-        getValue: (src: Feed) => src.entries[0].mediaContent?.height,
+        getValue: (src: Feed) => src.entries[0].media[MediaRssFields.Content]?.height,
         assert: [{ fn: assertEquals, expect: 1337 }],
       },
       {
