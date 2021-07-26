@@ -219,7 +219,6 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
 };
 
 const copyMedia = (source: MediaRssValueFields, target: MediaRss) => {
-
 	[
 		MediaRssFields.Rating,
 		MediaRssFields.Group,

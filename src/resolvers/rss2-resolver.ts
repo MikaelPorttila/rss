@@ -1,5 +1,6 @@
 import { DublinCoreFields } from "../types/dublin-core.ts";
 import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
+import { resolveMediaRssField } from './media-rss-resolver.ts';
 
 export const resolveRss2Field = (
   nodeName: string,
@@ -64,24 +65,29 @@ export const resolveRss2Field = (
       isArray = true;
       break;
     default:
-      const dublinCoreResult = resolveDublinCoreField(propertyName);
-      if (dublinCoreResult.handled) {
-        if (dublinCoreResult.isArray) {
-          isArray = true;
-        }
+			const subNamespaceResolvers = [resolveDublinCoreField, resolveMediaRssField];
+			for (let i = 0; i < subNamespaceResolvers.length; i++) {
+				const resolverResult = subNamespaceResolvers[i](propertyName);
+				if (resolverResult.handled) {
 
-        if (dublinCoreResult.isDate) {
-          isDate = true;
-        }
+					if (resolverResult.isArray) {
+						isArray = true;
+					}
 
-        if (dublinCoreResult.isNumber) {
-          isNumber = true;
-        }
+					if (resolverResult.isDate) {
+						isDate = true;
+					}
 
-        if (!!dublinCoreResult.newName) {
-          propertyName = dublinCoreResult.newName;
-        }
-      }
+					if (resolverResult.isNumber) {
+						isNumber = true;
+					}
+
+					if (!!resolverResult.newName) {
+						propertyName = resolverResult.newName;
+					}
+					break;
+				}
+			}
       break;
   }
 

@@ -1,9 +1,10 @@
 import { SlashFields } from "../types/slash.ts";
+import { ResolverResult } from "./types/resolver-result.ts";
 
 export const resolveSlashField = (
   fieldName: string,
-): SlashResolverResult => {
-  const result = { handled: true } as SlashResolverResult;
+): ResolverResult => {
+  const result = { handled: true } as ResolverResult;
 
   switch (fieldName) {
 		case SlashFields.Comments:
@@ -16,11 +17,3 @@ export const resolveSlashField = (
 
   return result;
 };
-
-interface SlashResolverResult {
-  handled: boolean;
-  isDate?: boolean;
-  isNumber?: boolean;
-  isArray?: boolean;
-  newName?: string;
-}

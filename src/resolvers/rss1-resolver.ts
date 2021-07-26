@@ -23,35 +23,27 @@ export const resolveRss1Field = (
       propertyName = "resource";
       break;
     default:
-      const dublinCoreResult = resolveDublinCoreField(propertyName);
-      if (dublinCoreResult.handled) {
-        if (dublinCoreResult.isArray) {
-          isArray = true;
-        }
-        if (dublinCoreResult.isDate) {
-          isDate = true;
-        }
-        if (dublinCoreResult.isNumber) {
-          isNumber = true;
-        }
-        if (!!dublinCoreResult.newName) {
-          propertyName = dublinCoreResult.newName;
-        }
-      } else {
-				const slashResult = resolveSlashField(propertyName);
-				if (slashResult.handled) {
-					if (slashResult.isArray) {
+			const subNamespaceResolvers = [resolveDublinCoreField, resolveSlashField];
+			for (let i = 0; i < subNamespaceResolvers.length; i++) {
+				const resolverResult = subNamespaceResolvers[i](propertyName);
+				if (resolverResult.handled) {
+
+					if (resolverResult.isArray) {
 						isArray = true;
 					}
-					if (slashResult.isDate) {
+
+					if (resolverResult.isDate) {
 						isDate = true;
 					}
-					if (slashResult.isNumber) {
+
+					if (resolverResult.isNumber) {
 						isNumber = true;
 					}
-					if (!!slashResult.newName) {
-						propertyName = slashResult.newName;
+
+					if (!!resolverResult.newName) {
+						propertyName = resolverResult.newName;
 					}
+					break;
 				}
 			}
       break;

@@ -1,11 +1,12 @@
 import { DublinCoreFields } from "../types/dublin-core.ts";
+import { ResolverResult } from "./types/resolver-result.ts";
 
 export const resolveDublinCoreField = (
   fieldName: string,
-): DublinCoreResolverResult => {
+): ResolverResult => {
   const result = {
     handled: true,
-  } as DublinCoreResolverResult;
+  } as ResolverResult;
 
   switch (fieldName) {
     case DublinCoreFields.Date:
@@ -30,11 +31,3 @@ export const resolveDublinCoreField = (
 
   return result;
 };
-
-interface DublinCoreResolverResult {
-  handled: boolean;
-  isDate?: boolean;
-  isNumber?: boolean;
-  isArray?: boolean;
-  newName?: string;
-}

@@ -1,29 +1,19 @@
 import { MediaRssFields } from "../types/media-rss.ts";
+import { ResolverResult } from "./types/resolver-result.ts";
 
 export const resolveMediaRssField = (
   fieldName: string,
-): MediaRssResolverResult => {
+): ResolverResult => {
   const result = {
     handled: true,
-  } as MediaRssResolverResult;
+  } as ResolverResult;
 
   switch (fieldName) {
-
-   /*  case DublinCoreFields.Date:
-    case DublinCoreFields.Created:
-    case DublinCoreFields.DateSubmitted:
-    case DublinCoreFields.Copyrighted:
-    case DublinCoreFields.DateAccepted:
-      result.isDate = true;
-      break;
-    case DublinCoreFields.Valid:
-      result.isDate = true;
-      result.isArray = true;
-      break;
-		case DublinCoreFields.Contributor:
-		case DublinCoreFields.Creator:
+		case MediaRssFields.Comment:
+		case MediaRssFields.Response:
+		case MediaRssFields.Scene:
 			result.isArray = true;
-			break;*/
+			break;
     default:
       result.handled = false;
       break;
@@ -31,11 +21,3 @@ export const resolveMediaRssField = (
 
   return result;
 };
-
-interface MediaRssResolverResult {
-  handled: boolean;
-  isDate?: boolean;
-  isNumber?: boolean;
-  isArray?: boolean;
-  newName?: string;
-}
