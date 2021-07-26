@@ -9,6 +9,8 @@ import { Feed, FeedType, RSS1 } from "../mod.ts";
 import type { Atom, DeserializationResult, Options, RSS2, JsonFeed } from "../mod.ts";
 import type { TestEntry } from "./test/test-entry.ts";
 import { MediaRssFields } from "./types/media-rss.ts";
+import { DublinCoreFields } from "./types/dublin-core.ts";
+import { SlashFields } from "./types/slash.ts";
 
 const atomTestSample = await Deno.readTextFile("./samples/atom.xml");
 const rss1TestSample = await Deno.readTextFile("./samples/rss1.xml");
@@ -125,42 +127,42 @@ Deno.test(`Call signatures compile without error`, async () => {
       },
 			{
         name: "Feed:Item:0:DcCreator:0",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed?.item[0]?.["dc:creator"]?.[0],
+        getValue: (src: DeserializationResult<RSS1>) => src.feed?.item[0][DublinCoreFields.Creator]?.[0],
         assert: [{ fn: assertEquals, expect: "RSS1:Item:0:DCCreator" }],
       },
 			{
         name: "Feed:Item:0:DcDate",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["dc:date"],
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0][DublinCoreFields.Date],
         assert: [{ fn: assertEquals, expect: new Date('2021-07-24T10:00:00+00:00') }],
       },
 			{
         name: "Feed:Item:0:DcDateRaw",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["dc:dateRaw"],
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0][DublinCoreFields.DateRaw],
         assert: [{ fn: assertEquals, expect: '2021-07-24T10:00:00+00:00' }],
       },
 			{
         name: "Feed:Item:0:DcSubject",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["dc:subject"],
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0][DublinCoreFields.Subject],
         assert: [{ fn: assertEquals, expect: "RSS1:Item:0:SlashSubject" }],
       },
 			{
         name: "Feed:Item:0:SlashDepartment",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["slash:department"],
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0][SlashFields.Department],
         assert: [{ fn: assertEquals, expect: "RSS1:Item:0:SlashDepartment" }],
       },
 			{
         name: "Feed:Item:0:SlashSection",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["slash:section"],
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0][SlashFields.Section],
         assert: [{ fn: assertEquals, expect: "RSS1:Item:0:SlashSection" }],
       },
 			{
         name: "Feed:Item:0:SlashComments",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["slash:comments"],
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0][SlashFields.Comments],
         assert: [{ fn: assertEquals, expect: 1337 }],
       },
 			{
         name: "Feed:Item:0:SlashHitParade",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0]["slash:hit_parade"],
+        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0][SlashFields.HitParade],
         assert: [{ fn: assertEquals, expect: '140,131,115,99,29,13,5' }],
       },
       {
@@ -1376,7 +1378,12 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
 			{
         name: "Items:[0]:Enclosure:0:Url",
         getValue: (src: Feed) => src.entries[0].attachments?.[0].url,
-        assert: [{ fn: assertEquals, expect: 'https://RSS2-entry-0-enclosure-url.mp3' }],
+        assert: [{ fn: assertEquals, expect: 'https://RSS2-entry-0-enclosure-0-url.mp3' }],
+      },
+			{
+        name: "Items:[0]:Enclosure:1:Url",
+        getValue: (src: Feed) => src.entries[0].attachments?.[1].url,
+        assert: [{ fn: assertEquals, expect: 'https://RSS2-entry-0-enclosure-1-url.mp3' }],
       },
 			{
         name: "Items:[0]:Enclosure:0:Type",
@@ -1406,17 +1413,17 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       },
       {
         name: "Items:[0]:Media:Credit",
-        getValue: (src: Feed) => src.entries[0].media[MediaRssFields.Credit]?.value,
+        getValue: (src: Feed) => src.entries[0][MediaRssFields.Credit]?.value,
         assert: [{ fn: assertEquals, expect: "RSS2:Media:Credit" }],
       },
       {
         name: "Items:[0]:Media:Description",
-        getValue: (src: Feed) => src.entries[0]?.media?.[MediaRssFields.Description]?.value,
+        getValue: (src: Feed) => src.entries[0][MediaRssFields.Description]?.value,
         assert: [{ fn: assertEquals, expect: "RSS2:Media:Description" }],
       },
       {
         name: "Items:[0]:Media:Content",
-        getValue: (src: Feed) => src.entries[0].media[MediaRssFields.Content],
+        getValue: (src: Feed) => src.entries[0][MediaRssFields.Content],
         assert: [{ fn: assertNotEquals, expect: undefined }, {
           fn: assertNotEquals,
           expect: null,
@@ -1424,7 +1431,7 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       },
       {
         name: "Items:[0]:Media:Content:Url",
-        getValue: (src: Feed) => src.entries[0].media[MediaRssFields.Content]?.url,
+        getValue: (src: Feed) => src.entries[0][MediaRssFields.Content]?.url,
         assert: [{
           fn: assertEquals,
           expect: "https://RSS2-media-content.com/",
@@ -1432,27 +1439,27 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       },
       {
         name: "Items:[0]:Media:Content:Medium",
-        getValue: (src: Feed) => src.entries[0].media[MediaRssFields.Content]?.medium,
+        getValue: (src: Feed) => src.entries[0][MediaRssFields.Content]?.medium,
         assert: [{ fn: assertEquals, expect: "image" }],
       },
       {
         name: "Items:[0]:Media:Content:Width",
-        getValue: (src: Feed) => src.entries[0].media[MediaRssFields.Content]?.width,
+        getValue: (src: Feed) => src.entries[0][MediaRssFields.Content]?.width,
         assert: [{ fn: assertEquals, expect: 1337 }],
       },
       {
         name: "Items:[0]:Media:Content:Height",
-        getValue: (src: Feed) => src.entries[0].media[MediaRssFields.Content]?.height,
+        getValue: (src: Feed) => src.entries[0][MediaRssFields.Content]?.height,
         assert: [{ fn: assertEquals, expect: 1337 }],
       },
       {
         name: "Items:[0]:DC:Creator:Length",
-        getValue: (src: Feed) => src.entries[0].dc["dc:creator"]?.length,
+        getValue: (src: Feed) => src.entries[0][DublinCoreFields.Creator]?.length,
         assert: [{ fn: assertEquals, expect: 1 }],
       },
       {
         name: "Items:[0]:DC:Creator[0]:Value",
-        getValue: (src: Feed) => src.entries[0].dc["dc:creator"]?.[0],
+        getValue: (src: Feed) => src.entries[0][DublinCoreFields.Creator]?.[0],
         assert: [{ fn: assertEquals, expect: "RSS2:Item:0:DC:Creator" }],
       },
       {
@@ -1538,12 +1545,12 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       },
       {
         name: "Items:[9]:Creators - Multiple DCCreators",
-        getValue: (src: Feed) => src.entries[9].dc["dc:creator"]?.length,
+        getValue: (src: Feed) => src.entries[9]["dc:creator"]?.length,
         assert: [{ fn: assertEquals, expect: 2 }],
       },
       {
         name: "Items:[9]:DCCreator - Multiple DCCreators",
-        getValue: (src: Feed) => src.entries[9].dc["dc:creator"]?.length,
+        getValue: (src: Feed) => src.entries[9]["dc:creator"]?.length,
         assert: [{ fn: assertEquals, expect: 2 }],
       },
     ] as TestEntry<Feed>[],

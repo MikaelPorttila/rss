@@ -30,8 +30,8 @@ export interface MediaRssValueFields {
 	'media:keywords'?: ValueField<string>;
 	'media:thumbnails'?: {
 		url?: string;
-		width?: string;
-		height?: string;
+		width?: number;
+		height?: number;
 		time?: string;
 	};
 	'media:category'?: ValueField<string>;
@@ -41,8 +41,8 @@ export interface MediaRssValueFields {
 	};
 	'media:player'?: {
 		url?: string;
-		height?: string;
-		width?: string;
+		height?: number;
+		width?: number;
 	};
 	'media:credit'?: {
 		value?: string;
@@ -90,7 +90,7 @@ export interface MediaRssValueFields {
 		'media:param'?: {
 			value?: string;
 			name?: string;
-		}[];
+		};
 	};
 	'media:responses'?: {
 		'media:response'?: ValueField<string>[];
@@ -164,8 +164,8 @@ export interface MediaRss {
 	'media:keywords'?: string;
 	'media:thumbnails'?: {
 		url?: string;
-		width?: string;
-		height?: string;
+		width?: number;
+		height?: number;
 		time?: string;
 	};
 	'media:category'?: string;
@@ -175,8 +175,8 @@ export interface MediaRss {
 	};
 	'media:player'?: {
 		url?: string;
-		height?: string;
-		width?: string;
+		height?: number;
+		width?: number;
 	};
 	'media:credit'?: {
 		value?: string;
@@ -224,7 +224,7 @@ export interface MediaRss {
 		'media:param'?: {
 			value?: string;
 			name?: string;
-		}[];
+		};
 	};
 	'media:responses'?: {
 		'media:response'?: string[];
@@ -286,16 +286,23 @@ export enum MediaRssFields {
 	Restriction = 'media:restriction',
 	Community = 'media:community',
 	Comments = 'media:comments',
+	Comment = 'media:comment',
 	Embed = 'media:embed',
+	Param = 'media:param',
 	Responses = 'media:responses',
+	Response = 'media:response',
+	StarRating = 'media:starRating',
+	Statistics = 'media:statistics',
 	BackLinks = 'media:backLinks',
+	BackLink = 'media:backLink',
 	Status = 'media:status',
 	Price = 'media:price',
 	License = 'media:license',
 	Subtitle = 'media:subTitle',
 	PeerLink = 'media:peerLink',
 	Rights = 'media:rights',
-	Scenes = 'media:scenes'
+	Scenes = 'media:scenes',
+	Scene = 'media:scene'
 }
 
 export const MediaRssFieldArray = [

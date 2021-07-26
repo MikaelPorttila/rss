@@ -3,7 +3,7 @@ import { Slash } from './slash.ts';
 import { FeedType } from "./feed-type.ts";
 import { MediaRss } from "./media-rss.ts";
 
-export interface Feed {
+export interface Feed extends DublinCore  {
   version?: string;
   id: string;
   type: FeedType;
@@ -28,10 +28,9 @@ export interface Feed {
   image?: FeedImage;
   docs?: string;
   entries: FeedEntry[];
-  dc: DublinCore;
 }
 
-export interface FeedEntry {
+export interface FeedEntry extends DublinCore, Slash, MediaRss {
   title?: TextField;
   description?: TextField;
   links: Link[];
@@ -54,9 +53,6 @@ export interface FeedEntry {
   contributors?: Person[];
   rights: TextField;
   attachments?: Attachment[];
-	media: MediaRss;
-  dc: DublinCore;
-	slash: Slash;
 }
 
 interface FeedImage {
@@ -71,13 +67,6 @@ interface Attachment {
   url?: string;
   mimeType?: string;
   sizeInBytes?: number;
-}
-
-interface FeedMedia {
-  url?: string;
-  width?: number;
-  height?: number;
-  medium?: string;
 }
 
 interface Link {

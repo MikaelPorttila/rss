@@ -6,7 +6,7 @@ import { SlashFieldArray, SlashFields } from './types/slash.ts';
 import { InternalAtom } from "./types/internal-atom.ts";
 import { InternalRSS2 } from "./types/internal-rss2.ts";
 import { InternalRSS1 } from "./types/internal-rss1.ts";
-import { MediaRss, MediaRssFields, MediaRssValueFields } from "./types/media-rss.ts";
+import { MediaRss, MediaRssFieldArray, MediaRssFields, MediaRssValueFields } from "./types/media-rss.ts";
 
 export const toFeed = (
   feedType: FeedType,
@@ -98,18 +98,14 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
 				})),
       } as FeedEntry;
 
-      feedEntry.dc = {};
-      feedEntry.slash = {};
-
-      copyFields(DublinCoreFieldArray, item, feedEntry.dc);
-      copyFields(SlashFieldArray, item, feedEntry.slash);
+      copyFields(DublinCoreFieldArray, item, feedEntry);
+      copyFields(SlashFieldArray, item, feedEntry);
 
       return feedEntry;
     }) || undefined;
   }
 
-  result.dc = {};
-  copyFields(DublinCoreFieldArray, rss.channel, result.dc);
+  copyFields(DublinCoreFieldArray, rss.channel, result);
 
   return result;
 };
@@ -147,9 +143,8 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
     result.generator = rss.channel.generator?.value;
     result.ttl = rss.channel.ttl?.value || 60;
     result.title = {
-      type: undefined,
-      value: rss.channel[DublinCoreFields.Title]?.value ||
-			rss.channel.title?.value,
+      value: rss.channel[DublinCoreFields.Title]?.value || rss.channel.title?.value,
+      type: undefined
     };
 
     result.description = rss.channel[DublinCoreFields.Description]?.value || rss.channel.description?.value;
@@ -168,8 +163,7 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
       }
       : undefined;
 
-    result.dc = {};
-    copyFields(DublinCoreFieldArray, rss.channel, result.dc);
+    copyFields(DublinCoreFieldArray, rss.channel, result);
   }
 
   result.entries = rss.channel?.items?.map((item) => {
@@ -200,14 +194,14 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
       })) ?? undefined,
       title: title
         ? {
-          type: undefined,
           value: title,
+          type: undefined
         }
         : undefined,
       description: description
         ? {
-          type: undefined,
           value: description,
+          type: undefined
         }
         : undefined,
 			contributors: item[DublinCoreFields.Contributor]?.map((contributor) => ({
@@ -215,11 +209,8 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
 			}))
     } as FeedEntry;
 
-		entryResult.media = {};
-		copyMedia(item, entryResult.media);
-
-    entryResult.dc = {};
-    copyFields(DublinCoreFieldArray, item, entryResult.dc);
+    copyMedia(item, entryResult);
+    copyFields(DublinCoreFieldArray, item, entryResult);
 
     return entryResult;
   });
@@ -228,6 +219,19 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
 };
 
 const copyMedia = (source: MediaRssValueFields, target: MediaRss) => {
+
+	[
+		MediaRssFields.Rating,
+		MediaRssFields.Group,
+		MediaRssFields.Keywords,
+		MediaRssFields.Category
+	].forEach((fieldName) => {
+		const val = (source as any)[fieldName];
+		if (val) {
+			(target as any)[fieldName] = (val as any).value;
+		}
+	});
+
 	const credit = source[MediaRssFields.Credit];
 	if (credit) {
 		target[MediaRssFields.Credit] = {
@@ -235,6 +239,14 @@ const copyMedia = (source: MediaRssValueFields, target: MediaRss) => {
 			role: credit.role,
 			scheme: credit.scheme
 		};
+	}
+
+	const title = source[MediaRssFields.Title];
+	if (title) {
+		target[MediaRssFields.Title] = {
+			value: title.value,
+			type: title.type
+		}
 	}
 
 	const description = source[MediaRssFields.Description];
@@ -261,6 +273,159 @@ const copyMedia = (source: MediaRssValueFields, target: MediaRss) => {
 			samplingrate: content.samplingrate,
 			type: content.type,
 			url: content.url
+		};
+	}
+
+	const thumbnails = source[MediaRssFields.Thumbnails];
+	if (thumbnails) {
+		target[MediaRssFields.Thumbnails] = {
+			url: thumbnails.url,
+			height: thumbnails.height,
+			width: thumbnails.width,
+			time: thumbnails.time
+		};
+	}
+
+	const hash = source[MediaRssFields.Hash];
+	if (hash) {
+		target[MediaRssFields.Hash] = {
+			value: hash.value,
+			algo: hash.algo
+		};
+	}
+
+	const player = source[MediaRssFields.Player];
+	if (player) {
+		target[MediaRssFields.Player] = {
+			url: player.url,
+			height: player.height,
+			width: player.width
+		};
+	}
+
+	const copyright = source[MediaRssFields.Copyright];
+	if (copyright) {
+		target[MediaRssFields.Copyright] = {
+			url: copyright.url,
+			value: copyright.value
+		};
+	}
+
+	const text = source[MediaRssFields.Text];
+	if (text) {
+		target[MediaRssFields.Text] = {
+			value: text.value,
+			type: text.value,
+			lang: text.value,
+			start: text.start,
+			end: text.end
+		};
+	}
+
+	const restriction = source[MediaRssFields.Restriction];
+	if (restriction) {
+		target[MediaRssFields.Restriction] = {
+			value: restriction.value,
+			relationship: restriction.relationship,
+			type: restriction.type
+		};
+	}
+
+	const comments = source[MediaRssFields.Comments];
+	if (comments) {
+		target[MediaRssFields.Comments] = {
+			'media:comment': comments[MediaRssFields.Comment]?.map(x => x.value) as string[]
+		};
+	}
+
+	const embed = source[MediaRssFields.Embed];
+	if (embed) {
+		const mediaParam = embed[MediaRssFields.Param];
+		target[MediaRssFields.Embed] = {
+			url: embed.url,
+			height: embed.height,
+			width: embed.width,
+			'media:param': mediaParam ? {
+				value: mediaParam?.value,
+				name: mediaParam?.name
+			} : undefined
+		};
+	}
+
+	const responses = source[MediaRssFields.Responses];
+	if (responses) {
+		target[MediaRssFields.Responses] = {
+			'media:response': responses[MediaRssFields.Response]?.map(x => x.value) as string[]
+		}
+	}
+
+	const backLinks = source[MediaRssFields.BackLinks];
+	if (backLinks) {
+		target[MediaRssFields.BackLinks] = {
+			'media:backLink': backLinks[MediaRssFields.BackLink]?.map(x => x.value) as string[]
+		}
+	}
+
+	const status = source[MediaRssFields.Status];
+	if (status) {
+		target[MediaRssFields.Status] = {
+			state: status.state,
+			reason: status.reason
+		};
+	}
+
+	const price  = source[MediaRssFields.Price];
+	if (price) {
+		target[MediaRssFields.Price] = {
+			type: price.type,
+			price: price.price,
+			info: price.info,
+			currency: price.currency
+		};
+	}
+
+	const license = source[MediaRssFields.License];
+	if (license) {
+		target[MediaRssFields.License] = {
+			value: license.value,
+			type: license.type,
+			href: license.href
+		};
+	}
+
+	const subtitle = source[MediaRssFields.Subtitle];
+	if (subtitle) {
+		target[MediaRssFields.Subtitle] = {
+			type: subtitle.type,
+			lang: subtitle.lang,
+			href: subtitle.href
+		};
+	}
+
+	const peerLink = source[MediaRssFields.PeerLink];
+	if (peerLink) {
+		target[MediaRssFields.PeerLink] = {
+			type: peerLink.type,
+			href: peerLink.href
+		};
+	}
+
+	const rights = source[MediaRssFields.Rights];
+	if (rights) {
+		target[MediaRssFields.Rights] = {
+			status: rights.status
+		};
+	}
+
+	const scenes = source[MediaRssFields.Scenes];
+	if (scenes) {
+		target[MediaRssFields.Scenes] = {
+			'media:scene': scenes[MediaRssFields.Scene]?.map(x => ({
+				sceneTitle: x.sceneTitle,
+				sceneDescription: x.sceneDescription,
+				sceneStartTime: x.sceneStartTime,
+				sceneEndTime: x.sceneEndTime
+			})) as []
 		}
 	}
 }
@@ -310,8 +475,8 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
 
     return {
       title: {
-        type: entry.title.type,
         value: entry.title.value,
+        type: entry.title.type
       },
       published: entry.published?.value,
       publishedRaw: entry.publishedRaw?.value,
@@ -320,15 +485,15 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
       updatedRaw: entry.updatedRaw?.value,
       links,
       description: {
-        type: entry.summary?.type,
         value: entry.summary?.value,
+        type: entry.summary?.type
       },
       source: entry.source
         ? {
           id: entry.source.id?.value,
           title: entry.source.title?.value,
           updated: entry.source.updated?.value,
-          updatedRaw: entry.source.updatedRaw?.value,
+          updatedRaw: entry.source.updatedRaw?.value
         }
         : undefined,
       author: entry.author
@@ -340,8 +505,8 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
         : undefined,
 			content: entry.content ?
 			{
-				type: entry.content?.type,
-				value: entry.content?.value
+				value: entry.content?.value,
+				type: entry.content?.type
 			}: undefined,
       contributors: entry.contributors?.map((x) => ({
         name: x.name?.value,
@@ -367,8 +532,8 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
     id: atom.id.value,
     generator: atom.generator?.value,
     title: {
-      type: atom.title?.type,
       value: atom.title?.value,
+      type: atom.title?.type
     },
     description: atom.subtitle?.value,
     links: atom.links?.map((x) => x.href) ?? [],

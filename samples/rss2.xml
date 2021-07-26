@@ -74,8 +74,8 @@
 					<media:content height="1337" medium="image" url="https://RSS2-media-content.com/" width="1337"/>
 					<media:credit>RSS2:Media:Credit</media:credit>
 					<media:description>RSS2:Media:Description</media:description>
-					<enclosure length="24986239" type="audio/mpeg" url="https://RSS2-entry-0-enclosure-url.mp3" />
-					<enclosure length="24986239" type="audio/mpeg" url="https://RSS2-entry-1-enclosure-url.mp3" />
+					<enclosure length="24986239" type="audio/mpeg" url="https://RSS2-entry-0-enclosure-0-url.mp3" />
+					<enclosure length="24986239" type="audio/mpeg" url="https://RSS2-entry-0-enclosure-1-url.mp3" />
 			</item>
 			<item>
 					<title><![CDATA[RSS2:Item:1:Title:CData]]></title>
@@ -84,6 +84,7 @@
 					<guid isPermaLink="true">https://example.com/test/1592856000</guid>
 					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
 					<pubDate>Mon, 22 Jun 2020 20:00:00 GMT</pubDate>
+					<media:thumbnail url="RSS2:Item:1:Media:Thumbnail" width="69" height="420"/>
 			</item>
 			<item>
 					<title><![CDATA[RSS2:Item:2:Title:CData]]></title>

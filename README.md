@@ -50,8 +50,8 @@ const { feed } = await parseFeed(xml);
 | SkipDays | - | SkipDays | - |
 | SkipHours | - |SkipHours | - |
 | Docs | - | Docs | - |
-| dc (Dublin Core Namespace) | - | All Dublin Core fields | All Dublin Core fields  |
-| Slash | - | - | All Slash fields |
+| Dublin Core Namespace | - | All Dublin Core fields | All Dublin Core fields  |
+| Slash Namespace | - | - | All Slash fields |
 
 ### Entries/Items
 
@@ -69,12 +69,10 @@ const { feed } = await parseFeed(xml);
 | Categories | Category | Category | - |
 | Contributors | Contributors | DC:Contributor | DC:Contributor |
 | Comments | - | Comments | - |
-| MediaCredit | - | media:credit | - |
-| MediaDescription | - | media:description | - |
-| MediaContent | - | media:content | - |
 | Source | Source | - | - |
-| dc (Dublin Core Namespace) | - | All Dublin Core fields | All Dublin Core fields |
-| Slash | - | - | All Slash fields |
+| Media Namespace | - | All Media fields | - |
+| Dublin Core Namespace| - | All Dublin Core fields | All Dublin Core fields |
+| Slash Namespace | - | - | All Slash fields |
 
 
 ## Benchmark
