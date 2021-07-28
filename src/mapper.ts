@@ -2,11 +2,11 @@ import type { Feed, FeedEntry, JsonFeed } from "./types/mod.ts";
 import { isValidHttpURL } from "./util.ts";
 import { FeedType } from "./types/mod.ts";
 import { DublinCoreFieldArray, DublinCoreFields } from "./types/dublin-core.ts";
-import { SlashFieldArray, SlashFields } from './types/slash.ts';
+import { SlashFieldArray } from './types/slash.ts';
 import { InternalAtom } from "./types/internal-atom.ts";
 import { InternalRSS2 } from "./types/internal-rss2.ts";
 import { InternalRSS1 } from "./types/internal-rss1.ts";
-import { MediaRss, MediaRssFieldArray, MediaRssFields, MediaRssValueFields } from "./types/media-rss.ts";
+import { MediaRss, MediaRssFields, MediaRssValueFields } from "./types/media-rss.ts";
 
 export const toFeed = (
   feedType: FeedType,
@@ -22,7 +22,7 @@ export const toFeed = (
     case FeedType.Rss1:
       return mapRssToFeed(feed as InternalRSS1);
     case FeedType.Rss2:
-      return mapRss2ToFeed(feed as InternalRSS2);
+			return mapRss2ToFeed(feed as InternalRSS2);
     case FeedType.JsonFeed:
       return mapJsonFeedToFeed(feed as JsonFeed);
     default:
@@ -31,193 +31,257 @@ export const toFeed = (
 };
 
 const mapRssToFeed = (rss: InternalRSS1): Feed => {
-  const result = {
-    type: FeedType.Rss1,
-  } as Feed;
 
-  if (rss.channel) {
-    result.title = {
-      type: undefined,
-      value: rss.channel[DublinCoreFields.Title]?.value ||
-        rss.channel.title.value,
-    };
-    result.description = rss.channel[DublinCoreFields.Description]?.value ||
-      rss.channel.description.value;
-    result.links = [
-      (rss.channel[DublinCoreFields.URI]?.value as string ||
-        rss.channel.link.value as string),
-    ];
-		result.copyright = rss.channel[DublinCoreFields.Rights]?.value;
-    result.language = rss.channel[DublinCoreFields.Language]?.value;
-		result.created = rss.channel[DublinCoreFields.Created]?.value || rss.channel[DublinCoreFields.DateSubmitted]?.value || rss.channel[DublinCoreFields.Date]?.value;
-		result.createdRaw = rss.channel[DublinCoreFields.CreatedRaw]?.value || rss.channel[DublinCoreFields.DateSubmittedRaw]?.value || rss.channel[DublinCoreFields.DateRaw]?.value;
-		result.published = rss.channel[DublinCoreFields.DateSubmitted]?.value || rss.channel[DublinCoreFields.Date]?.value;
-		result.publishedRaw = rss.channel[DublinCoreFields.DateSubmittedRaw]?.value || rss.channel[DublinCoreFields.DateRaw]?.value;
-		result.updateDate = rss.channel[DublinCoreFields.Date]?.value;
-		result.updateDateRaw = rss.channel[DublinCoreFields.DateRaw]?.value;
+	const {
+		title,
+		description,
+		link,
+		...rest
+	} = rss.channel;
 
-    result.image = rss.image
-      ? {
-        link: rss.image.link?.value as string,
-        title: rss.image.title?.value as string,
-        url: rss.image.url?.value as string,
-      }
-      : undefined;
-    result.entries = rss?.item?.map((item) => {
+	const result = (rest as any) as Feed;
+	copyFields(DublinCoreFieldArray, rss.channel, result);
+	result.type = FeedType.Rss1;
 
-			const links: any = [];
-			if (item[DublinCoreFields.URI]?.value) {
-				links.push({
-					href: item[DublinCoreFields.URI]?.value
-				});
-			}
-			if (item.link.value) {
-				links.push({
-					href: item.link.value
-				});
-			}
+	const titleValue = result[DublinCoreFields.Title] || title?.value;
+	if (titleValue) {
+		result.title = {
+			value: titleValue,
+			type: undefined
+		}
+	}
 
-      const feedEntry = {
-				id: item[DublinCoreFields.URI]?.value || item.link.value,
-        title: {
-          type: undefined,
-          value: item[DublinCoreFields.Title]?.value || item.title.value,
-        },
-        description: {
-          type: undefined,
-          value: item[DublinCoreFields.Description]?.value ||
-            item.description.value,
-        },
-        links,
-				published: item[DublinCoreFields.DateSubmitted]?.value || item[DublinCoreFields.Date]?.value,
-				publishedRaw: item[DublinCoreFields.DateSubmittedRaw]?.value || item[DublinCoreFields.DateRaw]?.value,
-				updated: item[DublinCoreFields.Date]?.value || item[DublinCoreFields.DateSubmitted]?.value,
-				updatedRaw: item[DublinCoreFields.DateRaw]?.value || item[DublinCoreFields.DateSubmittedRaw]?.value,
-				contributors: item[DublinCoreFields.Contributor]?.map((contributor) => ({
-					name: contributor
-				})),
-      } as FeedEntry;
+	result.links = [];
+	if (result[DublinCoreFields.URI]) {
+		result.links.push(result[DublinCoreFields.URI] as string);
+	}
 
-      copyFields(DublinCoreFieldArray, item, feedEntry);
-      copyFields(SlashFieldArray, item, feedEntry);
+	if(link?.value) {
+		result.links.push(link.value);
+	}
 
-      return feedEntry;
-    }) || undefined;
-  }
+	result.description = result[DublinCoreFields.Description] || description?.value
+	result.copyright = result[DublinCoreFields.Rights];
+	result.language = result[DublinCoreFields.Language];
+	result.created = result[DublinCoreFields.Created] || result[DublinCoreFields.DateSubmitted] || result[DublinCoreFields.Date];
+	result.createdRaw = result[DublinCoreFields.CreatedRaw] || result[DublinCoreFields.DateSubmittedRaw] || result[DublinCoreFields.DateRaw];
+	result.published = result[DublinCoreFields.DateSubmitted] || result[DublinCoreFields.Date];
+	result.publishedRaw = result[DublinCoreFields.DateSubmittedRaw] || result[DublinCoreFields.DateRaw];
+	result.updateDate = result[DublinCoreFields.Date];
+	result.updateDateRaw = result[DublinCoreFields.DateRaw];
 
-  copyFields(DublinCoreFieldArray, rss.channel, result);
+	if (rss.image) {
+		result.image = {
+			link: rss.image.link?.value as string,
+			title: rss.image.title?.value as string,
+			url: rss.image.url?.value as string,
+		};
+	}
+
+	result.entries = rss.item?.map((item) => {
+		const {
+			link,
+			title,
+			description,
+			...itemRest
+		} = item;
+
+		const entry = (itemRest as any) as FeedEntry;
+		copyFields(DublinCoreFieldArray, entry, entry);
+		copyFields(SlashFieldArray, entry, entry);
+
+		entry.id = entry[DublinCoreFields.URI] || link?.value as string;
+		entry.published = entry[DublinCoreFields.DateSubmitted] || entry[DublinCoreFields.Date];
+		entry.publishedRaw = entry[DublinCoreFields.DateSubmittedRaw] || entry[DublinCoreFields.DateRaw];
+		entry.updated = entry[DublinCoreFields.Date] || entry[DublinCoreFields.DateSubmitted];
+		entry.updatedRaw = entry[DublinCoreFields.DateRaw] || entry[DublinCoreFields.DateSubmittedRaw];
+
+		const itemTitle = entry[DublinCoreFields.Title] || title?.value;
+		if (itemTitle) {
+			entry.title = {
+				value: itemTitle,
+				type: undefined
+			};
+		}
+
+		const itemDescription = entry[DublinCoreFields.Description] || description?.value;
+		if (itemDescription) {
+			entry.description = {
+				value: itemDescription,
+				type: undefined
+			};
+		}
+
+		entry.links = [];
+		if (entry[DublinCoreFields.URI]) {
+			entry.links.push({
+				href: entry[DublinCoreFields.URI]
+			});
+		}
+
+		if (link?.value) {
+			entry.links.push({
+				href: link.value
+			});
+		}
+
+		entry.contributors = entry[DublinCoreFields.Contributor]?.map((contributor) => ({
+			name: contributor
+		}));
+
+		return entry;
+	})
 
   return result;
 };
 
 const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
-  const result = {
-    type: FeedType.Rss2,
-  } as Feed;
+	const {
+		items,
+		title,
+		description,
+		generator,
+		pubDate,
+		pubDateRaw,
+		lastBuildDate,
+		lastBuildDateRaw,
+		docs,
+		webMaster,
+		language,
+		copyright,
+		ttl,
+		skipDays,
+		skipHours,
+		link,
+		image,
+		...rest
+	} = rss.channel;
 
-  if (rss.channel) {
-    result.published = rss.channel[DublinCoreFields.DateSubmitted]?.value || rss.channel[DublinCoreFields.Date]?.value || rss.channel.pubDate?.value;
-    result.publishedRaw = rss.channel[DublinCoreFields.DateSubmittedRaw]?.value || rss.channel[DublinCoreFields.DateRaw]?.value || rss.channel.pubDateRaw?.value;
-		result.created = rss.channel[DublinCoreFields.Created]?.value || rss.channel.lastBuildDate?.value || result.published;
-		result.createdRaw = rss.channel[DublinCoreFields.CreatedRaw]?.value || rss.channel.lastBuildDateRaw?.value || result.publishedRaw;
+	const result = (rest as any) as Feed;
+	result.type = FeedType.Rss2;
+	copyFields(DublinCoreFieldArray, result, result);
 
-    if (rss.channel.webMaster?.value) {
-      result.author = {
-        email: rss.channel.webMaster?.value,
-      };
-    }
+	result.title = {
+		value: result[DublinCoreFields.Title] || title?.value,
+		type: undefined
+	};
 
-    result.docs = rss.channel.docs?.value;
-    result.links = [];
+	const commonDate = result[DublinCoreFields.DateSubmitted] || result[DublinCoreFields.Date] || pubDate?.value;
+	const commonDateRaw = result[DublinCoreFields.DateSubmittedRaw] || result[DublinCoreFields.DateRaw] || pubDateRaw?.value;
 
-		if (rss.channel[DublinCoreFields.URI]?.value) {
-			result.links.push(rss.channel[DublinCoreFields.URI]?.value as string);
+	result.description = description?.value || result[DublinCoreFields.Description];
+	result.generator = generator?.value;
+	result.published = commonDate;
+	result.publishedRaw = commonDateRaw;
+	result.created = result[DublinCoreFields.Created] || lastBuildDate?.value || commonDate;
+	result.createdRaw = result[DublinCoreFields.CreatedRaw] || lastBuildDateRaw?.value || commonDateRaw;
+	result.updateDate = lastBuildDate?.value || result[DublinCoreFields.Date];
+	result.updateDateRaw = lastBuildDateRaw?.value || result[DublinCoreFields.DateRaw];
+	result.docs = docs?.value;
+	result.language = language?.value;
+	result.copyright = copyright?.value || result[DublinCoreFields.Rights];
+	result.ttl = ttl?.value;
+	result.skipDays = skipDays?.day?.map(x => x.value as string);
+	result.skipHours = skipHours?.hour?.map(x => x.value as number);
+	result.links = [
+		link?.value,
+		result[DublinCoreFields.URI]
+	].filter(x => !!x) as string[];
+
+	if (webMaster?.value) {
+		result.author = createAuthor(webMaster.value);
+	}
+
+	if (image) {
+		result.image = {
+			link: image.link?.value as string,
+			title: image.title?.value as string,
+			url: image.url?.value as string,
+			height: image?.height?.value,
+			width: image?.width?.value,
+		};
+	}
+
+	result.entries = items.map((item) => {
+		const {
+			author,
+			title,
+			description,
+			guid,
+			link,
+			pubDate,
+			pubDateRaw,
+			enclosure,
+			comments,
+			categories,
+			...itemRest
+		} = item;
+
+		const entry = itemRest as FeedEntry;
+		copyFields(DublinCoreFieldArray, entry, entry);
+
+		entry.id = guid?.value as string || entry[DublinCoreFields.URI] as string;
+
+		const titleValue = entry[DublinCoreFields.Title] || title?.value;
+		if (titleValue) {
+			entry.title = {
+				value: titleValue,
+				type: undefined
+			};
 		}
-		if (rss.channel.link?.value) {
-			result.links.push(rss.channel.link?.value);
+
+		const descriptionValue = entry[DublinCoreFields.Description] || description?.value;
+		if (descriptionValue) {
+			entry.description = {
+				value: descriptionValue,
+				type: undefined
+			};
 		}
 
-    result.language = rss.channel[DublinCoreFields.Language]?.value || rss.channel.language?.value;
-    result.updateDate = rss.channel.lastBuildDate?.value || rss.channel[DublinCoreFields.Date]?.value;
-    result.updateDateRaw = rss.channel.lastBuildDateRaw?.value || rss.channel[DublinCoreFields.DateRaw]?.value;
-    result.generator = rss.channel.generator?.value;
-    result.ttl = rss.channel.ttl?.value || 60;
-    result.title = {
-      value: rss.channel[DublinCoreFields.Title]?.value || rss.channel.title?.value,
-      type: undefined
-    };
+		entry.comments = comments?.value;
+		entry.published = entry[DublinCoreFields.DateSubmitted] || pubDate?.value;
+		entry.publishedRaw = entry[DublinCoreFields.DateSubmittedRaw] || pubDateRaw?.value;
+		entry.updated = pubDate?.value;
+		entry.updatedRaw = item.pubDateRaw?.value;
 
-    result.description = rss.channel[DublinCoreFields.Description]?.value || rss.channel.description?.value;
-    result.copyright = rss.channel.copyright?.value || rss.channel[DublinCoreFields.Rights]?.value;
-    result.skipDays = rss.channel.skipDays?.day?.map((x) => x.value as string);
-    result.skipHours = rss.channel.skipHours?.hour?.map((x) =>
-      x.value as number
-    );
-    result.image = rss.channel.image
-      ? {
-        link: rss.channel.image.link?.value as string,
-        title: rss.channel.image.title?.value as string,
-        url: rss.channel.image.url?.value as string,
-        height: rss.channel.image?.height?.value,
-        width: rss.channel.image?.width?.value,
-      }
-      : undefined;
+		if (author?.value) {
+			entry.author = createAuthor(undefined, author.value);
+		}
 
-    copyFields(DublinCoreFieldArray, rss.channel, result);
-  }
+		if (link?.value) {
+			entry.links = [{ href: link?.value }];
+		}
 
-  result.entries = rss.channel?.items?.map((item) => {
-    const title = item[DublinCoreFields.Title] || item.title?.value;
-    const description = item[DublinCoreFields.Description] || item.description?.value;
-
-    const entryResult = {
-			author: item.author?.value ? {
-				name: item.author?.value
-			}: undefined,
-      id: item.guid?.value,
-      links: item.link?.value ? [{
-				href: item.link?.value
-			}]: undefined,
-      published: item[DublinCoreFields.DateSubmitted] || item.pubDate?.value,
-      publishedRaw: item[DublinCoreFields.DateSubmittedRaw] || item.pubDateRaw?.value,
-      updated: item.pubDate?.value,
-			attachments: item.enclosure ? item.enclosure.map(x => ({
+		if(enclosure) {
+			entry.attachments = enclosure.map(x => ({
 				url: x.url,
 				mimeType: x.type,
 				sizeInBytes: x.length
-			}))  : undefined,
-      updatedRaw: item.pubDateRaw?.value,
-      comments: item.comments?.value,
-      categories: item.categories?.map((category) => ({
-        term: category.value,
-        label: category.value,
-      })) ?? undefined,
-      title: title
-        ? {
-          value: title,
-          type: undefined
-        }
-        : undefined,
-      description: description
-        ? {
-          value: description,
-          type: undefined
-        }
-        : undefined,
-			contributors: item[DublinCoreFields.Contributor]?.map((contributor) => ({
-				name: contributor
-			}))
-    } as FeedEntry;
+			}));
+		}
 
-    copyMedia(item, entryResult);
-    copyFields(DublinCoreFieldArray, item, entryResult);
+		entry.categories = categories?.map((category) => ({
+			term: category.value,
+			label: category.value,
+		}));
 
-    return entryResult;
-  });
+		entry.contributors = result[DublinCoreFields.Contributor]?.map((contributor) => ({
+			name: contributor
+		}));
 
-  return result;
+		return entry;
+	});
+
+	return (result as any);
 };
 
+const createAuthor = (email?: string, name?: string, uri?: string) => ({
+	email,
+	name,
+	uri
+});
+
+//  copyMedia(item, entryResult);
 const copyMedia = (source: MediaRssValueFields, target: MediaRss) => {
 	[
 		MediaRssFields.Rating,

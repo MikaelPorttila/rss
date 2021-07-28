@@ -823,7 +823,7 @@ const testArrayLength = (
       },
       {
         name: "WebMaster (Author:Email For Author mapping)",
-        getValue: (src: Feed) => src.author.email,
+        getValue: (src: Feed) => src.author?.email,
         assert: [{ fn: assertEquals, expect: "RSS2:Channel:WebMaster:Value" }],
       },
       {

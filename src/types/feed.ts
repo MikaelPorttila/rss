@@ -20,7 +20,7 @@ export interface Feed extends DublinCore  {
   updateDate?: Date;
   updateDateRaw?: string;
   copyright?: string;
-  author: Author;
+  author?: Author;
   ttl?: number;
   categories: Category[];
   skipHours?: number[];
@@ -86,8 +86,8 @@ interface Author extends Person {
 }
 
 interface Category {
-  term: string;
-  label: string;
+  term?: string;
+  label?: string;
 }
 
 enum ContentType {
