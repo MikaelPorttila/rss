@@ -10,6 +10,7 @@ import { resolveRss1Field } from "./resolvers/rss1-resolver.ts";
 import { SlashFieldArray } from "./types/slash.ts";
 import { resolveRss2Field } from "./resolvers/rss2-resolver.ts";
 import { MediaRssFields } from "./types/media-rss.ts";
+import { AtomFields } from "./resolvers/types/atom-fields.ts";
 const composeAtom = (
   setter: (data: InternalAtom) => void = () => {},
 ): InternalAtom => {
@@ -145,9 +146,6 @@ const composeAtom = (
           updatedRaw: { value: "Mon, 22 Jun 2020 20:03:00 GMT" },
         },
         href: "Atom:Entries:0:Href",
-        "feedburner:origlink": {
-          value: "Atom:Entries:0:Feedburner:Origlink",
-        },
         links: [
           {
             type: "Atom:Entries:0:Links:0:Type",
@@ -1203,14 +1201,6 @@ const testArrayLength = (
         "Atom:Entries:0:Summary:Value",
       ),
       {
-        name: "Items:0:Link",
-        getValue: (src: Feed) => src.entries[0].links[0].href,
-        assert: [{
-          fn: assertEquals,
-          expect: "Atom:Entries:0:Feedburner:Origlink",
-        }],
-      },
-      {
         name: "Items:0:Id",
         getValue: (src: Feed) => src.entries[0].id,
         assert: [{ fn: assertEquals, expect: "Atom:Entries:0:Id:value" }],
@@ -1262,6 +1252,30 @@ const testArrayLength = (
       },
     ],
   },
+	{
+    name: "AtomFeedburner",
+    source: toFeed(FeedType.Atom, composeAtom((data) => {
+			data.entries[0][AtomFields.FeedburnerOrigLink] = { value: "Atom:Entries:0:Feedburner:Origlink" };
+		})) as Feed,
+    tests: [
+			{
+				name: 'Items:0:Id',
+				getValue: (src: Feed) => src.entries[0].id,
+        assert: [{
+          fn: assertEquals,
+          expect: "Atom:Entries:0:Feedburner:Origlink",
+        }]
+			},
+			{
+        name: "Items:0:Link",
+        getValue: (src: Feed) => src.entries[0].links[0].href,
+        assert: [{
+          fn: assertEquals,
+          expect: "Atom:Entries:0:Feedburner:Origlink",
+        }],
+      },
+		]
+	}
 ].forEach((workspace) => {
   workspace.tests.forEach((test) => {
     Deno.test(`toFeed:${workspace.name}:${test.name}`, () => {

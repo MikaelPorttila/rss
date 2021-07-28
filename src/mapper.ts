@@ -7,6 +7,7 @@ import { InternalAtom } from "./types/internal-atom.ts";
 import { InternalRSS2 } from "./types/internal-rss2.ts";
 import { InternalRSS1 } from "./types/internal-rss1.ts";
 import { MediaRss, MediaRssFields, MediaRssValueFields } from "./types/media-rss.ts";
+import { AtomFields } from "./resolvers/types/atom-fields.ts";
 
 export const toFeed = (
   feedType: FeedType,
@@ -23,8 +24,6 @@ export const toFeed = (
       return mapRssToFeed(feed as InternalRSS1);
     case FeedType.Rss2:
 			return mapRss2ToFeed(feed as InternalRSS2);
-    case FeedType.JsonFeed:
-      return mapJsonFeedToFeed(feed as JsonFeed);
     default:
       return null;
   }
@@ -275,6 +274,178 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
 	return (result as any);
 };
 
+const mapAtomToFeed = (atom: InternalAtom): Feed => {
+
+	const {
+		id,
+		generator,
+		title,
+		subtitle,
+		updated,
+		updatedRaw,
+		icon,
+		links,
+		logo,
+		categories,
+		author,
+		entries,
+		...rest
+	} = atom;
+
+	const result = (rest as any) as Feed;
+	result.type = FeedType.Atom;
+	result.id = id?.value as string;
+	result.generator = generator?.value;
+	result.title = {
+		value: title?.value,
+		type: title?.type
+	};
+	result.description = subtitle?.value;
+	result.updateDate = updated.value;
+	result.updateDateRaw = updatedRaw?.value;
+	result.published = updated.value;
+	result.publishedRaw = updatedRaw?.value;
+	result.created = updated.value;
+	result.createdRaw = updatedRaw.value;
+	result.icon = icon?.value;
+	result.links = links?.map((x) => x.href) ?? [];
+
+	if (logo) {
+		result.image = {
+			link: logo.value as string,
+			url: logo.value as string
+		};
+	}
+
+	if (categories) {
+		result.categories = categories?.map((category) => ({
+      term: category.term,
+      label: category.label,
+    }));
+	}
+
+	if (author) {
+		result.author = {
+			name: author.name?.value,
+			email: author.email?.value,
+			uri: author.uri?.value,
+		};
+	}
+
+  result.entries= entries?.map((atomEntry) => {
+		const {
+			links,
+			href,
+			id,
+			title,
+			summary,
+			published,
+			publishedRaw,
+			updated,
+			updatedRaw,
+			source,
+			author,
+			content,
+			contributors,
+			categories,
+			...entryRest
+		} = atomEntry;
+
+		const entry = entryRest as FeedEntry;
+		entry.id = atomEntry[AtomFields.FeedburnerOrigLink]?.value || id?.value as string;
+		entry.published = published?.value;
+		entry.publishedRaw = publishedRaw?.value;
+		entry.updated = updated?.value;
+		entry.updatedRaw = updatedRaw?.value;
+
+		if (title) {
+			entry.title = {
+				value: title.value,
+				type: title.type
+			};
+		}
+
+		if (summary) {
+			entry.description = {
+				value: summary.value,
+				type: summary.type
+			};
+		}
+
+    entry.links = [];
+    if (atomEntry[AtomFields.FeedburnerOrigLink]?.value) {
+      entry.links.push({ href: atomEntry[AtomFields.FeedburnerOrigLink]?.value as string });
+    }
+
+		if (links && links?.length > 0) {
+			for(const link of links) {
+				entry.links.push({
+					href: link.href,
+					rel: link.rel,
+					type: link.type,
+				});
+			}
+
+			entry.attachments = links.filter((x) => x.rel === "enclosure").map((x) => ({
+				url: x.href,
+				mimeType: x.type,
+				sizeInBytes: x.length,
+			}));
+		}
+
+		if (href) {
+			entry.links.push({ href });
+		}
+
+		if (isValidHttpURL(id.value as string)) {
+			entry.links.push({ href: id.value });
+		}
+
+		if (source) {
+			entry.source = {
+				id: source.id?.value,
+				title: source.title?.value,
+				updated: source.updated?.value,
+				updatedRaw: source.updatedRaw?.value
+			};
+		}
+
+		if (author) {
+			entry.author = {
+				email: author.email?.value,
+				name: author.name.value,
+				uri: author.uri?.value,
+			}
+		}
+
+		if (content) {
+			entry.content = {
+				value: content?.value,
+				type: content?.type
+			}
+		}
+
+		if (contributors) {
+			entry.contributors = contributors?.map((x) => ({
+        name: x.name?.value,
+        email: x.email?.value,
+        uri: x.uri?.value,
+      }));
+		}
+
+		if (categories) {
+			entry.categories = categories?.map((x) => ({
+        term: x.term,
+        label: x.label,
+      }));
+		}
+
+		return entry;
+  });
+
+  return result;
+};
+
 const createAuthor = (email?: string, name?: string, uri?: string) => ({
 	email,
 	name,
@@ -503,133 +674,3 @@ const copyFields = (fields: string[], source: any, target: any) => {
     }
   });
 }
-
-const mapAtomToFeed = (atom: InternalAtom): Feed => {
-  const entries = atom.entries?.map((entry) => {
-    let links = [];
-    if (entry["feedburner:origlink"]) {
-      links.push({
-				href: entry["feedburner:origlink"]?.value
-			});
-    }
-
-		if (entry.links && entry.links.length > 0) {
-			for(const link of entry.links) {
-				links.push({
-					href: link.href,
-					rel: link.rel,
-					type: link.type,
-					length: link.length
-				});
-			}
-		}
-
-		if (entry.href) {
-			links.push({
-				href: entry.href
-			});
-		}
-
-		if (isValidHttpURL(entry.id.value as string)) {
-			links.push({
-				href: entry.id.value
-			});
-		}
-
-    return {
-      title: {
-        value: entry.title.value,
-        type: entry.title.type
-      },
-      published: entry.published?.value,
-      publishedRaw: entry.publishedRaw?.value,
-      id: entry.id.value,
-      updated: entry.updated?.value,
-      updatedRaw: entry.updatedRaw?.value,
-      links,
-      description: {
-        value: entry.summary?.value,
-        type: entry.summary?.type
-      },
-      source: entry.source
-        ? {
-          id: entry.source.id?.value,
-          title: entry.source.title?.value,
-          updated: entry.source.updated?.value,
-          updatedRaw: entry.source.updatedRaw?.value
-        }
-        : undefined,
-      author: entry.author
-        ? {
-          email: entry.author.email?.value,
-          name: entry.author.name.value,
-          uri: entry.author.uri?.value,
-        }
-        : undefined,
-			content: entry.content ?
-			{
-				value: entry.content?.value,
-				type: entry.content?.type
-			}: undefined,
-      contributors: entry.contributors?.map((x) => ({
-        name: x.name?.value,
-        email: x.email?.value,
-        uri: x.uri?.value,
-      })) ?? undefined,
-      categories: atom.categories?.map((x) => ({
-        term: x.term,
-        label: x.label,
-      })),
-      attachments: atom.links
-        ?.filter((x) => x.rel === "enclosure")
-        ?.map((x) => ({
-          url: x.href,
-          mimeType: x.type,
-          sizeInBytes: x.length,
-        })),
-    } as FeedEntry;
-  });
-
-  const result = {
-    type: FeedType.Atom,
-    id: atom.id.value,
-    generator: atom.generator?.value,
-    title: {
-      value: atom.title?.value,
-      type: atom.title?.type
-    },
-    description: atom.subtitle?.value,
-    links: atom.links?.map((x) => x.href) ?? [],
-    icon: atom.icon?.value,
-    image: atom.logo
-      ? {
-        link: atom.logo.value,
-        url: atom.logo.value,
-      }
-      : undefined,
-    updateDate: atom.updated?.value,
-    updateDateRaw: atom.updatedRaw?.value,
-    published: atom.updated?.value,
-    publishedRaw: atom.updatedRaw?.value,
-    created: atom.updated.value,
-    createdRaw: atom.updatedRaw.value,
-    categories: atom.categories?.map((category) => ({
-      term: category.term,
-      label: category.label,
-    })) ?? undefined,
-    author: atom.author
-      ? {
-        name: atom.author.name?.value,
-        email: atom.author.email?.value,
-        uri: atom.author.uri?.value,
-      }
-      : undefined,
-    entries,
-  } as Feed;
-
-  return result;
-};
-
-const mapJsonFeedToFeed = (rss: JsonFeed): Feed => {
-  return {} as Feed;
-};

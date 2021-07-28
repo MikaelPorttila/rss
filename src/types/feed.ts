@@ -35,7 +35,7 @@ export interface FeedEntry extends DublinCore, Slash, MediaRss {
   description?: TextField;
   links: Link[];
   id: string;
-  author?: Author;
+  author?: Author; // Todo, lets go with authors instead
   published?: Date;
   publishedRaw?: string;
   updated?: Date;
@@ -47,7 +47,7 @@ export interface FeedEntry extends DublinCore, Slash, MediaRss {
     id?: string;
     title?: string;
     updated?: Date;
-    updatedRaw?: Date;
+    updatedRaw?: string;
 		url?: string
   };
   contributors?: Person[];
@@ -56,9 +56,9 @@ export interface FeedEntry extends DublinCore, Slash, MediaRss {
 }
 
 interface FeedImage {
-  url: string;
-  title: string;
-  link: string;
+  url?: string;
+  title?: string;
+  link?: string;
   width?: number;
   height?: number;
 }

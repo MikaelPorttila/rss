@@ -14,6 +14,7 @@ import { InternalAtom } from "./types/internal-atom.ts";
 import { InternalRSS2 } from "./types/internal-rss2.ts";
 import { InternalRSS1 } from "./types/internal-rss1.ts";
 import { MediaRssFields } from "./types/media-rss.ts";
+import { AtomFields } from "./resolvers/types/atom-fields.ts";
 
 export const toLegacyRss1 = (rss: InternalRSS1): RSS1 => {
   const result = {} as RSS1;
@@ -370,8 +371,8 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
       : undefined,
     items: atom.entries.map((entry) => {
       let url: string | undefined;
-      if (entry["feedburner:origlink"]) {
-        url = entry["feedburner:origlink"];
+      if (entry[AtomFields.FeedburnerOrigLink]) {
+        url = entry[AtomFields.FeedburnerOrigLink];
       } else if (entry.href) {
         url = entry.href;
       } else if (isValidHttpURL(entry.id)) {

@@ -1,4 +1,5 @@
 import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
+import { AtomFields } from "./types/atom-fields.ts";
 
 export const resolveAtomField = (
   nodeName: string,
@@ -9,24 +10,24 @@ export const resolveAtomField = (
   let propertyName = nodeName;
 
   switch (nodeName) {
-    case Field.Category:
+    case AtomFields.Category:
       propertyName = "categories";
       isArray = true;
       break;
-    case Field.Contributor:
+    case AtomFields.Contributor:
       propertyName = "contributors";
       isArray = true;
       break;
-    case Field.Link:
+    case AtomFields.Link:
       propertyName = "links";
       isArray = true;
       break;
-    case Field.Entry:
+    case AtomFields.Entry:
       propertyName = "entries";
       isArray = true;
       break;
-    case Field.Updated:
-    case Field.Published:
+    case AtomFields.Updated:
+    case AtomFields.Published:
       isDate = true;
       break;
     default:
@@ -56,38 +57,12 @@ export const resolveAtomField = (
 
 export const isAtomCDataField = (nodeName: string): boolean => {
   switch (nodeName) {
-    case Field.Title:
-    case Field.Summary:
-    case Field.Content:
-    case Field.Rights:
+    case AtomFields.Title:
+    case AtomFields.Summary:
+    case AtomFields.Content:
+    case AtomFields.Rights:
       return true;
   }
 
   return false;
 };
-
-enum Field {
-  Author = "author",
-  Category = "category",
-  Content = "content",
-  Contributor = "contributor",
-  Email = "email",
-  Entry = "entry",
-  Feed = "feed",
-  Href = "href",
-  Icon = "icon",
-  Id = "id",
-  Link = "link",
-  Name = "name",
-  Published = "published",
-  Rel = "rel",
-  Rights = "rights",
-  Source = "source",
-  Src = "src",
-  Summary = "summary",
-  Title = "title",
-  Type = "type",
-  Updated = "updated",
-  Uri = "uri",
-  Value = "value",
-}
