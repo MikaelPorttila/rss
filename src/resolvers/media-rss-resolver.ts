@@ -9,10 +9,13 @@ export const resolveMediaRssField = (
   } as ResolverResult;
 
   switch (fieldName) {
-		case MediaRssFields.Comment:
-		case MediaRssFields.Response:
-		case MediaRssFields.Scene:
-			result.isArray = true;
+    case MediaRssFields.Comment:
+    case MediaRssFields.Response:
+    case MediaRssFields.Scene:
+      result.isArray = true;
+      break;
+		case MediaRssFields.Price:
+			result.isNumber = true;
 			break;
     default:
       result.handled = false;

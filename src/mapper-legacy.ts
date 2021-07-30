@@ -38,15 +38,14 @@ export const toLegacyRss1 = (rss: InternalRSS1): RSS1 => {
   }
 
   result.item = rss.item?.map((item) => {
-
-		const itemResult = {
+    const itemResult = {
       title: item.title?.value as string,
       description: item.description?.value as string,
       link: item.link?.value as string,
     };
 
-		copyFields(DublinCoreFieldArray, item, itemResult);
-		copyFields(SlashFieldArray, item, itemResult);
+    copyFields(DublinCoreFieldArray, item, itemResult);
+    copyFields(SlashFieldArray, item, itemResult);
     return itemResult;
   });
 
@@ -77,21 +76,19 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
       }
       : undefined as any;
 
-    const skipHours =
-      (rss.channel.skipHours && rss.channel.skipHours.hour &&
-          rss.channel.skipHours.hour.length > 0)
-        ? {
-          hour: rss.channel.skipHours.hour?.map((x) => x.value),
-        }
-        : undefined as any;
+    const skipHours = (rss.channel.skipHours && rss.channel.skipHours.hour &&
+        rss.channel.skipHours.hour.length > 0)
+      ? {
+        hour: rss.channel.skipHours.hour?.map((x) => x.value),
+      }
+      : undefined as any;
 
-    const skipDays =
-      (rss.channel.skipDays && rss.channel.skipDays.day &&
-          rss.channel.skipDays.day.length > 0)
-        ? {
-          day: rss.channel.skipDays.day?.map((x) => x.value),
-        }
-        : undefined as any;
+    const skipDays = (rss.channel.skipDays && rss.channel.skipDays.day &&
+        rss.channel.skipDays.day.length > 0)
+      ? {
+        day: rss.channel.skipDays.day?.map((x) => x.value),
+      }
+      : undefined as any;
 
     result.channel = {
       title: rss.channel.title?.value as string,
@@ -113,7 +110,6 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
       generator: rss.channel.generator?.value,
       category: rss.channel.category?.map((x) => x.value as string),
       items: rss.channel.items?.map((item) => {
-
         const itemResult: any = {
           guid: item.guid?.value,
           pubDate: item.pubDate?.value,
@@ -121,58 +117,62 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
           title: item.title?.value,
           description: item.description?.value,
           link: item.link?.value,
-          author: item.author?.value || ((item[DublinCoreFields.Creator]?.length || 0) > 0 ? item[DublinCoreFields.Creator]?.[0].value : undefined ),
-					enclosure: item.enclosure?.[0] ? {
-						url: item.enclosure?.[0].url,
-						type: item.enclosure?.[0].type,
-						length: item.enclosure?.[0].length,
-					} : undefined,
+          author: item.author?.value ||
+            ((item[DublinCoreFields.Creator]?.length || 0) > 0
+              ? item[DublinCoreFields.Creator]?.[0].value
+              : undefined),
+          enclosure: item.enclosure?.[0]
+            ? {
+              url: item.enclosure?.[0].url,
+              type: item.enclosure?.[0].type,
+              length: item.enclosure?.[0].length,
+            }
+            : undefined,
           comments: item.comments?.value,
           categories: item.categories?.map((x) => x.value as string),
           /* "media:description": item[MediaRssFields.Description]?.value, */
         };
 
-				const mediaCredit = item[MediaRssFields.Credit];
-				if (mediaCredit) {
-					itemResult[MediaRssFields.Credit] = {
-						value: mediaCredit.value,
-						role: mediaCredit.role,
-						scheme: mediaCredit.scheme
-					}
-				}
+        const mediaCredit = item[MediaRssFields.Credit];
+        if (mediaCredit) {
+          itemResult[MediaRssFields.Credit] = {
+            value: mediaCredit.value,
+            role: mediaCredit.role,
+            scheme: mediaCredit.scheme,
+          };
+        }
 
-				const mediaDescription = item[MediaRssFields.Description];
-				if (mediaDescription) {
-					itemResult[MediaRssFields.Description] = {
-						value: mediaDescription.value,
-						type: mediaDescription.type
-					}
-				}
-
+        const mediaDescription = item[MediaRssFields.Description];
+        if (mediaDescription) {
+          itemResult[MediaRssFields.Description] = {
+            value: mediaDescription.value,
+            type: mediaDescription.type,
+          };
+        }
 
         const mediaContent = item[MediaRssFields.Content];
         if (mediaContent) {
-					itemResult[MediaRssFields.Content] = {
-						url: mediaContent.url,
-						fileSize: mediaContent.fileSize,
-						type: mediaContent.type,
-						medium: mediaContent.medium,
-						isDefault: mediaContent.isDefault,
-						expression: mediaContent.expression,
-						bitrate: mediaContent.bitrate,
-						samplingrate: mediaContent.samplingrate,
-						channels: mediaContent.channels,
-						duration: mediaContent.duration,
-						height: mediaContent.height,
-						width: mediaContent.width
-					};
+          itemResult[MediaRssFields.Content] = {
+            url: mediaContent.url,
+            fileSize: mediaContent.fileSize,
+            type: mediaContent.type,
+            medium: mediaContent.medium,
+            isDefault: mediaContent.isDefault,
+            expression: mediaContent.expression,
+            bitrate: mediaContent.bitrate,
+            samplingrate: mediaContent.samplingrate,
+            channels: mediaContent.channels,
+            duration: mediaContent.duration,
+            height: mediaContent.height,
+            width: mediaContent.width,
+          };
         }
 
         copyFields(DublinCoreFieldArray, item, itemResult);
         return itemResult;
       }),
     };
-		copyFields(DublinCoreFieldArray, rss.channel, result.channel);
+    copyFields(DublinCoreFieldArray, rss.channel, result.channel);
   }
 
   return result;
@@ -369,7 +369,7 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
         url: atom.author.uri,
       } as JsonFeedAuthor
       : undefined,
-    items: atom.entries.map((entry) => {
+    items: atom.entries?.map((entry) => {
       let url: string | undefined;
       if (entry[AtomFields.FeedburnerOrigLink]) {
         url = entry[AtomFields.FeedburnerOrigLink];
@@ -438,8 +438,8 @@ const copyFields = (fields: string[], source: any, target: any) => {
     const val = source[fieldName];
     if (val) {
       target[fieldName] = Array.isArray(val)
-				? val.map(x => (x?.value || x))
-				: (val?.value || val);
+        ? val.map((x) => (x?.value || x))
+        : (val?.value || val);
     }
   });
-}
+};

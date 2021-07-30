@@ -1,5 +1,5 @@
 import { DublinCoreValueFields } from "./dublin-core.ts";
-import { SlashValueFields } from './slash.ts';
+import { SlashValueFields } from "./slash.ts";
 import { ValueField } from "./value-field.ts";
 
 // https://validator.w3.org/feed/docs/rss1.html

@@ -1,9 +1,9 @@
 import { DublinCore } from "./dublin-core.ts";
-import { Slash } from './slash.ts';
+import { Slash } from "./slash.ts";
 import { FeedType } from "./feed-type.ts";
 import { MediaRss } from "./media-rss.ts";
 
-export interface Feed extends DublinCore  {
+export interface Feed extends DublinCore {
   version?: string;
   id: string;
   type: FeedType;
@@ -48,10 +48,10 @@ export interface FeedEntry extends DublinCore, Slash, MediaRss {
     title?: string;
     updated?: Date;
     updatedRaw?: string;
-		url?: string
+    url?: string;
   };
   contributors?: Person[];
-  rights: TextField;
+  rights?: TextField;
   attachments?: Attachment[];
 }
 
@@ -70,10 +70,10 @@ interface Attachment {
 }
 
 interface Link {
-	rel?: string;
-	type?: string;
-	href?: string;
-	title?: string;
+  rel?: string;
+  type?: string;
+  href?: string;
+  title?: string;
 }
 
 interface TextField {

@@ -1,22 +1,22 @@
 import { DublinCore } from "./dublin-core.ts";
 import { MediaRss } from "./media-rss.ts";
-import { Slash } from './slash.ts';
+import { Slash } from "./slash.ts";
 
 // https://validator.w3.org/feed/docs/rss1.html
 export interface RSS1 {
   channel: Channel;
-	image: Image;
+  image: Image;
   textInput: {
     about: string; //Mapped from rdf:about
-		title: string;
+    title: string;
     description: string;
     link: string;
     name: string;
   };
-	item: Item[];
+  item: Item[];
 }
 
-interface Channel extends DublinCore  {
+interface Channel extends DublinCore {
   about: string; // Mapped rdf:about
   title: string;
   link: string;

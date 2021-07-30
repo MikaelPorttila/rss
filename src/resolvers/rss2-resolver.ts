@@ -1,6 +1,5 @@
-import { DublinCoreFields } from "../types/dublin-core.ts";
 import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
-import { resolveMediaRssField } from './media-rss-resolver.ts';
+import { resolveMediaRssField } from "./media-rss-resolver.ts";
 import { Rss2Fields } from "./types/rss2-fields.ts";
 
 export const resolveRss2Field = (
@@ -39,9 +38,9 @@ export const resolveRss2Field = (
       propertyName = "items";
       isArray = true;
       break;
-		case Rss2Fields.Enclosure:
-			isArray = true;
-			break;
+    case Rss2Fields.Enclosure:
+      isArray = true;
+      break;
     case Rss2Fields.Category:
       propertyName = "categories";
       isArray = true;
@@ -63,32 +62,33 @@ export const resolveRss2Field = (
       isArray = true;
       break;
     default:
-			const subNamespaceResolvers = [resolveDublinCoreField, resolveMediaRssField];
-			for (let i = 0; i < subNamespaceResolvers.length; i++) {
-				const resolverResult = subNamespaceResolvers[i](propertyName);
-				if (resolverResult.handled) {
+      const subNamespaceResolvers = [
+        resolveDublinCoreField,
+        resolveMediaRssField,
+      ];
+      for (let i = 0; i < subNamespaceResolvers.length; i++) {
+        const resolverResult = subNamespaceResolvers[i](propertyName);
+        if (resolverResult.handled) {
+          if (resolverResult.isArray) {
+            isArray = true;
+          }
 
-					if (resolverResult.isArray) {
-						isArray = true;
-					}
+          if (resolverResult.isDate) {
+            isDate = true;
+          }
 
-					if (resolverResult.isDate) {
-						isDate = true;
-					}
+          if (resolverResult.isNumber) {
+            isNumber = true;
+          }
 
-					if (resolverResult.isNumber) {
-						isNumber = true;
-					}
-
-					if (!!resolverResult.newName) {
-						propertyName = resolverResult.newName;
-					}
-					break;
-				}
-			}
+          if (!!resolverResult.newName) {
+            propertyName = resolverResult.newName;
+          }
+          break;
+        }
+      }
       break;
   }
 
   return [propertyName, isArray, isNumber, isDate];
 };
-

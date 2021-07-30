@@ -6,7 +6,13 @@ import {
 } from "../test_deps.ts";
 import { deserializeFeed, parseFeed } from "./deserializer.ts";
 import { Feed, FeedType, RSS1 } from "../mod.ts";
-import type { Atom, DeserializationResult, Options, RSS2, JsonFeed } from "../mod.ts";
+import type {
+  Atom,
+  DeserializationResult,
+  JsonFeed,
+  Options,
+  RSS2,
+} from "../mod.ts";
 import type { TestEntry } from "./test/test-entry.ts";
 import { MediaRssFields } from "./types/media-rss.ts";
 import { DublinCoreFields } from "./types/dublin-core.ts";
@@ -122,48 +128,60 @@ Deno.test(`Call signatures compile without error`, async () => {
       },
       {
         name: "Feed:Item:0:Description",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0].description,
+        getValue: (src: DeserializationResult<RSS1>) =>
+          src.feed.item[0].description,
         assert: [{ fn: assertEquals, expect: "RSS1:Item:0:Description" }],
       },
-			{
+      {
         name: "Feed:Item:0:DcCreator:0",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed?.item[0][DublinCoreFields.Creator]?.[0],
+        getValue: (src: DeserializationResult<RSS1>) =>
+          src.feed?.item[0][DublinCoreFields.Creator]?.[0],
         assert: [{ fn: assertEquals, expect: "RSS1:Item:0:DCCreator" }],
       },
-			{
+      {
         name: "Feed:Item:0:DcDate",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0][DublinCoreFields.Date],
-        assert: [{ fn: assertEquals, expect: new Date('2021-07-24T10:00:00+00:00') }],
+        getValue: (src: DeserializationResult<RSS1>) =>
+          src.feed.item[0][DublinCoreFields.Date],
+        assert: [{
+          fn: assertEquals,
+          expect: new Date("2021-07-24T10:00:00+00:00"),
+        }],
       },
-			{
+      {
         name: "Feed:Item:0:DcDateRaw",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0][DublinCoreFields.DateRaw],
-        assert: [{ fn: assertEquals, expect: '2021-07-24T10:00:00+00:00' }],
+        getValue: (src: DeserializationResult<RSS1>) =>
+          src.feed.item[0][DublinCoreFields.DateRaw],
+        assert: [{ fn: assertEquals, expect: "2021-07-24T10:00:00+00:00" }],
       },
-			{
+      {
         name: "Feed:Item:0:DcSubject",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0][DublinCoreFields.Subject],
+        getValue: (src: DeserializationResult<RSS1>) =>
+          src.feed.item[0][DublinCoreFields.Subject],
         assert: [{ fn: assertEquals, expect: "RSS1:Item:0:SlashSubject" }],
       },
-			{
+      {
         name: "Feed:Item:0:SlashDepartment",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0][SlashFields.Department],
+        getValue: (src: DeserializationResult<RSS1>) =>
+          src.feed.item[0][SlashFields.Department],
         assert: [{ fn: assertEquals, expect: "RSS1:Item:0:SlashDepartment" }],
       },
-			{
+      {
         name: "Feed:Item:0:SlashSection",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0][SlashFields.Section],
+        getValue: (src: DeserializationResult<RSS1>) =>
+          src.feed.item[0][SlashFields.Section],
         assert: [{ fn: assertEquals, expect: "RSS1:Item:0:SlashSection" }],
       },
-			{
+      {
         name: "Feed:Item:0:SlashComments",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0][SlashFields.Comments],
+        getValue: (src: DeserializationResult<RSS1>) =>
+          src.feed.item[0][SlashFields.Comments],
         assert: [{ fn: assertEquals, expect: 1337 }],
       },
-			{
+      {
         name: "Feed:Item:0:SlashHitParade",
-        getValue: (src: DeserializationResult<RSS1>) => src.feed.item[0][SlashFields.HitParade],
-        assert: [{ fn: assertEquals, expect: '140,131,115,99,29,13,5' }],
+        getValue: (src: DeserializationResult<RSS1>) =>
+          src.feed.item[0][SlashFields.HitParade],
+        assert: [{ fn: assertEquals, expect: "140,131,115,99,29,13,5" }],
       },
       {
         name: "Feed:TextInput",
@@ -1081,21 +1099,25 @@ Deno.test(`Call signatures compile without error`, async () => {
       },
     ] as TestEntry<DeserializationResult<Atom>>[],
   },
-	{
-		name: "JsonFeed(Atom)",
+  {
+    name: "JsonFeed(Atom)",
     source: await deserializeFeed(atomTestSample, { outputJsonFeed: true }),
     tests: [
-			{
-				name: 'OriginalFeedType',
-				getValue: (src: DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed> & {
-					originalFeedType?: FeedType;
-				}) => src.originalFeedType,
+      {
+        name: "OriginalFeedType",
+        getValue: (
+          src: DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed> & {
+            originalFeedType?: FeedType;
+          },
+        ) => src.originalFeedType,
         assert: [{ fn: assertEquals, expect: FeedType.Atom }],
-			}
-		] as TestEntry<DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed> & {
-			originalFeedType?: FeedType;
-		}>[]
-	}
+      },
+    ] as TestEntry<
+      DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed> & {
+        originalFeedType?: FeedType;
+      }
+    >[],
+  },
 ].forEach((workspace) => {
   workspace.tests.forEach((test) => {
     Deno.test(`parseFeed:${workspace.name}:${test.name}`, () => {
@@ -1141,7 +1163,7 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
         getValue: (src: Feed) => src.title.value,
         assert: [{ fn: assertEquals, expect: "RSS1:Title" }],
       },
-			{
+      {
         name: "DCRights",
         getValue: (src: Feed) => src.copyright,
         assert: [{ fn: assertEquals, expect: "RSS1:DcRights" }],
@@ -1353,54 +1375,62 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
         getValue: (src: Feed) => src.entries[0].title?.value,
         assert: [{ fn: assertEquals, expect: "RSS2:Item:0:Title:CData" }],
       },
-			{
+      {
         name: "Items:[0]:Author",
         getValue: (src: Feed) => src.entries[0].author,
         assert: [{
           fn: assertNotEquals,
           expect: undefined,
-        },
-				{
+        }, {
           fn: assertNotEquals,
           expect: null,
         }],
       },
-			{
+      {
         name: "Items:[0]:Enclosure",
         getValue: (src: Feed) => src.entries[0].attachments,
-        assert: [{ fn: assertNotEquals, expect: undefined }, { fn: assertNotEquals, expect: null }],
+        assert: [{ fn: assertNotEquals, expect: undefined }, {
+          fn: assertNotEquals,
+          expect: null,
+        }],
       },
-			{
+      {
         name: "Items:[0]:Enclosure:Length",
         getValue: (src: Feed) => src.entries[0].attachments?.length,
         assert: [{ fn: assertEquals, expect: 2 }],
       },
-			{
+      {
         name: "Items:[0]:Enclosure:0:Url",
         getValue: (src: Feed) => src.entries[0].attachments?.[0].url,
-        assert: [{ fn: assertEquals, expect: 'https://RSS2-entry-0-enclosure-0-url.mp3' }],
+        assert: [{
+          fn: assertEquals,
+          expect: "https://RSS2-entry-0-enclosure-0-url.mp3",
+        }],
       },
-			{
+      {
         name: "Items:[0]:Enclosure:1:Url",
         getValue: (src: Feed) => src.entries[0].attachments?.[1].url,
-        assert: [{ fn: assertEquals, expect: 'https://RSS2-entry-0-enclosure-1-url.mp3' }],
+        assert: [{
+          fn: assertEquals,
+          expect: "https://RSS2-entry-0-enclosure-1-url.mp3",
+        }],
       },
-			{
+      {
         name: "Items:[0]:Enclosure:0:Type",
         getValue: (src: Feed) => src.entries[0].attachments?.[0].mimeType,
-        assert: [{ fn: assertEquals, expect: 'audio/mpeg' }],
+        assert: [{ fn: assertEquals, expect: "audio/mpeg" }],
       },
-			{
+      {
         name: "Items:[0]:Enclosure:0:Length",
         getValue: (src: Feed) => src.entries[0].attachments?.[0].sizeInBytes,
-        assert: [{ fn: assertEquals, expect: 24986239}],
+        assert: [{ fn: assertEquals, expect: 24986239 }],
       },
-			{
+      {
         name: "Items:[0]:Author:Name",
         getValue: (src: Feed) => src.entries[0]?.author?.name,
         assert: [{
           fn: assertEquals,
-          expect: 'RSS2:Item:0:Author',
+          expect: "RSS2:Item:0:Author",
         }],
       },
       {
@@ -1418,7 +1448,8 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       },
       {
         name: "Items:[0]:Media:Description",
-        getValue: (src: Feed) => src.entries[0][MediaRssFields.Description]?.value,
+        getValue: (src: Feed) =>
+          src.entries[0][MediaRssFields.Description]?.value,
         assert: [{ fn: assertEquals, expect: "RSS2:Media:Description" }],
       },
       {
@@ -1454,7 +1485,8 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       },
       {
         name: "Items:[0]:DC:Creator:Length",
-        getValue: (src: Feed) => src.entries[0][DublinCoreFields.Creator]?.length,
+        getValue: (src: Feed) =>
+          src.entries[0][DublinCoreFields.Creator]?.length,
         assert: [{ fn: assertEquals, expect: 1 }],
       },
       {

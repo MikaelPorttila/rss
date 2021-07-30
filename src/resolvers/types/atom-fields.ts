@@ -22,5 +22,5 @@ export enum AtomFields {
   Updated = "updated",
   Uri = "uri",
   Value = "value",
-  FeedburnerOrigLink = "feedburner:origlink"
+  FeedburnerOrigLink = "feedburner:origlink",
 }

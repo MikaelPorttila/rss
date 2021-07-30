@@ -163,21 +163,25 @@ const parse = (input: string) =>
         }
 
         const newNode = attributeNames.reduce((builder, attrName) => {
-          const [
-            attributeName,
-            isArray,
-            isNumber,
-            isDate,
-          ] = resolveField(attrName);
-          const val = (node.attributes as any)[attributeName];
-          if (isNumber) {
-            builder[attrName] = parseInt(val);
-          } else if (isDate) {
-            builder[attrName + "Raw"] = val;
-            builder[attrName] = new Date(val);
-          } else {
-            builder[attrName] = val;
-          }
+
+					const val = (node.attributes as any)[attrName];
+					if (val !== undefined && val !== null) {
+						const [
+							attributeName,
+							isArray,
+							isNumber,
+							isDate,
+						] = resolveField(attrName);
+
+          	if (isNumber) {
+							builder[attributeName] = parseInt(val);
+						} else if (isDate) {
+							builder[attributeName + "Raw"] = val;
+							builder[attributeName] = new Date(val);
+						} else {
+							builder[attributeName] = val;
+						}
+					}
 
           return builder;
         }, {} as any);
@@ -227,12 +231,14 @@ const parse = (input: string) =>
           return;
         }
 
-        if (isNumber) {
-          node.value = parseInt(node.value);
-        } else if (isDate) {
-          targetNode[propertyName + "Raw"] = { value: node.value };
-          node.value = new Date(node.value);
-        }
+				if(node.value !== undefined && node.value !== null) {
+					if (isNumber) {
+						node.value = parseInt(node.value);
+					} else if (isDate) {
+						targetNode[propertyName + "Raw"] = { value: node.value };
+						node.value = new Date(node.value);
+					}
+				}
 
         if (isArray) {
           if (!targetNode[propertyName]) {

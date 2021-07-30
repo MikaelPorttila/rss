@@ -20,10 +20,10 @@ export const resolveDublinCoreField = (
       result.isDate = true;
       result.isArray = true;
       break;
-		case DublinCoreFields.Contributor:
-		case DublinCoreFields.Creator:
-			result.isArray = true;
-			break;
+    case DublinCoreFields.Contributor:
+    case DublinCoreFields.Creator:
+      result.isArray = true;
+      break;
     default:
       result.handled = false;
       break;

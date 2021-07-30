@@ -7,9 +7,9 @@ export const resolveSlashField = (
   const result = { handled: true } as ResolverResult;
 
   switch (fieldName) {
-		case SlashFields.Comments:
-			result.isNumber = true;
-			break;
+    case SlashFields.Comments:
+      result.isNumber = true;
+      break;
     default:
       result.handled = false;
       break;

@@ -5,5 +5,7 @@ export function isValidHttpURL(text: string) {
   } catch (_) {
     return false;
   }
-  return ["https:", "http:", "ftp://", "mailto:", "news://"].includes(url.protocol);
+  return ["https:", "http:", "ftp://", "mailto:", "news://"].includes(
+    url.protocol,
+  );
 }

@@ -279,9 +279,9 @@ const composeRss2 = (
           description: {
             value: "RSS2:Channel:Item:0:Description:Value",
           },
-					author: {
-						value: 'RSS2:Channel:Item:0:Author:Value'
-					},
+          author: {
+            value: "RSS2:Channel:Item:0:Author:Value",
+          },
           link: {
             value: "RSS2:Channel:Item:0:Link:Value",
           },
@@ -354,31 +354,39 @@ const composeRss2 = (
     },
   } as InternalRSS2;
 
-	DublinCoreFieldArray.forEach((dcField => {
-		const fieldName = formatNamespaceFieldName(dcField);
-		const [propertyName, isArray, isNumber, isDate] = resolveRss2Field(dcField);
+  DublinCoreFieldArray.forEach(
+    ((dcField) => {
+      const fieldName = formatNamespaceFieldName(dcField);
+      const [propertyName, isArray, isNumber, isDate] = resolveRss2Field(
+        dcField,
+      );
 
-		let channelValue: any = { value: `RSS2:Channel:${fieldName}:Value` } ;
-		let itemValue: any = { value: `RSS2:Channel:Item:0:${fieldName}:Value` };
+      let channelValue: any = { value: `RSS2:Channel:${fieldName}:Value` };
+      let itemValue: any = { value: `RSS2:Channel:Item:0:${fieldName}:Value` };
 
-		if (isDate) {
-			channelValue = { value: new Date("Mon, 22 Jun 2020 20:03:00 GMT") };
-			itemValue = { value: new Date("Mon, 22 Jun 2020 20:03:00 GMT") };
-		}
+      if (isDate) {
+        channelValue = { value: new Date("Mon, 22 Jun 2020 20:03:00 GMT") };
+        itemValue = { value: new Date("Mon, 22 Jun 2020 20:03:00 GMT") };
+      }
 
-		if (isNumber) {
-			channelValue = { value: 1337 };
-			itemValue = 1337;
-		}
+      if (isNumber) {
+        channelValue = { value: 1337 };
+        itemValue = 1337;
+      }
 
-		if (isArray) {
-			channelValue = [{ value: `RSS2:Channel:${fieldName}:0:Value`}, {value: `RSS2:Channel:${fieldName}:1:Value`}];
-			itemValue = [{ value: `RSS2:Channel:${fieldName}:0:Value`}, {value: `RSS2:Channel:${fieldName}:1:Value`}];
-		}
+      if (isArray) {
+        channelValue = [{ value: `RSS2:Channel:${fieldName}:0:Value` }, {
+          value: `RSS2:Channel:${fieldName}:1:Value`,
+        }];
+        itemValue = [{ value: `RSS2:Channel:${fieldName}:0:Value` }, {
+          value: `RSS2:Channel:${fieldName}:1:Value`,
+        }];
+      }
 
-		(result.channel as any)[dcField] = channelValue;
-		(result.channel.items[0] as any)[dcField] = itemValue;
-	}));
+      (result.channel as any)[dcField] = channelValue;
+      (result.channel.items[0] as any)[dcField] = itemValue;
+    }),
+  );
 
   setter && setter(result);
   return result;
@@ -388,96 +396,108 @@ const composeRss1 = (
   setter: (data: InternalRSS1) => void = () => {},
 ): InternalRSS1 => {
   const result = {
-		channel: {
-			title: {
-				value: 'RSS1:Channel:Title:Value'
-			},
-			link: {
-				value: 'RSS1:Channel:Link:Value'
-			},
-			description: {
-				value: 'RSS1:Channel:Description:Value'
-			},
-			about: {
-				value: 'RSS1:Channel:About:Value'
-			}
-		},
-		image: {
-			about: 'RSS1:Image:About',
-			resource: 'RSS1:Image:Resource',
-			title: {
-				value: 'RSS1:Image:Title:Value'
-			},
-			link: {
-				value: 'RSS1:Image:Link:Value'
-			},
-			url: {
-				value: 'RSS1:Image:Url:Value'
-			}
-		},
-		item: [
-			{
-				title: {
-					value: 'RSS1:Item:0:Title:Value'
-				},
-				link: {
-					value: 'RSS1:Item:0:Link:Value'
-				},
-				description: {
-					value: 'RSS1:Item:0:Description:Value'
-				}
-			}
-		]
-	} as InternalRSS1;
+    channel: {
+      title: {
+        value: "RSS1:Channel:Title:Value",
+      },
+      link: {
+        value: "RSS1:Channel:Link:Value",
+      },
+      description: {
+        value: "RSS1:Channel:Description:Value",
+      },
+      about: {
+        value: "RSS1:Channel:About:Value",
+      },
+    },
+    image: {
+      about: "RSS1:Image:About",
+      resource: "RSS1:Image:Resource",
+      title: {
+        value: "RSS1:Image:Title:Value",
+      },
+      link: {
+        value: "RSS1:Image:Link:Value",
+      },
+      url: {
+        value: "RSS1:Image:Url:Value",
+      },
+    },
+    item: [
+      {
+        title: {
+          value: "RSS1:Item:0:Title:Value",
+        },
+        link: {
+          value: "RSS1:Item:0:Link:Value",
+        },
+        description: {
+          value: "RSS1:Item:0:Description:Value",
+        },
+      },
+    ],
+  } as InternalRSS1;
 
-	DublinCoreFieldArray.forEach((dcField => {
-		const fieldName = formatNamespaceFieldName(dcField);
-		const [propertyName, isArray, isNumber, isDate] = resolveRss1Field(dcField);
+  DublinCoreFieldArray.forEach(
+    ((dcField) => {
+      const fieldName = formatNamespaceFieldName(dcField);
+      const [propertyName, isArray, isNumber, isDate] = resolveRss1Field(
+        dcField,
+      );
 
-		let channelValue: any;
-		let itemValue: any;
+      let channelValue: any;
+      let itemValue: any;
 
-		if (isArray) {
-			channelValue = [{ value: `RSS1:Channel:${fieldName}:0:Value` }, { value: `RSS1:Channel:${fieldName}:1:Value` }]
-			itemValue = [{ value: `RSS1:Channel:${fieldName}:0:Value` }, { value: `RSS1:Channel:${fieldName}:1:Value` }];
-		}
-		else if (isDate) {
-			channelValue = { value: new Date("Mon, 22 Jun 2020 20:03:00 GMT") }
-			itemValue = { value: new Date("Mon, 22 Jun 2020 20:03:00 GMT") };
-		} else if (isNumber) {
-			channelValue = { value: 1337 };
-			itemValue = { value: 1337 };
-		}
+      if (isArray) {
+        channelValue = [{ value: `RSS1:Channel:${fieldName}:0:Value` }, {
+          value: `RSS1:Channel:${fieldName}:1:Value`,
+        }];
+        itemValue = [{ value: `RSS1:Channel:${fieldName}:0:Value` }, {
+          value: `RSS1:Channel:${fieldName}:1:Value`,
+        }];
+      } else if (isDate) {
+        channelValue = { value: new Date("Mon, 22 Jun 2020 20:03:00 GMT") };
+        itemValue = { value: new Date("Mon, 22 Jun 2020 20:03:00 GMT") };
+      } else if (isNumber) {
+        channelValue = { value: 1337 };
+        itemValue = { value: 1337 };
+      }
 
-		(result.channel as any)[dcField] = channelValue || { value: `RSS1:Channel:${fieldName}:Value` };
-		(result.item[0] as any)[dcField] = itemValue || { value: `RSS1:Item:0:${fieldName}:Value` };
-	}));
+      (result.channel as any)[dcField] = channelValue ||
+        { value: `RSS1:Channel:${fieldName}:Value` };
+      (result.item[0] as any)[dcField] = itemValue ||
+        { value: `RSS1:Item:0:${fieldName}:Value` };
+    }),
+  );
 
-	SlashFieldArray.forEach(slashField => {
-		const fieldName = formatNamespaceFieldName(slashField);
-		const [propertyName, isArray, isNumber, isDate] = resolveRss1Field(slashField);
+  SlashFieldArray.forEach((slashField) => {
+    const fieldName = formatNamespaceFieldName(slashField);
+    const [propertyName, isArray, isNumber, isDate] = resolveRss1Field(
+      slashField,
+    );
 
-		let value: string | number | Date= `RSS1:Item:0:${fieldName}:Value`;
+    let value: string | number | Date = `RSS1:Item:0:${fieldName}:Value`;
 
-		if (isDate) {
-			value = new Date("Mon, 22 Jun 2020 20:03:00 GMT");
-		}
+    if (isDate) {
+      value = new Date("Mon, 22 Jun 2020 20:03:00 GMT");
+    }
 
-		if (isNumber) {
-			value = 1337
-		}
+    if (isNumber) {
+      value = 1337;
+    }
 
-		(result.item[0] as any)[slashField] = { value };
-	});
+    (result.item[0] as any)[slashField] = { value };
+  });
 
   setter && setter(result);
   return result;
 };
 
 const formatNamespaceFieldName = (field: string) => {
-	const nameSplit = field.split(':');
-	return nameSplit[0].toUpperCase() + nameSplit[1].charAt(0).toUpperCase() + nameSplit[1].slice(1);
-}
+  const nameSplit = field.split(":");
+  return nameSplit[0].toUpperCase() + nameSplit[1].charAt(0).toUpperCase() +
+    nameSplit[1].slice(1);
+};
 
 const testTextField = (
   fieldName: string,
@@ -530,19 +550,22 @@ const testArrayLength = (
 };
 
 [
-	{
-		name: 'RSS1',
-		source: toFeed(FeedType.Rss1, composeRss1((data) => {
-			data.channel[DublinCoreFields.Title] = undefined;
-			data.channel[DublinCoreFields.Description] = undefined;
-			data.channel[DublinCoreFields.URI] = undefined;
-			data.channel[DublinCoreFields.Title] = undefined;
-			data.item[0][DublinCoreFields.Title] = undefined;
-			data.item[0][DublinCoreFields.Description] = undefined;
-			data.item[0][DublinCoreFields.URI] = undefined;
-		})) as Feed,
-		tests: [
-			{
+  {
+    name: "RSS1",
+    source: toFeed(
+      FeedType.Rss1,
+      composeRss1((data) => {
+        data.channel[DublinCoreFields.Title] = undefined;
+        data.channel[DublinCoreFields.Description] = undefined;
+        data.channel[DublinCoreFields.URI] = undefined;
+        data.channel[DublinCoreFields.Title] = undefined;
+        data.item[0][DublinCoreFields.Title] = undefined;
+        data.item[0][DublinCoreFields.Description] = undefined;
+        data.item[0][DublinCoreFields.URI] = undefined;
+      }),
+    ) as Feed,
+    tests: [
+      {
         name: "Root",
         getValue: (src: Feed) => src,
         assert: [{ fn: assertNotEquals, expect: undefined }, {
@@ -550,8 +573,13 @@ const testArrayLength = (
           expect: null,
         }],
       },
-			...testTextField("Title", (src: Feed) => src.title, undefined, "RSS1:Channel:Title:Value"),
-			{
+      ...testTextField(
+        "Title",
+        (src: Feed) => src.title,
+        undefined,
+        "RSS1:Channel:Title:Value",
+      ),
+      {
         name: "Description",
         getValue: (src: Feed) => src.description,
         assert: [{
@@ -559,10 +587,10 @@ const testArrayLength = (
           expect: "RSS1:Channel:Description:Value",
         }],
       },
-			{
+      {
         name: "Language",
         getValue: (src: Feed) => src.language,
-        assert: [{ fn: assertEquals, expect: 'RSS1:Channel:DCLanguage:Value' }],
+        assert: [{ fn: assertEquals, expect: "RSS1:Channel:DCLanguage:Value" }],
       },
       ...testArrayLength("Link", (src: Feed) => src.links, 1),
       {
@@ -573,20 +601,23 @@ const testArrayLength = (
       {
         name: "Copyright",
         getValue: (src: Feed) => src.copyright,
-        assert: [{ fn: assertEquals, expect: 'RSS1:Channel:DCRights:Value' }],
+        assert: [{ fn: assertEquals, expect: "RSS1:Channel:DCRights:Value" }],
       },
       {
         name: "PubDate",
         getValue: (src: Feed) => src.published,
         assert: [{
           fn: assertEquals,
-          expect: new Date('2020-06-22T20:03:00.000Z'),
+          expect: new Date("2020-06-22T20:03:00.000Z"),
         }],
       },
       {
         name: "PubDateRaw",
         getValue: (src: Feed) => src.publishedRaw,
-        assert: [{ fn: assertEquals, expect: 'RSS1:Channel:DCDateSubmittedRaw:Value' }],
+        assert: [{
+          fn: assertEquals,
+          expect: "RSS1:Channel:DCDateSubmittedRaw:Value",
+        }],
       },
       {
         name: "Docs",
@@ -603,29 +634,32 @@ const testArrayLength = (
         getValue: (src: Feed) => src.created,
         assert: [{
           fn: assertEquals,
-          expect: new Date('2020-06-22T20:03:00.000Z'),
+          expect: new Date("2020-06-22T20:03:00.000Z"),
         }],
       },
-			{
+      {
         name: "DcDate",
         getValue: (src: Feed) => src.updateDate,
         assert: [{
           fn: assertEquals,
-          expect: new Date('2020-06-22T20:03:00.000Z'),
+          expect: new Date("2020-06-22T20:03:00.000Z"),
         }],
       },
-			{
+      {
         name: "DcDateRaw",
         getValue: (src: Feed) => src.updateDateRaw,
         assert: [{
           fn: assertEquals,
-          expect: 'RSS1:Channel:DCDateRaw:Value',
+          expect: "RSS1:Channel:DCDateRaw:Value",
         }],
       },
       {
         name: "LastBuildDateRaw",
         getValue: (src: Feed) => src.createdRaw,
-        assert: [{ fn: assertEquals, expect: 'RSS1:Channel:DCCreatedRaw:Value'}],
+        assert: [{
+          fn: assertEquals,
+          expect: "RSS1:Channel:DCCreatedRaw:Value",
+        }],
       },
       {
         name: "Ttl",
@@ -648,7 +682,7 @@ const testArrayLength = (
       {
         name: "Image:Title",
         getValue: (src: Feed) => src.image?.title,
-        assert: [{ fn: assertEquals, expect: 'RSS1:Image:Title:Value' }],
+        assert: [{ fn: assertEquals, expect: "RSS1:Image:Title:Value" }],
       },
       {
         name: "Image:Link",
@@ -696,15 +730,21 @@ const testArrayLength = (
         getValue: (src: Feed) => src.entries[0].comments,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
-			{
+      {
         name: "Items:0:Published",
         getValue: (src: Feed) => src.entries[0].published,
-        assert: [{ fn: assertEquals, expect: new Date("Mon, 22 Jun 2020 20:03:00 GMT") }],
+        assert: [{
+          fn: assertEquals,
+          expect: new Date("Mon, 22 Jun 2020 20:03:00 GMT"),
+        }],
       },
-			{
+      {
         name: "Items:0:PublishedRaw",
         getValue: (src: Feed) => src.entries[0].publishedRaw,
-        assert: [{ fn: assertEquals, expect: "RSS1:Item:0:DCDateSubmittedRaw:Value" }],
+        assert: [{
+          fn: assertEquals,
+          expect: "RSS1:Item:0:DCDateSubmittedRaw:Value",
+        }],
       },
       {
         name: "Items:0:MediaCredit",
@@ -741,37 +781,43 @@ const testArrayLength = (
         getValue: (src: Feed) => src.entries[0][MediaRssFields.Content]?.url,
         assert: [{ fn: assertEquals, expect: undefined }],
       },
-			...SlashFieldArray.map((slashField) => {
-				const fieldName = formatNamespaceFieldName(slashField);
-				const [propertyName, isArray, isNumber, isDate] = resolveRss1Field(slashField);
+      ...SlashFieldArray.map((slashField) => {
+        const fieldName = formatNamespaceFieldName(slashField);
+        const [propertyName, isArray, isNumber, isDate] = resolveRss1Field(
+          slashField,
+        );
 
-				let expectValue: string | number | Date  = `RSS1:Item:0:${fieldName}:Value`;
-				if (isNumber) {
-					expectValue = 1337;
-				}
+        let expectValue: string | number | Date =
+          `RSS1:Item:0:${fieldName}:Value`;
+        if (isNumber) {
+          expectValue = 1337;
+        }
 
-				return {
-					name: `Items:0:${fieldName}`,
-					getValue: (src: Feed) => src.entries[0][slashField],
-					assert: [{ fn: assertEquals, expect: expectValue }],
-				}
-			})
-		]
-	},
+        return {
+          name: `Items:0:${fieldName}`,
+          getValue: (src: Feed) => src.entries[0][slashField],
+          assert: [{ fn: assertEquals, expect: expectValue }],
+        };
+      }),
+    ],
+  },
   {
     name: "RSS2",
-    source: toFeed(FeedType.Rss2, composeRss2((data) => {
-			data.channel[DublinCoreFields.Creator] = undefined;
-			data.channel[DublinCoreFields.Description] = undefined;
-			data.channel[DublinCoreFields.URI] = undefined;
-			data.channel[DublinCoreFields.Title] = undefined;
-			data.channel[DublinCoreFields.Language] = undefined;
-			data.channel[DublinCoreFields.CreatedRaw] = undefined;
-			data.channel[DublinCoreFields.DateSubmittedRaw] = undefined;
-			data.channel.items[0][DublinCoreFields.Title] = undefined;
-			data.channel.items[0][DublinCoreFields.Description] = undefined;
-			data.channel.items[0][DublinCoreFields.URI] = undefined;
-		})) as Feed,
+    source: toFeed(
+      FeedType.Rss2,
+      composeRss2((data) => {
+        data.channel[DublinCoreFields.Creator] = undefined;
+        data.channel[DublinCoreFields.Description] = undefined;
+        data.channel[DublinCoreFields.URI] = undefined;
+        data.channel[DublinCoreFields.Title] = undefined;
+        data.channel[DublinCoreFields.Language] = undefined;
+        data.channel[DublinCoreFields.CreatedRaw] = undefined;
+        data.channel[DublinCoreFields.DateSubmittedRaw] = undefined;
+        data.channel.items[0][DublinCoreFields.Title] = undefined;
+        data.channel.items[0][DublinCoreFields.Description] = undefined;
+        data.channel.items[0][DublinCoreFields.URI] = undefined;
+      }),
+    ) as Feed,
     tests: [
       {
         name: "Root",
@@ -936,7 +982,7 @@ const testArrayLength = (
         undefined,
         "RSS2:Channel:Item:0:Description:Value",
       ),
-			{
+      {
         name: "Items:0:Author:Name",
         getValue: (src: Feed) => src.entries[0].author?.name,
         assert: [{
@@ -983,7 +1029,8 @@ const testArrayLength = (
       },
       {
         name: "Items:0:MediaDescription",
-        getValue: (src: Feed) => src.entries[0][MediaRssFields.Description]?.value,
+        getValue: (src: Feed) =>
+          src.entries[0][MediaRssFields.Description]?.value,
         assert: [{
           fn: assertEquals,
           expect: "RSS2:Channel:Item:0:MediaDescription:Value",
@@ -1023,50 +1070,61 @@ const testArrayLength = (
           expect: "RSS2:Channel:Item:0:MediaContent:Url",
         }],
       },
-			...DublinCoreFieldArray
-				.filter(x => ![
-					DublinCoreFields.Description,
-					DublinCoreFields.URI,
-					DublinCoreFields.Title,
-					DublinCoreFields.Language,
-					DublinCoreFields.CreatedRaw,
-					DublinCoreFields.DateSubmittedRaw,
-					DublinCoreFields.Title,
-					DublinCoreFields.Description,
-					DublinCoreFields.URI,
-					DublinCoreFields.Creator,
-					DublinCoreFields.Valid
-				].some(ignoreField => x === ignoreField ))
-				.flatMap((dcField) => {
-				const fieldName = formatNamespaceFieldName(dcField);
-				const [propertyName, isArray, isNumber, isDate] = resolveRss2Field(dcField);
+      ...DublinCoreFieldArray
+        .filter((x) =>
+          ![
+            DublinCoreFields.Description,
+            DublinCoreFields.URI,
+            DublinCoreFields.Title,
+            DublinCoreFields.Language,
+            DublinCoreFields.CreatedRaw,
+            DublinCoreFields.DateSubmittedRaw,
+            DublinCoreFields.Title,
+            DublinCoreFields.Description,
+            DublinCoreFields.URI,
+            DublinCoreFields.Creator,
+            DublinCoreFields.Valid,
+          ].some((ignoreField) => x === ignoreField)
+        )
+        .flatMap((dcField) => {
+          const fieldName = formatNamespaceFieldName(dcField);
+          const [propertyName, isArray, isNumber, isDate] = resolveRss2Field(
+            dcField,
+          );
 
-				let expectValue;
+          let expectValue;
 
-				if (isArray) {
-					expectValue = [
-						`RSS2:Channel:${fieldName}:0:Value`,
-						`RSS2:Channel:${fieldName}:1:Value`
-					];
-				} else if (isNumber) {
-					expectValue = 1337;
-				} else if (isDate) {
-					expectValue = new Date('2020-06-22T20:03:00.000Z');
-				}
+          if (isArray) {
+            expectValue = [
+              `RSS2:Channel:${fieldName}:0:Value`,
+              `RSS2:Channel:${fieldName}:1:Value`,
+            ];
+          } else if (isNumber) {
+            expectValue = 1337;
+          } else if (isDate) {
+            expectValue = new Date("2020-06-22T20:03:00.000Z");
+          }
 
-				return [
-					{
-						name: `Items:0:${fieldName}`,
-						getValue: (src: Feed) => (src as any)[dcField],
-						assert: [{ fn: assertEquals, expect: (expectValue || `RSS2:Channel:${fieldName}:Value`) }]
-					},
-					{
-						name: `Items:0:${fieldName}`,
-						getValue: (src: Feed) => (src.entries[0] as any)[dcField],
-						assert: [{ fn: assertEquals, expect: (expectValue || `RSS2:Channel:Item:0:${fieldName}:Value`) }]
-					}
-				]
-			})
+          return [
+            {
+              name: `Items:0:${fieldName}`,
+              getValue: (src: Feed) => (src as any)[dcField],
+              assert: [{
+                fn: assertEquals,
+                expect: (expectValue || `RSS2:Channel:${fieldName}:Value`),
+              }],
+            },
+            {
+              name: `Items:0:${fieldName}`,
+              getValue: (src: Feed) => (src.entries[0] as any)[dcField],
+              assert: [{
+                fn: assertEquals,
+                expect:
+                  (expectValue || `RSS2:Channel:Item:0:${fieldName}:Value`),
+              }],
+            },
+          ];
+        }),
     ],
   },
   {
@@ -1252,21 +1310,26 @@ const testArrayLength = (
       },
     ],
   },
-	{
+  {
     name: "AtomFeedburner",
-    source: toFeed(FeedType.Atom, composeAtom((data) => {
-			data.entries[0][AtomFields.FeedburnerOrigLink] = { value: "Atom:Entries:0:Feedburner:Origlink" };
-		})) as Feed,
+    source: toFeed(
+      FeedType.Atom,
+      composeAtom((data) => {
+        data.entries[0][AtomFields.FeedburnerOrigLink] = {
+          value: "Atom:Entries:0:Feedburner:Origlink",
+        };
+      }),
+    ) as Feed,
     tests: [
-			{
-				name: 'Items:0:Id',
-				getValue: (src: Feed) => src.entries[0].id,
+      {
+        name: "Items:0:Id",
+        getValue: (src: Feed) => src.entries[0].id,
         assert: [{
           fn: assertEquals,
           expect: "Atom:Entries:0:Feedburner:Origlink",
-        }]
-			},
-			{
+        }],
+      },
+      {
         name: "Items:0:Link",
         getValue: (src: Feed) => src.entries[0].links[0].href,
         assert: [{
@@ -1274,8 +1337,8 @@ const testArrayLength = (
           expect: "Atom:Entries:0:Feedburner:Origlink",
         }],
       },
-		]
-	}
+    ],
+  },
 ].forEach((workspace) => {
   workspace.tests.forEach((test) => {
     Deno.test(`toFeed:${workspace.name}:${test.name}`, () => {

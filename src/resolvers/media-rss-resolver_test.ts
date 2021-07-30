@@ -1,6 +1,6 @@
 import { assertEquals, assertNotEquals } from "../../test_deps.ts";
 import { resolveMediaRssField } from "./media-rss-resolver.ts";
-import { MediaRssFields } from './../types/media-rss.ts';
+import { MediaRssFields } from "./../types/media-rss.ts";
 
 [
   {
@@ -23,7 +23,7 @@ import { MediaRssFields } from './../types/media-rss.ts';
       handled: true,
     },
   },
-	{
+  {
     propertyName: MediaRssFields.Response,
     expect: {
       isArray: true,
@@ -33,7 +33,7 @@ import { MediaRssFields } from './../types/media-rss.ts';
       handled: true,
     },
   },
-	{
+  {
     propertyName: MediaRssFields.Scene,
     expect: {
       isArray: true,
@@ -42,7 +42,7 @@ import { MediaRssFields } from './../types/media-rss.ts';
       newName: undefined,
       handled: true,
     },
-  }
+  },
 ].forEach((test) => {
   Deno.test(`MediaRssResolver:${test.propertyName}`, () => {
     const result = resolveMediaRssField(test.propertyName);

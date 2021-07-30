@@ -11,7 +11,7 @@ import { resolveSlashField } from "./slash-resolver.ts";
       isDate: undefined,
       newName: undefined,
       handled: false,
-    }
+    },
   },
   {
     propertyName: SlashFields.Comments,
@@ -21,8 +21,8 @@ import { resolveSlashField } from "./slash-resolver.ts";
       isDate: undefined,
       newName: undefined,
       handled: true,
-    }
-  }
+    },
+  },
 ].forEach((test) => {
   Deno.test(`SlashResolver:${test.propertyName}`, () => {
     const result = resolveSlashField(test.propertyName);
