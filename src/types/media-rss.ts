@@ -2,16 +2,16 @@ import { ValueField } from "./value-field.ts";
 
 // Based on https://www.rssboard.org/media-rss
 export interface MediaRssValueFields {
-  "media:rating"?: ValueField<string>;
-  "media:title"?: {
+  [MediaRssFields.Rating]?: ValueField<string>;
+  [MediaRssFields.Title]?: {
     value?: string;
     type?: string;
   };
-  "media:description"?: {
+  [MediaRssFields.Description]?: {
     value?: string;
     type?: string;
   };
-  "media:content"?: {
+  [MediaRssFields.Content]?: {
     url?: string;
     fileSize?: string;
     type?: string;
@@ -26,107 +26,107 @@ export interface MediaRssValueFields {
     width?: number;
     lang?: string;
   };
-  "media:group"?: ValueField<string>;
-  "media:keywords"?: ValueField<string>;
-  "media:thumbnails"?: {
+  [MediaRssFields.Group]?: ValueField<string>;
+  [MediaRssFields.Keywords]?: ValueField<string>;
+  [MediaRssFields.Thumbnails]?: {
     url?: string;
     width?: number;
     height?: number;
     time?: string;
   };
-  "media:category"?: ValueField<string>;
-  "media:hash"?: {
+  [MediaRssFields.Category]?: ValueField<string>;
+  [MediaRssFields.Hash]?: {
     value?: string;
     algo?: string;
   };
-  "media:player"?: {
+  [MediaRssFields.Player]?: {
     url?: string;
     height?: number;
     width?: number;
   };
-  "media:credit"?: {
+  [MediaRssFields.Credit]?: {
     value?: string;
     role?: string;
     scheme?: string;
   };
-  "media:copyright"?: {
+  [MediaRssFields.Copyright]?: {
     url?: string;
     value?: string;
   };
-  "media:text"?: {
+  [MediaRssFields.Text]?: {
     value?: string;
     type?: string;
     lang?: string;
     start?: string;
     end?: string;
   };
-  "media:restriction"?: {
+  [MediaRssFields.Restriction]?: {
     value?: string;
     relationship?: string;
     type?: string;
   };
-  "media:community"?: {
-    "media:starRating"?: {
+  [MediaRssFields.Community]?:{
+    [MediaRssFields.StarRating]?: {
       average?: string;
       count?: string;
       min?: string;
       max?: string;
     };
-    "media:statistics"?: {
+    [MediaRssFields.Statistics]?: {
       views?: string;
       favorites?: string;
     };
-    "media:tags"?: {
+    [MediaRssFields.Tags]?: {
       value?: string;
     };
   };
-  "media:comments"?: {
+  [MediaRssFields.Comments]?: {
     "media:comment"?: ValueField<string>[];
   };
-  "media:embed"?: {
+  [MediaRssFields.Embed]?: {
     url?: string;
     height?: string;
     width?: string;
-    "media:param"?: {
+    [MediaRssFields.Param]?: {
       value?: string;
       name?: string;
     };
   };
-  "media:responses"?: {
-    "media:response"?: ValueField<string>[];
+  [MediaRssFields.Responses]?: {
+    [MediaRssFields.Response]?: ValueField<string>[];
   };
-  "media:backLinks"?: {
-    "media:backLink"?: ValueField<string>[];
+  [MediaRssFields.BackLinks]?: {
+    [MediaRssFields.BackLink]?: ValueField<string>[];
   };
-  "media:status"?: {
+  [MediaRssFields.Status]?: {
     state?: string;
     reason?: string;
   };
-  "media:price"?: {
+  [MediaRssFields.Price]?: {
     type?: string;
     price?: string;
     info?: string;
     currency?: string;
   };
-  "media:license"?: {
+  [MediaRssFields.License]?: {
     value?: string;
     type?: string;
     href?: string;
   };
-  "media:subTitle"?: {
+  [MediaRssFields.Subtitle]?: {
     type?: string;
     lang?: string;
     href?: string;
   };
-  "media:peerLink"?: {
+  [MediaRssFields.PeerLink]?:{
     type?: string;
     href?: string;
   };
-  "media:rights"?: {
+  [MediaRssFields.Rights]?:{
     status?: string;
   };
-  "media:scenes"?: {
-    "media:scene"?: {
+  [MediaRssFields.Scenes]?: {
+    [MediaRssFields.Scene]?: {
       sceneTitle?: ValueField<string>;
       sceneDescription?: ValueField<string>;
       sceneStartTime?: ValueField<string>;
@@ -136,16 +136,16 @@ export interface MediaRssValueFields {
 }
 
 export interface MediaRss {
-  "media:rating"?: string;
-  "media:title"?: {
+  [MediaRssFields.Rating]?: string;
+  [MediaRssFields.Title]?: {
     value?: string;
     type?: string;
   };
-  "media:description"?: {
+  [MediaRssFields.Description]?: {
     value?: string;
     type?: string;
   };
-  "media:content"?: {
+  [MediaRssFields.Content]?: {
     url?: string;
     fileSize?: string;
     type?: string;
@@ -160,107 +160,107 @@ export interface MediaRss {
     width?: number;
     lang?: string;
   };
-  "media:group"?: string;
-  "media:keywords"?: string;
-  "media:thumbnails"?: {
+  [MediaRssFields.Group]?: string;
+  [MediaRssFields.Keywords]?: string;
+  [MediaRssFields.Thumbnails]?: {
     url?: string;
     width?: number;
     height?: number;
     time?: string;
   };
-  "media:category"?: string;
-  "media:hash"?: {
+  [MediaRssFields.Category]?: string;
+  [MediaRssFields.Hash]?: {
     value?: string;
     algo?: string;
   };
-  "media:player"?: {
+  [MediaRssFields.Player]?: {
     url?: string;
     height?: number;
     width?: number;
   };
-  "media:credit"?: {
+  [MediaRssFields.Credit]?: {
     value?: string;
     role?: string;
     scheme?: string;
   };
-  "media:copyright"?: {
+  [MediaRssFields.Copyright]?: {
     url?: string;
     value?: string;
   };
-  "media:text"?: {
+  [MediaRssFields.Text]?: {
     value?: string;
     type?: string;
     lang?: string;
     start?: string;
     end?: string;
   };
-  "media:restriction"?: {
+  [MediaRssFields.Restriction]?: {
     value?: string;
     relationship?: string;
     type?: string;
   };
-  "media:community"?: {
-    "media:starRating"?: {
+  [MediaRssFields.Community]?: {
+    [MediaRssFields.StarRating]?: {
       average?: string;
       count?: string;
       min?: string;
       max?: string;
     };
-    "media:statistics"?: {
+    [MediaRssFields.Statistics]?: {
       views?: string;
       favorites?: string;
     };
-    "media:tags"?: {
+    [MediaRssFields.Tags]?:{
       value?: string;
     };
   };
-  "media:comments"?: {
-    "media:comment"?: string[];
+  [MediaRssFields.Comments]?: {
+    [MediaRssFields.Comment]?: string[];
   };
-  "media:embed"?: {
+  [MediaRssFields.Embed]?: {
     url?: string;
     height?: string;
     width?: string;
-    "media:param"?: {
+    [MediaRssFields.Param]?: {
       value?: string;
       name?: string;
     };
   };
-  "media:responses"?: {
-    "media:response"?: string[];
+  [MediaRssFields.Responses]?: {
+    [MediaRssFields.Response]?: string[];
   };
-  "media:backLinks"?: {
-    "media:backLink"?: string[];
+  [MediaRssFields.BackLinks]?: {
+    [MediaRssFields.BackLink]?: string[];
   };
-  "media:status"?: {
+  [MediaRssFields.Status]?: {
     state?: string;
     reason?: string;
   };
-  "media:price"?: {
+  [MediaRssFields.Price]?: {
     type?: string;
     price?: string;
     info?: string;
     currency?: string;
   };
-  "media:license"?: {
+  [MediaRssFields.License]?: {
     value?: string;
     type?: string;
     href?: string;
   };
-  "media:subTitle"?: {
+  [MediaRssFields.Subtitle]?: {
     type?: string;
     lang?: string;
     href?: string;
   };
-  "media:peerLink"?: {
+  [MediaRssFields.PeerLink]?: {
     type?: string;
     href?: string;
   };
-  "media:rights"?: {
+  [MediaRssFields.Rights]?: {
     status?: string;
   };
-  "media:scenes"?: {
-    "media:scene"?: {
+  [MediaRssFields.Scenes]?: {
+    [MediaRssFields.Scene]?: {
       sceneTitle?: string;
       sceneDescription?: string;
       sceneStartTime?: string;
@@ -303,6 +303,7 @@ export enum MediaRssFields {
   Rights = "media:rights",
   Scenes = "media:scenes",
   Scene = "media:scene",
+	Tags = "media:tags",
 	PriceValue = "price"
 }
 
@@ -331,4 +332,5 @@ export const MediaRssFieldArray = [
   MediaRssFields.PeerLink,
   MediaRssFields.Rights,
   MediaRssFields.Scenes,
+	MediaRssFields.Tags
 ];
