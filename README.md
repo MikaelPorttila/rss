@@ -45,7 +45,7 @@ const { feed } = await parseFeed(xml);
 | Generator             | Generator | Generator                                                             | -                                         |
 | Ttl                   | -         | Ttl                                                                   | -                                         |
 | Categories            | Category  | -                                                                     | -                                         |
-| Author                | Author    | WebMaster                                                             | -                                         |
+| Author                | Author    | WebMaster or DC:Creator                                               | DC:Creator                                |
 | Copyright             | -         | Copyright or DC:Rights                                                | DC:Rights                                 |
 | SkipDays              | -         | SkipDays                                                              | -                                         |
 | SkipHours             | -         | SkipHours                                                             | -                                         |
@@ -58,7 +58,7 @@ const { feed } = await parseFeed(xml);
 | Feed                  | Atom                                          | RSS2                                   | RSS                           |
 | --------------------- | --------------------------------------------- | -------------------------------------- | ----------------------------- |
 | Id                    | Id                                            | Guid                                   | DC:URI or Link                |
-| Author                | Author                                        | Author                                 | -                             |
+| Author                | Author                                        | Author or DC:Creator                   | DC:Creator                    |
 | Title                 | Title                                         | Title or DC:Title                      | Title or DC:Title             |
 | Description           | Summary                                       | Description or DC:Description          | Description or DC:Description |
 | Content               | Content                                       | -                                      | -                             |

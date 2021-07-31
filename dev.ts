@@ -1,29 +1,14 @@
-import { Atom, deserializeFeed, FeedType, parseFeed, RSS2 } from "./mod.ts";
-import { isValidHttpURL } from "./src/util.ts";
+import { deserializeFeed, DublinCore, MediaRss, parseFeed } from "./mod.ts";
+import { isValidURL } from "./src/util.ts";
 
 const arg0 = Deno.args[0];
 let xml: string;
-if (isValidHttpURL(arg0)) {
+if (isValidURL(arg0)) {
   const response = await fetch(arg0);
   xml = await response.text();
 } else {
   xml = await Deno.readTextFile(`./samples/${(arg0 || "rss2")}.xml`);
 }
 
-const result = await parseFeed(xml);
-console.log("\n", "============ RESULT ============", "\n", result);
-
-/* const result = await deserializeFeed(xml);
-console.log("\n", "============ RESULT ============", '\n', result);
-
-switch(result.feedType) {
-	case FeedType.Rss2:
-		console.log("\n", "============ Items ============", '\n', (result.feed as RSS2).channel.items);
-	break;
-	case FeedType.Atom:
-		console.log("\n", "============ Items ============", '\n', (result.feed as Atom).entries);
-	break; */
-/* 	case FeedType.JsonFeed:
-		console.log("\n", "============ Items ============", '\n', (result.feed as JsonFeed));
-	break;
-}*/
+const feed = await parseFeed(xml);
+console.log("\n", "⭐============ RESULT ============⭐", "\n", feed);

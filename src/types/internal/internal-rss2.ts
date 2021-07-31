@@ -1,7 +1,7 @@
 // https://validator.w3.org/feed/docs/rss2.html#requiredChannelElements
 
 import { InternalDublinCore } from "./internal-dublin-core.ts";
-import { MediaRssValueFields } from "../media-rss.ts";
+import { InternalMediaRss } from "./internal-media-rss.ts";
 import { ValueField } from "../value-field.ts";
 
 export interface InternalRSS2 {
@@ -37,7 +37,7 @@ interface Channel extends InternalDublinCore {
   items: Item[];
 }
 
-interface Item extends InternalDublinCore, MediaRssValueFields {
+interface Item extends InternalDublinCore, InternalMediaRss {
   title?: ValueField<string>;
   description?: ValueField<string>;
   link?: ValueField<string>;
@@ -76,14 +76,4 @@ interface Image extends InternalDublinCore {
   link: ValueField<string>;
   width?: ValueField<number>;
   height?: ValueField<number>;
-}
-
-enum Days {
-  Monday = "Monday",
-  Tuesday = "Tuesday",
-  Wednesday = "Wednesday",
-  Thursday = "Thursday",
-  Friday = "Friday",
-  Saturday = "Saturday",
-  Sunday = "Sunday",
 }

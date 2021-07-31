@@ -5,14 +5,14 @@ import { ResolverResult } from "./types/resolver-result.ts";
 export const resolveAtomField = (
   name: string,
 ): ResolverResult => {
-	const result = {
-		name,
-		isHandled: true,
-		isArray: false,
-		isInt: false,
-		isFloat: false,
-		isDate: false
-	} as ResolverResult;
+  const result = {
+    name,
+    isHandled: true,
+    isArray: false,
+    isInt: false,
+    isFloat: false,
+    isDate: false,
+  } as ResolverResult;
 
   switch (name) {
     case AtomFields.Category:
@@ -39,22 +39,22 @@ export const resolveAtomField = (
       const resolverResult = resolveDublinCoreField(name);
       if (resolverResult.isHandled) {
         if (resolverResult.isArray) {
-					result.isArray = true;
-				}
+          result.isArray = true;
+        }
 
-				if (resolverResult.isDate) {
-					result.isDate = true;
-				}
+        if (resolverResult.isDate) {
+          result.isDate = true;
+        }
 
-				if(resolverResult.isInt){
-					result.isInt = true;
-				}
+        if (resolverResult.isInt) {
+          result.isInt = true;
+        }
 
-				if(resolverResult.isFloat){
-					result.isFloat = true;
-				}
+        if (resolverResult.isFloat) {
+          result.isFloat = true;
+        }
 
-				result.name = resolverResult.name;
+        result.name = resolverResult.name;
       }
       break;
   }

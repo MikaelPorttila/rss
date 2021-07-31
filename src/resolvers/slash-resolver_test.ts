@@ -6,10 +6,10 @@ import { resolveSlashField } from "./slash-resolver.ts";
   {
     name: "",
     expect: {
-      name: '',
+      name: "",
       isArray: false,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       isHandled: false,
     },
@@ -18,11 +18,11 @@ import { resolveSlashField } from "./slash-resolver.ts";
     name: SlashFields.Comments,
     expect: {
       name: SlashFields.Comments,
-			isArray: false,
+      isArray: false,
       isHandled: true,
-			isInt: true,
-			isFloat: false,
-      isDate: false
+      isInt: true,
+      isFloat: false,
+      isDate: false,
     },
   },
 ].forEach((test) => {
@@ -34,7 +34,7 @@ import { resolveSlashField } from "./slash-resolver.ts";
     assertEquals(result.isHandled, test.expect.isHandled, "isHandled");
     assertEquals(result.isArray, test.expect.isArray, "isArray");
     assertEquals(result.isInt, test.expect.isInt, "isInt");
-		assertEquals(result.isFloat, test.expect.isFloat, "isFloat");
+    assertEquals(result.isFloat, test.expect.isFloat, "isFloat");
     assertEquals(result.isDate, test.expect.isDate, "isDate");
   });
 });

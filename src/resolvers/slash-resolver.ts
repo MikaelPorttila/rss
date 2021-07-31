@@ -5,13 +5,13 @@ export const resolveSlashField = (
   name: string,
 ): ResolverResult => {
   const result = {
-		name,
-		isHandled: true,
-		isArray: false,
-		isInt: false,
-		isFloat: false,
-		isDate: false
-	} as ResolverResult;
+    name,
+    isHandled: true,
+    isArray: false,
+    isInt: false,
+    isFloat: false,
+    isDate: false,
+  } as ResolverResult;
 
   switch (name) {
     case SlashFields.Comments:

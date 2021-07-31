@@ -21,17 +21,18 @@ import { DublinCoreFieldArray } from "../types/internal/internal-dublin-core.ts"
 import { AtomFields, DublinCoreFields } from "../types/fields/mod.ts";
 
 export const toLegacyRss1 = (rss: InternalRSS1): RSS1 => {
-  const result = {} as RSS1;
-
   const {
     title,
     description,
     link,
     about,
-    ...rest
+    ...channel
   } = rss.channel;
 
-  result.channel = rest as any;
+  const result = {
+    channel,
+  } as RSS1;
+
   result.channel.title = title?.value as string;
   result.channel.description = description?.value as string;
   result.channel.link = link?.value as string;

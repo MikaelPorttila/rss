@@ -1,9 +1,9 @@
-import { MediaRssFields } from "./fields/mod.ts";
-import { ValueField } from "./value-field.ts";
+import { MediaRssFields } from "../fields/mod.ts";
+import { ValueField } from "../value-field.ts";
 
 // Based on https://www.rssboard.org/media-rss
-export interface MediaRss {
-  [MediaRssFields.Rating]?: string;
+export interface InternalMediaRss {
+  [MediaRssFields.Rating]?: ValueField<string>;
   [MediaRssFields.Title]?: {
     value?: string;
     type?: string;
@@ -44,14 +44,14 @@ export interface MediaRss {
       lang?: string;
     }[];
   }[];
-  [MediaRssFields.Keywords]?: string;
+  [MediaRssFields.Keywords]?: ValueField<string>;
   [MediaRssFields.Thumbnails]?: {
     url?: string;
     width?: number;
     height?: number;
     time?: string;
   };
-  [MediaRssFields.Category]?: string;
+  [MediaRssFields.Category]?: ValueField<string>;
   [MediaRssFields.Hash]?: {
     value?: string;
     algo?: string;
@@ -98,7 +98,7 @@ export interface MediaRss {
     };
   };
   [MediaRssFields.Comments]?: {
-    [MediaRssFields.Comment]?: string[];
+    "media:comment"?: ValueField<string>[];
   };
   [MediaRssFields.Embed]?: {
     url?: string;
@@ -110,10 +110,10 @@ export interface MediaRss {
     };
   };
   [MediaRssFields.Responses]?: {
-    [MediaRssFields.Response]?: string[];
+    [MediaRssFields.Response]?: ValueField<string>[];
   };
   [MediaRssFields.BackLinks]?: {
-    [MediaRssFields.BackLink]?: string[];
+    [MediaRssFields.BackLink]?: ValueField<string>[];
   };
   [MediaRssFields.Status]?: {
     state?: string;
@@ -144,10 +144,10 @@ export interface MediaRss {
   };
   [MediaRssFields.Scenes]?: {
     [MediaRssFields.Scene]?: {
-      sceneTitle?: string;
-      sceneDescription?: string;
-      sceneStartTime?: string;
-      sceneEndTime?: string;
+      sceneTitle?: ValueField<string>;
+      sceneDescription?: ValueField<string>;
+      sceneStartTime?: ValueField<string>;
+      sceneEndTime?: ValueField<string>;
     }[];
   };
 }

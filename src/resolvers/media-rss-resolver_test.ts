@@ -8,9 +8,9 @@ import { MediaRssFields } from "./../types/fields/mod.ts";
     expect: {
       isArray: false,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
-      name: '',
+      name: "",
       isHandled: false,
     },
   },
@@ -19,7 +19,7 @@ import { MediaRssFields } from "./../types/fields/mod.ts";
     expect: {
       isArray: true,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: MediaRssFields.Comment,
       isHandled: true,
@@ -30,7 +30,7 @@ import { MediaRssFields } from "./../types/fields/mod.ts";
     expect: {
       isArray: true,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: MediaRssFields.Response,
       isHandled: true,
@@ -41,7 +41,7 @@ import { MediaRssFields } from "./../types/fields/mod.ts";
     expect: {
       isArray: true,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: MediaRssFields.Scene,
       isHandled: true,
@@ -55,7 +55,7 @@ import { MediaRssFields } from "./../types/fields/mod.ts";
     assertEquals(result.isHandled, test.expect.isHandled, "isHandled");
     assertEquals(result.isArray, test.expect.isArray, "isArray");
     assertEquals(result.isInt, test.expect.isInt, "isInt");
-		assertEquals(result.isFloat, test.expect.isFloat, "isFloat");
+    assertEquals(result.isFloat, test.expect.isFloat, "isFloat");
     assertEquals(result.name, test.expect.name, "name");
     assertEquals(result.isDate, test.expect.isDate, "isDate");
   });

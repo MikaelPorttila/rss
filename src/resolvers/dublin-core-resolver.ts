@@ -5,7 +5,7 @@ export const resolveDublinCoreField = (
   name: string,
 ): ResolverResult => {
   const result = {
-		name,
+    name,
     isHandled: true,
   } as ResolverResult;
 

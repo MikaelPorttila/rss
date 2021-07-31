@@ -5,12 +5,12 @@ export const resolveMediaRssField = (
   name: string,
 ): ResolverResult => {
   const result = {
-		name,
-		isHandled: true,
-		isArray: false,
-		isInt: false,
-		isFloat: false,
-		isDate: false
+    name,
+    isHandled: true,
+    isArray: false,
+    isInt: false,
+    isFloat: false,
+    isDate: false,
   } as ResolverResult;
 
   switch (name) {
@@ -21,7 +21,7 @@ export const resolveMediaRssField = (
     case MediaRssFields.Content:
       result.isArray = true;
       break;
-		case MediaRssFields.PriceValue:
+    case MediaRssFields.PriceValue:
       result.isFloat = true;
       break;
     default:

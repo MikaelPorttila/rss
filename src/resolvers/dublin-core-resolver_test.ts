@@ -8,9 +8,9 @@ import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
     expect: {
       isArray: undefined,
       isInt: undefined,
-			isFloat: undefined,
+      isFloat: undefined,
       isDate: undefined,
-      name: '',
+      name: "",
       isHandled: false,
     },
   },
@@ -19,7 +19,7 @@ import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
     expect: {
       isArray: undefined,
       isInt: undefined,
-			isFloat: undefined,
+      isFloat: undefined,
       isDate: true,
       name: DublinCoreFields.Date,
       isHandled: true,
@@ -30,7 +30,7 @@ import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
     expect: {
       isArray: undefined,
       isInt: undefined,
-			isFloat: undefined,
+      isFloat: undefined,
       isDate: true,
       name: DublinCoreFields.Created,
       isHandled: true,
@@ -41,7 +41,7 @@ import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
     expect: {
       isArray: undefined,
       isInt: undefined,
-			isFloat: undefined,
+      isFloat: undefined,
       isDate: true,
       name: DublinCoreFields.DateSubmitted,
       isHandled: true,
@@ -52,7 +52,7 @@ import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
     expect: {
       isArray: undefined,
       isInt: undefined,
-			isFloat: undefined,
+      isFloat: undefined,
       isDate: true,
       name: DublinCoreFields.Copyrighted,
       isHandled: true,
@@ -63,7 +63,7 @@ import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
     expect: {
       isArray: undefined,
       isInt: undefined,
-			isFloat: undefined,
+      isFloat: undefined,
       isDate: true,
       name: DublinCoreFields.DateAccepted,
       isHandled: true,
@@ -77,7 +77,7 @@ import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
     assertEquals(result.isHandled, test.expect.isHandled, "isHandled");
     assertEquals(result.isArray, test.expect.isArray, "isArray");
     assertEquals(result.isInt, test.expect.isInt, "isInt");
-		assertEquals(result.isFloat, test.expect.isFloat, "isFloat");
+    assertEquals(result.isFloat, test.expect.isFloat, "isFloat");
     assertEquals(result.name, test.expect.name, "name");
     assertEquals(result.isDate, test.expect.isDate, "isDate");
   });

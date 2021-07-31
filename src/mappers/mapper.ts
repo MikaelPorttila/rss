@@ -3,10 +3,10 @@ import { AtomFields, DublinCoreFields } from "./../types/fields/mod.ts";
 import { copyValueFields, isValidURL } from "./../util.ts";
 import { FeedType } from "./../types/mod.ts";
 import { SlashFieldArray } from "./../types/slash.ts";
-import { MediaRssValueFields } from "./../types/media-rss.ts";
 import { copyMedia } from "./media-mapper.ts";
 import {
   InternalAtom,
+  InternalMediaRss,
   InternalRSS1,
   InternalRSS2,
 } from "../types/internal/mod.ts";
@@ -77,6 +77,11 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
   result.updateDate = result[DublinCoreFields.Date];
   result.updateDateRaw = result[DublinCoreFields.DateRaw];
 
+  const creators = result[DublinCoreFields.Creator];
+  if (creators && creators.length > 0) {
+    result.author = createAuthor(undefined, creators[0]);
+  }
+
   if (rss.image) {
     result.image = {
       link: rss.image.link?.value as string,
@@ -106,6 +111,11 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
       entry[DublinCoreFields.DateSubmitted];
     entry.updatedRaw = entry[DublinCoreFields.DateRaw] ||
       entry[DublinCoreFields.DateSubmittedRaw];
+
+    const entryCreators = entry[DublinCoreFields.Creator];
+    if (entryCreators && entryCreators.length > 0) {
+      entry.author = createAuthor(undefined, entryCreators[0]);
+    }
 
     const itemTitle = entry[DublinCoreFields.Title] || title?.value;
     if (itemTitle) {
@@ -208,8 +218,11 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
     result[DublinCoreFields.URI],
   ].filter((x) => !!x) as string[];
 
+  const creators = result[DublinCoreFields.Creator];
   if (webMaster?.value) {
     result.author = createAuthor(webMaster.value);
+  } else if (creators && creators?.length > 0) {
+    result.author = createAuthor(undefined, creators[0]);
   }
 
   if (image) {
@@ -239,7 +252,7 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
 
     const entry = itemRest as FeedEntry;
     copyValueFields(DublinCoreFieldArray, entry, entry);
-    copyMedia(entry as MediaRssValueFields, entry);
+    copyMedia(entry as InternalMediaRss, entry);
 
     entry.id = guid?.value as string || entry[DublinCoreFields.URI] as string;
 
@@ -267,8 +280,11 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
     entry.updated = pubDate?.value;
     entry.updatedRaw = item.pubDateRaw?.value;
 
+    const creators = entry[DublinCoreFields.Creator];
     if (author?.value) {
       entry.author = createAuthor(undefined, author.value);
+    } else if (creators && creators.length > 0) {
+      entry.author = createAuthor(undefined, creators[0]);
     }
 
     if (link?.value) {

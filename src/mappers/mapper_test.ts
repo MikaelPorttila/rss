@@ -379,7 +379,7 @@ const composeRss2 = (
         itemValue = 1337;
       }
 
-			if (isFloat) {
+      if (isFloat) {
         channelValue = { value: 1337.1337 };
         itemValue = 1337.1337;
       }
@@ -806,9 +806,9 @@ const testArrayLength = (
           `RSS1:Item:0:${fieldName}:Value`;
         if (isInt) {
           expectValue = 1337;
-        } else if(isFloat) {
-					expectValue = 1337.1337;
-				}
+        } else if (isFloat) {
+          expectValue = 1337.1337;
+        }
 
         return {
           name: `Items:0:${fieldName}`,
@@ -1125,8 +1125,8 @@ const testArrayLength = (
           } else if (isDate) {
             expectValue = new Date("2020-06-22T20:03:00.000Z");
           } else if (isFloat) {
-						expectValue = 1337.1337;
-					}
+            expectValue = 1337.1337;
+          }
 
           return [
             {

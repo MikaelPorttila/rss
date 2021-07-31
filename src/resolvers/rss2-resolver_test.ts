@@ -8,7 +8,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: false,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: "",
     },
@@ -18,7 +18,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: false,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: "textInput",
     },
@@ -28,7 +28,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: false,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: "skipHours",
     },
@@ -38,7 +38,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: false,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: "skipDays",
     },
@@ -48,7 +48,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: false,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: true,
       name: "pubDate",
     },
@@ -58,7 +58,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: false,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: "managingEditor",
     },
@@ -68,7 +68,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: false,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: "webMaster",
     },
@@ -78,7 +78,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: false,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: true,
       name: "lastBuildDate",
     },
@@ -88,7 +88,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: true,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: "items",
     },
@@ -98,7 +98,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: true,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: Rss2Fields.Enclosure,
     },
@@ -108,7 +108,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: true,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: "categories",
     },
@@ -118,7 +118,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: false,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: "isPermaLink",
     },
@@ -134,7 +134,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
       expect: {
         isArray: false,
         isInt: true,
-				isFloat: false,
+        isFloat: false,
         isDate: false,
         name: field,
       },
@@ -145,7 +145,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: true,
       isInt: true,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: Rss2Fields.Hour,
     },
@@ -155,7 +155,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: true,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: Rss2Fields.Day,
     },
@@ -165,7 +165,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: false,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: true,
       name: DublinCoreFields.Date,
     },
@@ -175,7 +175,7 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: true,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: true,
       name: DublinCoreFields.Valid,
     },
@@ -185,18 +185,40 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     expect: {
       isArray: true,
       isInt: false,
-			isFloat: false,
+      isFloat: false,
       isDate: false,
       name: DublinCoreFields.Creator,
     },
   },
 ].forEach((test) => {
   Deno.test(`resolveRss2Field:${test.name}`, () => {
-    const { isArray, isInt, isFloat, name, isDate } = resolveRss2Field(test.name);
-    assertEquals(isArray, test.expect.isArray, `isArray - Expect: ${test.expect.isArray}, Actual: ${isArray}`);
-    assertEquals(isInt, test.expect.isInt, `IsInt - Expect: ${test.expect.isInt}, Actual: ${isInt}`);
-		assertEquals(isFloat, test.expect.isFloat, `isFloat - Expect: ${test.expect.isFloat}, Actual: ${isFloat}`);
-    assertEquals(name, test.expect.name, `name - Expect: ${test.expect.name}, Actual: ${name}`);
-    assertEquals(isDate, test.expect.isDate, `isDate - Expect: ${test.expect.isDate}, Actual: ${isDate}`);
+    const { isArray, isInt, isFloat, name, isDate } = resolveRss2Field(
+      test.name,
+    );
+    assertEquals(
+      isArray,
+      test.expect.isArray,
+      `isArray - Expect: ${test.expect.isArray}, Actual: ${isArray}`,
+    );
+    assertEquals(
+      isInt,
+      test.expect.isInt,
+      `IsInt - Expect: ${test.expect.isInt}, Actual: ${isInt}`,
+    );
+    assertEquals(
+      isFloat,
+      test.expect.isFloat,
+      `isFloat - Expect: ${test.expect.isFloat}, Actual: ${isFloat}`,
+    );
+    assertEquals(
+      name,
+      test.expect.name,
+      `name - Expect: ${test.expect.name}, Actual: ${name}`,
+    );
+    assertEquals(
+      isDate,
+      test.expect.isDate,
+      `isDate - Expect: ${test.expect.isDate}, Actual: ${isDate}`,
+    );
   });
 });

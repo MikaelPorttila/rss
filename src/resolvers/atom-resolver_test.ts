@@ -7,37 +7,61 @@ Deno.test("Atom Resolver", () => {
     const result = resolveAtomField(field);
 
     assert(result.name === field, `propertyName should be null`);
-    assertEquals(false, result.isArray, `isArray should be false for field: ${field}`);
+    assertEquals(
+      false,
+      result.isArray,
+      `isArray should be false for field: ${field}`,
+    );
     assertEquals(
       false,
       result.isInt,
       `isNumber should be false for field: ${field}`,
     );
-    assertEquals(false, result.isDate, `isDate should be false for field ${field}`);
+    assertEquals(
+      false,
+      result.isDate,
+      `isDate should be false for field ${field}`,
+    );
   });
 
   [AtomFields.Category, AtomFields.Link, AtomFields.Entry].forEach((field) => {
     const result = resolveAtomField(field);
 
-    assertEquals(true, result.isArray, `isArray should be true for field ${field}`);
+    assertEquals(
+      true,
+      result.isArray,
+      `isArray should be true for field ${field}`,
+    );
     assertEquals(
       false,
       result.isInt,
       `isNumber should be false for field ${field}`,
     );
-    assertEquals(false, result.isDate, `isDate should be false for field ${field}`);
+    assertEquals(
+      false,
+      result.isDate,
+      `isDate should be false for field ${field}`,
+    );
   });
 
   [AtomFields.Updated, AtomFields.Published].forEach((field) => {
     const result = resolveAtomField(field);
 
-    assertEquals(false, result.isArray, `isArray should be false for field ${field}`);
+    assertEquals(
+      false,
+      result.isArray,
+      `isArray should be false for field ${field}`,
+    );
     assertEquals(
       false,
       result.isInt,
       `isNumber should be false for field ${field}`,
     );
-    assertEquals(true, result.isDate, `isDate should be true for field ${field}`);
+    assertEquals(
+      true,
+      result.isDate,
+      `isDate should be true for field ${field}`,
+    );
   });
 });
 

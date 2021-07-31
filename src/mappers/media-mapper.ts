@@ -1,7 +1,8 @@
 import { MediaRssFields } from "../types/fields/mod.ts";
-import { MediaRss, MediaRssValueFields } from "./../types/media-rss.ts";
+import { InternalMediaRss } from "../types/internal/mod.ts";
+import { MediaRss } from "./../types/media-rss.ts";
 
-export const copyMedia = (source: MediaRssValueFields, target: MediaRss) => {
+export const copyMedia = (source: InternalMediaRss, target: MediaRss) => {
   [
     MediaRssFields.Rating,
     MediaRssFields.Keywords,

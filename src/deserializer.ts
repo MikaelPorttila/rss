@@ -214,12 +214,12 @@ const parse = (input: string) =>
 
         const targetNode = stack[stack.length - 1];
         const {
-					name,
+          name,
           isArray,
           isInt,
-					isFloat,
-          isDate
-				} = resolveField(nodeName);
+          isFloat,
+          isDate,
+        } = resolveField(nodeName);
 
         if (cDataActive) {
           node.value = cDataBuilder;
