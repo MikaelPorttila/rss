@@ -362,7 +362,7 @@ const composeRss2 = (
   DublinCoreFieldArray.forEach(
     ((dcField) => {
       const fieldName = formatNamespaceFieldName(dcField);
-      const [propertyName, isArray, isNumber, isDate] = resolveRss2Field(
+      const { isArray, isDate, isInt, isFloat } = resolveRss2Field(
         dcField,
       );
 
@@ -374,9 +374,14 @@ const composeRss2 = (
         itemValue = { value: new Date("Mon, 22 Jun 2020 20:03:00 GMT") };
       }
 
-      if (isNumber) {
+      if (isInt) {
         channelValue = { value: 1337 };
         itemValue = 1337;
+      }
+
+			if (isFloat) {
+        channelValue = { value: 1337.1337 };
+        itemValue = 1337.1337;
       }
 
       if (isArray) {
@@ -446,7 +451,7 @@ const composeRss1 = (
   DublinCoreFieldArray.forEach(
     ((dcField) => {
       const fieldName = formatNamespaceFieldName(dcField);
-      const [propertyName, isArray, isNumber, isDate] = resolveRss1Field(
+      const { isArray, isInt, isFloat, isDate } = resolveRss1Field(
         dcField,
       );
 
@@ -463,9 +468,12 @@ const composeRss1 = (
       } else if (isDate) {
         channelValue = { value: new Date("Mon, 22 Jun 2020 20:03:00 GMT") };
         itemValue = { value: new Date("Mon, 22 Jun 2020 20:03:00 GMT") };
-      } else if (isNumber) {
+      } else if (isInt) {
         channelValue = { value: 1337 };
         itemValue = { value: 1337 };
+      } else if (isFloat) {
+        channelValue = { value: 1337.1337 };
+        itemValue = { value: 1337.1337 };
       }
 
       (result.channel as any)[dcField] = channelValue ||
@@ -477,7 +485,7 @@ const composeRss1 = (
 
   SlashFieldArray.forEach((slashField) => {
     const fieldName = formatNamespaceFieldName(slashField);
-    const [propertyName, isArray, isNumber, isDate] = resolveRss1Field(
+    const { isInt, isFloat, isDate } = resolveRss1Field(
       slashField,
     );
 
@@ -485,10 +493,10 @@ const composeRss1 = (
 
     if (isDate) {
       value = new Date("Mon, 22 Jun 2020 20:03:00 GMT");
-    }
-
-    if (isNumber) {
+    } else if (isInt) {
       value = 1337;
+    } else if (isFloat) {
+      value = 1337.1337;
     }
 
     (result.item[0] as any)[slashField] = { value };
@@ -792,15 +800,15 @@ const testArrayLength = (
       },
       ...SlashFieldArray.map((slashField) => {
         const fieldName = formatNamespaceFieldName(slashField);
-        const [propertyName, isArray, isNumber, isDate] = resolveRss1Field(
-          slashField,
-        );
+        const { isInt, isFloat } = resolveRss1Field(slashField);
 
         let expectValue: string | number | Date =
           `RSS1:Item:0:${fieldName}:Value`;
-        if (isNumber) {
+        if (isInt) {
           expectValue = 1337;
-        }
+        } else if(isFloat) {
+					expectValue = 1337.1337;
+				}
 
         return {
           name: `Items:0:${fieldName}`,
@@ -1101,7 +1109,7 @@ const testArrayLength = (
         )
         .flatMap((dcField) => {
           const fieldName = formatNamespaceFieldName(dcField);
-          const [propertyName, isArray, isNumber, isDate] = resolveRss2Field(
+          const { isArray, isInt, isFloat, isDate } = resolveRss2Field(
             dcField,
           );
 
@@ -1112,11 +1120,13 @@ const testArrayLength = (
               `RSS2:Channel:${fieldName}:0:Value`,
               `RSS2:Channel:${fieldName}:1:Value`,
             ];
-          } else if (isNumber) {
+          } else if (isInt) {
             expectValue = 1337;
           } else if (isDate) {
             expectValue = new Date("2020-06-22T20:03:00.000Z");
-          }
+          } else if (isFloat) {
+						expectValue = 1337.1337;
+					}
 
           return [
             {

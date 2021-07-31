@@ -4,111 +4,123 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
 
 [
   {
-    propertyName: "",
+    name: "",
     expect: {
       isArray: false,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: false,
-      propertyName: "",
+      name: "",
     },
   },
   {
-    propertyName: Rss2Fields.TextInput,
+    name: Rss2Fields.TextInput,
     expect: {
       isArray: false,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: false,
-      propertyName: "textInput",
+      name: "textInput",
     },
   },
   {
-    propertyName: Rss2Fields.SkipHours,
+    name: Rss2Fields.SkipHours,
     expect: {
       isArray: false,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: false,
-      propertyName: "skipHours",
+      name: "skipHours",
     },
   },
   {
-    propertyName: Rss2Fields.SkipDays,
+    name: Rss2Fields.SkipDays,
     expect: {
       isArray: false,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: false,
-      propertyName: "skipDays",
+      name: "skipDays",
     },
   },
   {
-    propertyName: Rss2Fields.PubDate,
+    name: Rss2Fields.PubDate,
     expect: {
       isArray: false,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: true,
-      propertyName: "pubDate",
+      name: "pubDate",
     },
   },
   {
-    propertyName: Rss2Fields.ManagingEditor,
+    name: Rss2Fields.ManagingEditor,
     expect: {
       isArray: false,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: false,
-      propertyName: "managingEditor",
+      name: "managingEditor",
     },
   },
   {
-    propertyName: Rss2Fields.WebMaster,
+    name: Rss2Fields.WebMaster,
     expect: {
       isArray: false,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: false,
-      propertyName: "webMaster",
+      name: "webMaster",
     },
   },
   {
-    propertyName: Rss2Fields.LastBuildDate,
+    name: Rss2Fields.LastBuildDate,
     expect: {
       isArray: false,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: true,
-      propertyName: "lastBuildDate",
+      name: "lastBuildDate",
     },
   },
   {
-    propertyName: Rss2Fields.Item,
+    name: Rss2Fields.Item,
     expect: {
       isArray: true,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: false,
-      propertyName: "items",
+      name: "items",
     },
   },
   {
-    propertyName: Rss2Fields.Enclosure,
+    name: Rss2Fields.Enclosure,
     expect: {
       isArray: true,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: false,
-      propertyName: Rss2Fields.Enclosure,
+      name: Rss2Fields.Enclosure,
     },
   },
   {
-    propertyName: Rss2Fields.Category,
+    name: Rss2Fields.Category,
     expect: {
       isArray: true,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: false,
-      propertyName: "categories",
+      name: "categories",
     },
   },
   {
-    propertyName: Rss2Fields.isPermaLink,
+    name: Rss2Fields.isPermaLink,
     expect: {
       isArray: false,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: false,
-      propertyName: "isPermaLink",
+      name: "isPermaLink",
     },
   },
   ...[
@@ -118,68 +130,73 @@ import { resolveRss2Field } from "./rss2-resolver.ts";
     Rss2Fields.Height,
   ].map((field) => (
     {
-      propertyName: field,
+      name: field,
       expect: {
         isArray: false,
-        isNumber: true,
+        isInt: true,
+				isFloat: false,
         isDate: false,
-        propertyName: field,
+        name: field,
       },
     }
   )),
   {
-    propertyName: Rss2Fields.Hour,
+    name: Rss2Fields.Hour,
     expect: {
       isArray: true,
-      isNumber: true,
+      isInt: true,
+			isFloat: false,
       isDate: false,
-      propertyName: Rss2Fields.Hour,
+      name: Rss2Fields.Hour,
     },
   },
   {
-    propertyName: Rss2Fields.Day,
+    name: Rss2Fields.Day,
     expect: {
       isArray: true,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: false,
-      propertyName: Rss2Fields.Day,
+      name: Rss2Fields.Day,
     },
   },
   {
-    propertyName: DublinCoreFields.Date,
+    name: DublinCoreFields.Date,
     expect: {
       isArray: false,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: true,
-      propertyName: DublinCoreFields.Date,
+      name: DublinCoreFields.Date,
     },
   },
   {
-    propertyName: DublinCoreFields.Valid,
+    name: DublinCoreFields.Valid,
     expect: {
       isArray: true,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: true,
-      propertyName: DublinCoreFields.Valid,
+      name: DublinCoreFields.Valid,
     },
   },
   {
-    propertyName: DublinCoreFields.Creator,
+    name: DublinCoreFields.Creator,
     expect: {
       isArray: true,
-      isNumber: false,
+      isInt: false,
+			isFloat: false,
       isDate: false,
-      propertyName: DublinCoreFields.Creator,
+      name: DublinCoreFields.Creator,
     },
   },
 ].forEach((test) => {
-  Deno.test(`resolveRss2Field:${test.propertyName}`, () => {
-    const [propertyName, isArray, isNumber, isDate] = resolveRss2Field(
-      test.propertyName,
-    );
-    assertEquals(isArray, test.expect.isArray, "isArray");
-    assertEquals(isNumber, test.expect.isNumber, "isNumber");
-    assertEquals(propertyName, test.expect.propertyName, "");
-    assertEquals(isDate, test.expect.isDate, "isDate");
+  Deno.test(`resolveRss2Field:${test.name}`, () => {
+    const { isArray, isInt, isFloat, name, isDate } = resolveRss2Field(test.name);
+    assertEquals(isArray, test.expect.isArray, `isArray - Expect: ${test.expect.isArray}, Actual: ${isArray}`);
+    assertEquals(isInt, test.expect.isInt, `IsInt - Expect: ${test.expect.isInt}, Actual: ${isInt}`);
+		assertEquals(isFloat, test.expect.isFloat, `isFloat - Expect: ${test.expect.isFloat}, Actual: ${isFloat}`);
+    assertEquals(name, test.expect.name, `name - Expect: ${test.expect.name}, Actual: ${name}`);
+    assertEquals(isDate, test.expect.isDate, `isDate - Expect: ${test.expect.isDate}, Actual: ${isDate}`);
   });
 });

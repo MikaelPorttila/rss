@@ -2,14 +2,14 @@ import { DublinCoreFields } from "../types/fields/mod.ts";
 import { ResolverResult } from "./types/resolver-result.ts";
 
 export const resolveDublinCoreField = (
-  propertyName: string,
+  name: string,
 ): ResolverResult => {
   const result = {
-		propertyName,
-    handled: true,
+		name,
+    isHandled: true,
   } as ResolverResult;
 
-  switch (propertyName) {
+  switch (name) {
     case DublinCoreFields.Date:
     case DublinCoreFields.Created:
     case DublinCoreFields.DateSubmitted:
@@ -26,7 +26,7 @@ export const resolveDublinCoreField = (
       result.isArray = true;
       break;
     default:
-      result.handled = false;
+      result.isHandled = false;
       break;
   }
 

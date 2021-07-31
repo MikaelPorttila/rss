@@ -2,19 +2,23 @@ import { SlashFields } from "../types/fields/mod.ts";
 import { ResolverResult } from "./types/resolver-result.ts";
 
 export const resolveSlashField = (
-  propertyName: string,
+  name: string,
 ): ResolverResult => {
   const result = {
-		propertyName,
-		handled: true
+		name,
+		isHandled: true,
+		isArray: false,
+		isInt: false,
+		isFloat: false,
+		isDate: false
 	} as ResolverResult;
 
-  switch (propertyName) {
+  switch (name) {
     case SlashFields.Comments:
       result.isInt = true;
       break;
     default:
-      result.handled = false;
+      result.isHandled = false;
       break;
   }
 

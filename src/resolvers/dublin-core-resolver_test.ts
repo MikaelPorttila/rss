@@ -4,81 +4,81 @@ import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
 
 [
   {
-    propertyName: "",
+    name: "",
     expect: {
       isArray: undefined,
       isInt: undefined,
 			isFloat: undefined,
       isDate: undefined,
-      propertyName: '',
-      handled: false,
+      name: '',
+      isHandled: false,
     },
   },
   {
-    propertyName: DublinCoreFields.Date,
+    name: DublinCoreFields.Date,
     expect: {
       isArray: undefined,
       isInt: undefined,
 			isFloat: undefined,
       isDate: true,
-      propertyName: DublinCoreFields.Date,
-      handled: true,
+      name: DublinCoreFields.Date,
+      isHandled: true,
     },
   },
   {
-    propertyName: DublinCoreFields.Created,
+    name: DublinCoreFields.Created,
     expect: {
       isArray: undefined,
       isInt: undefined,
 			isFloat: undefined,
       isDate: true,
-      propertyName: DublinCoreFields.Created,
-      handled: true,
+      name: DublinCoreFields.Created,
+      isHandled: true,
     },
   },
   {
-    propertyName: DublinCoreFields.DateSubmitted,
+    name: DublinCoreFields.DateSubmitted,
     expect: {
       isArray: undefined,
       isInt: undefined,
 			isFloat: undefined,
       isDate: true,
-      propertyName: DublinCoreFields.DateSubmitted,
-      handled: true,
+      name: DublinCoreFields.DateSubmitted,
+      isHandled: true,
     },
   },
   {
-    propertyName: DublinCoreFields.Copyrighted,
+    name: DublinCoreFields.Copyrighted,
     expect: {
       isArray: undefined,
       isInt: undefined,
 			isFloat: undefined,
       isDate: true,
-      propertyName: DublinCoreFields.Copyrighted,
-      handled: true,
+      name: DublinCoreFields.Copyrighted,
+      isHandled: true,
     },
   },
   {
-    propertyName: DublinCoreFields.DateAccepted,
+    name: DublinCoreFields.DateAccepted,
     expect: {
       isArray: undefined,
       isInt: undefined,
 			isFloat: undefined,
       isDate: true,
-      propertyName: DublinCoreFields.DateAccepted,
-      handled: true,
+      name: DublinCoreFields.DateAccepted,
+      isHandled: true,
     },
   },
 ].forEach((test) => {
-  Deno.test(`DublinCoreResolver:${test.propertyName}`, () => {
-    const result = resolveDublinCoreField(test.propertyName);
+  Deno.test(`DublinCoreResolver:${test.name}`, () => {
+    const result = resolveDublinCoreField(test.name);
     assertNotEquals(result, undefined);
     assertNotEquals(result, null);
-    assertEquals(result.handled, test.expect.handled, "handled");
+    assertEquals(result.isHandled, test.expect.isHandled, "isHandled");
     assertEquals(result.isArray, test.expect.isArray, "isArray");
     assertEquals(result.isInt, test.expect.isInt, "isInt");
 		assertEquals(result.isFloat, test.expect.isFloat, "isFloat");
-    assertEquals(result.propertyName, test.expect.propertyName, "propertyName");
+    assertEquals(result.name, test.expect.name, "name");
     assertEquals(result.isDate, test.expect.isDate, "isDate");
   });
 });

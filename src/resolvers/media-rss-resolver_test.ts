@@ -4,59 +4,59 @@ import { MediaRssFields } from "./../types/fields/mod.ts";
 
 [
   {
-    propertyName: "",
+    name: "",
     expect: {
-      isArray: undefined,
-      isInt: undefined,
-			isFloat: undefined,
-      isDate: undefined,
-      propertyName: '',
-      handled: false,
+      isArray: false,
+      isInt: false,
+			isFloat: false,
+      isDate: false,
+      name: '',
+      isHandled: false,
     },
   },
   {
-    propertyName: MediaRssFields.Comment,
+    name: MediaRssFields.Comment,
     expect: {
       isArray: true,
-      isInt: undefined,
-			isFloat: undefined,
-      isDate: undefined,
-      propertyName: MediaRssFields.Comment,
-      handled: true,
+      isInt: false,
+			isFloat: false,
+      isDate: false,
+      name: MediaRssFields.Comment,
+      isHandled: true,
     },
   },
   {
-    propertyName: MediaRssFields.Response,
+    name: MediaRssFields.Response,
     expect: {
       isArray: true,
-      isInt: undefined,
-			isFloat: undefined,
-      isDate: undefined,
-      propertyName: MediaRssFields.Response,
-      handled: true,
+      isInt: false,
+			isFloat: false,
+      isDate: false,
+      name: MediaRssFields.Response,
+      isHandled: true,
     },
   },
   {
-    propertyName: MediaRssFields.Scene,
+    name: MediaRssFields.Scene,
     expect: {
       isArray: true,
-      isInt: undefined,
-			isFloat: undefined,
-      isDate: undefined,
-      propertyName: MediaRssFields.Scene,
-      handled: true,
+      isInt: false,
+			isFloat: false,
+      isDate: false,
+      name: MediaRssFields.Scene,
+      isHandled: true,
     },
   },
 ].forEach((test) => {
-  Deno.test(`MediaRssResolver:${test.propertyName}`, () => {
-    const result = resolveMediaRssField(test.propertyName);
+  Deno.test(`MediaRssResolver:${test.name}`, () => {
+    const result = resolveMediaRssField(test.name);
     assertNotEquals(result, undefined);
     assertNotEquals(result, null);
-    assertEquals(result.handled, test.expect.handled, "handled");
+    assertEquals(result.isHandled, test.expect.isHandled, "isHandled");
     assertEquals(result.isArray, test.expect.isArray, "isArray");
     assertEquals(result.isInt, test.expect.isInt, "isInt");
 		assertEquals(result.isFloat, test.expect.isFloat, "isFloat");
-    assertEquals(result.propertyName, test.expect.propertyName, "propertyName");
+    assertEquals(result.name, test.expect.name, "name");
     assertEquals(result.isDate, test.expect.isDate, "isDate");
   });
 });

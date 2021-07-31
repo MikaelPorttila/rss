@@ -1,51 +1,60 @@
 import { Rss1Fields } from "../types/fields/mod.ts";
 import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
 import { resolveSlashField } from "./slash-resolver.ts";
+import { ResolverResult } from "./types/resolver-result.ts";
 
 export const resolveRss1Field = (
-  nodeName: string,
-): [string, boolean, boolean, boolean] => {
-  let isArray = false;
-  let isNumber = false;
-  let isDate = false;
-  let propertyName = nodeName;
+  name: string,
+): ResolverResult => {
+	const result = {
+		name,
+		isHandled: true,
+		isArray: false,
+		isInt: false,
+		isFloat: false,
+		isDate: false
+	} as ResolverResult;
 
-  switch (nodeName) {
+  switch (name) {
     case Rss1Fields.TextInput:
-      propertyName = "textInput";
+      result.name = "textInput";
       break;
     case Rss1Fields.Item:
-      isArray = true;
+      result.isArray = true;
       break;
     case Rss1Fields.About:
-      propertyName = "about";
+      result.name = "about";
       break;
     case Rss1Fields.Resource:
-      propertyName = "resource";
+      result.name = "resource";
       break;
     default:
       const subNamespaceResolvers = [resolveDublinCoreField, resolveSlashField];
       for (let i = 0; i < subNamespaceResolvers.length; i++) {
-        const resolverResult = subNamespaceResolvers[i](propertyName);
-        if (resolverResult.handled) {
+        const resolverResult = subNamespaceResolvers[i](name);
+        if (resolverResult.isHandled) {
           if (resolverResult.isArray) {
-            isArray = true;
+            result.isArray = true;
           }
 
           if (resolverResult.isDate) {
-            isDate = true;
+            result.isDate = true;
           }
 
-          if (resolverResult.isInt || resolverResult.isFloat) {
-            isNumber = true;
-          }
+					if(resolverResult.isInt){
+						result.isInt = true;
+					}
 
-					propertyName = resolverResult.propertyName;
+					if(resolverResult.isFloat){
+						result.isFloat = true;
+					}
+
+					result.name = resolverResult.name;
           break;
         }
       }
       break;
   }
 
-  return [propertyName, isArray, isNumber, isDate];
+  return result;
 };

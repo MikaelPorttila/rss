@@ -2,14 +2,18 @@ import { MediaRssFields } from "../types/fields/mod.ts";
 import { ResolverResult } from "./types/resolver-result.ts";
 
 export const resolveMediaRssField = (
-  propertyName: string,
+  name: string,
 ): ResolverResult => {
   const result = {
-		propertyName,
-    handled: true,
+		name,
+		isHandled: true,
+		isArray: false,
+		isInt: false,
+		isFloat: false,
+		isDate: false
   } as ResolverResult;
 
-  switch (propertyName) {
+  switch (name) {
     case MediaRssFields.Comment:
     case MediaRssFields.Response:
     case MediaRssFields.Scene:
@@ -21,7 +25,7 @@ export const resolveMediaRssField = (
       result.isFloat = true;
       break;
     default:
-      result.handled = false;
+      result.isHandled = false;
       break;
   }
 

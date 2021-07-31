@@ -1,56 +1,65 @@
 import { AtomFields } from "../types/fields/mod.ts";
 import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
+import { ResolverResult } from "./types/resolver-result.ts";
 
 export const resolveAtomField = (
-  nodeName: string,
-): [string, boolean, boolean, boolean] => {
-  let isArray = false;
-  let isNumber = false;
-  let isDate = false;
-  let propertyName = nodeName;
+  name: string,
+): ResolverResult => {
+	const result = {
+		name,
+		isHandled: true,
+		isArray: false,
+		isInt: false,
+		isFloat: false,
+		isDate: false
+	} as ResolverResult;
 
-  switch (nodeName) {
+  switch (name) {
     case AtomFields.Category:
-      propertyName = "categories";
-      isArray = true;
+      result.name = "categories";
+      result.isArray = true;
       break;
     case AtomFields.Contributor:
-      propertyName = "contributors";
-      isArray = true;
+      result.name = "contributors";
+      result.isArray = true;
       break;
     case AtomFields.Link:
-      propertyName = "links";
-      isArray = true;
+      result.name = "links";
+      result.isArray = true;
       break;
     case AtomFields.Entry:
-      propertyName = "entries";
-      isArray = true;
+      result.name = "entries";
+      result.isArray = true;
       break;
     case AtomFields.Updated:
     case AtomFields.Published:
-      isDate = true;
+      result.isDate = true;
       break;
     default:
-      const resolverResult = resolveDublinCoreField(propertyName);
-      if (resolverResult.handled) {
+      const resolverResult = resolveDublinCoreField(name);
+      if (resolverResult.isHandled) {
         if (resolverResult.isArray) {
-          isArray = true;
-        }
+					result.isArray = true;
+				}
 
-        if (resolverResult.isDate) {
-          isDate = true;
-        }
+				if (resolverResult.isDate) {
+					result.isDate = true;
+				}
 
-        if (resolverResult.isInt || resolverResult.isFloat) {
-          isNumber = true;
-        }
+				if(resolverResult.isInt){
+					result.isInt = true;
+				}
 
-				propertyName = resolverResult.propertyName;
+				if(resolverResult.isFloat){
+					result.isFloat = true;
+				}
+
+				result.name = resolverResult.name;
       }
       break;
   }
 
-  return [propertyName, isArray, isNumber, isDate];
+  return result;
 };
 
 export const isAtomCDataField = (nodeName: string): boolean => {

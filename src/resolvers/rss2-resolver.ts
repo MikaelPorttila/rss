@@ -1,65 +1,71 @@
 import { Rss2Fields } from "../types/fields/mod.ts";
 import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
 import { resolveMediaRssField } from "./media-rss-resolver.ts";
+import { ResolverResult } from "./types/resolver-result.ts";
 
 export const resolveRss2Field = (
-  nodeName: string,
-): [string, boolean, boolean, boolean] => {
-  let isArray = false;
-  let isNumber = false;
-  let isDate = false;
-  let propertyName = nodeName;
+  name: string,
+): ResolverResult=> {
 
-  switch (nodeName) {
+	let result = {
+		name,
+		isHandled: true,
+		isArray: false,
+		isInt: false,
+		isFloat: false,
+		isDate: false
+	} as ResolverResult;
+
+  switch (name) {
     case Rss2Fields.TextInput:
-      propertyName = "textInput";
+      result.name = "textInput";
       break;
     case Rss2Fields.SkipHours:
-      propertyName = "skipHours";
+      result.name = "skipHours";
       break;
     case Rss2Fields.SkipDays:
-      propertyName = "skipDays";
+      result.name = "skipDays";
       break;
     case Rss2Fields.PubDate:
-      propertyName = "pubDate";
-      isDate = true;
+      result.name = "pubDate";
+      result.isDate = true;
       break;
     case Rss2Fields.ManagingEditor:
-      propertyName = "managingEditor";
+      result.name = "managingEditor";
       break;
     case Rss2Fields.WebMaster:
-      propertyName = "webMaster";
+      result.name = "webMaster";
       break;
     case Rss2Fields.LastBuildDate:
-      propertyName = "lastBuildDate";
-      isDate = true;
+      result.name = "lastBuildDate";
+      result.isDate = true;
       break;
     case Rss2Fields.Item:
-      propertyName = "items";
-      isArray = true;
+      result.name = "items";
+      result.isArray = true;
       break;
     case Rss2Fields.Enclosure:
-      isArray = true;
+      result.isArray = true;
       break;
     case Rss2Fields.Category:
-      propertyName = "categories";
-      isArray = true;
+      result.name = "categories";
+      result.isArray = true;
       break;
     case Rss2Fields.isPermaLink:
-      propertyName = "isPermaLink";
+      result.name = "isPermaLink";
       break;
     case Rss2Fields.Ttl:
     case Rss2Fields.Length:
     case Rss2Fields.Width:
     case Rss2Fields.Height:
-      isNumber = true;
+      result.isInt = true;
       break;
     case Rss2Fields.Hour:
-      isArray = true;
-      isNumber = true;
+      result.isArray = true;
+      result.isInt = true;
       break;
     case Rss2Fields.Day:
-      isArray = true;
+      result.isArray = true;
       break;
     default:
       const subNamespaceResolvers = [
@@ -67,26 +73,30 @@ export const resolveRss2Field = (
         resolveMediaRssField,
       ];
       for (let i = 0; i < subNamespaceResolvers.length; i++) {
-        const resolverResult = subNamespaceResolvers[i](propertyName);
-        if (resolverResult.handled) {
+        const resolverResult = subNamespaceResolvers[i](name);
+        if (resolverResult.isHandled) {
           if (resolverResult.isArray) {
-            isArray = true;
+            result.isArray = true;
           }
 
           if (resolverResult.isDate) {
-            isDate = true;
+            result.isDate = true;
           }
 
-          if (resolverResult.isInt || resolverResult.isFloat) {
-            isNumber = true;
-          }
+					if(resolverResult.isInt){
+						result.isInt = true;
+					}
 
-					propertyName = resolverResult.propertyName;
+					if(resolverResult.isFloat){
+						result.isFloat = true;
+					}
+
+					result.name = resolverResult.name;
           break;
         }
       }
       break;
   }
 
-  return [propertyName, isArray, isNumber, isDate];
+  return result;
 };

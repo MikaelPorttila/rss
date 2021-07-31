@@ -4,34 +4,37 @@ import { resolveSlashField } from "./slash-resolver.ts";
 
 [
   {
-    propertyName: "",
+    name: "",
     expect: {
-      isArray: undefined,
-      isNumber: undefined,
-      isDate: undefined,
-      propertyName: '',
-      handled: false,
+      name: '',
+      isArray: false,
+      isInt: false,
+			isFloat: false,
+      isDate: false,
+      isHandled: false,
     },
   },
   {
-    propertyName: SlashFields.Comments,
+    name: SlashFields.Comments,
     expect: {
-      isArray: undefined,
-      isNumber: true,
-      isDate: undefined,
-      propertyName: SlashFields.Comments,
-      handled: true,
+      name: SlashFields.Comments,
+			isArray: false,
+      isHandled: true,
+			isInt: true,
+			isFloat: false,
+      isDate: false
     },
   },
 ].forEach((test) => {
-  Deno.test(`SlashResolver:${test.propertyName}`, () => {
-    const result = resolveSlashField(test.propertyName);
+  Deno.test(`SlashResolver:${test.name}`, () => {
+    const result = resolveSlashField(test.name);
     assertNotEquals(result, undefined);
     assertNotEquals(result, null);
-    assertEquals(result.handled, test.expect.handled, "handled");
+    assertEquals(result.name, test.expect.name, "name");
+    assertEquals(result.isHandled, test.expect.isHandled, "isHandled");
     assertEquals(result.isArray, test.expect.isArray, "isArray");
-    assertEquals(result.isInt, test.expect.isNumber, "isNumber");
-    assertEquals(result.propertyName, test.expect.propertyName, "propertyName");
+    assertEquals(result.isInt, test.expect.isInt, "isInt");
+		assertEquals(result.isFloat, test.expect.isFloat, "isFloat");
     assertEquals(result.isDate, test.expect.isDate, "isDate");
   });
 });

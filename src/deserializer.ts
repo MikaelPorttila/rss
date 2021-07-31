@@ -22,6 +22,7 @@ import {
   toLegacyRss1,
   toLegacyRss2,
 } from "./mappers/mod.ts";
+import { ResolverResult } from "./resolvers/types/resolver-result.ts";
 
 export interface Options {
   outputJsonFeed?: boolean;
@@ -126,7 +127,7 @@ const parse = (input: string) =>
 
       let resolveField: (
         nodeName: string,
-      ) => [string, boolean, boolean, boolean];
+      ) => ResolverResult;
 
       let isCDataField: (nodeName: string) => boolean;
 
@@ -166,20 +167,17 @@ const parse = (input: string) =>
         const newNode = attributeNames.reduce((builder, attrName) => {
           const val = (node.attributes as any)[attrName];
           if (val !== undefined && val !== null) {
-            const [
-              attributeName,
-              isArray,
-              isNumber,
-              isDate,
-            ] = resolveField(attrName);
+            const { name, isInt, isFloat, isDate } = resolveField(attrName);
 
-            if (isNumber) {
-              builder[attributeName] = parseInt(val);
+            if (isInt) {
+              builder[name] = parseInt(val);
+            } else if (isFloat) {
+              builder[name] = parseFloat(val);
             } else if (isDate) {
-              builder[attributeName + "Raw"] = val;
-              builder[attributeName] = new Date(val);
+              builder[name + "Raw"] = val;
+              builder[name] = new Date(val);
             } else {
-              builder[attributeName] = val;
+              builder[name] = val;
             }
           }
 
@@ -215,16 +213,17 @@ const parse = (input: string) =>
         }
 
         const targetNode = stack[stack.length - 1];
-        const [
-          propertyName,
+        const {
+					name,
           isArray,
-          isNumber,
-          isDate,
-        ] = resolveField(nodeName);
+          isInt,
+					isFloat,
+          isDate
+				} = resolveField(nodeName);
 
         if (cDataActive) {
           node.value = cDataBuilder;
-          targetNode[propertyName] = node;
+          targetNode[name] = node;
           cDataBuilder = "";
           cDataActive = false;
           cDataLevel = 0;
@@ -232,19 +231,21 @@ const parse = (input: string) =>
         }
 
         if (node.value !== undefined && node.value !== null) {
-          if (isNumber) {
+          if (isInt) {
             node.value = parseInt(node.value);
+          } else if (isFloat) {
+            node.value = parseFloat(node.value);
           } else if (isDate) {
-            targetNode[propertyName + "Raw"] = { value: node.value };
+            targetNode[name + "Raw"] = { value: node.value };
             node.value = new Date(node.value);
           }
         }
 
         if (isArray) {
-          if (!targetNode[propertyName]) {
-            targetNode[propertyName] = [node];
+          if (!targetNode[name]) {
+            targetNode[name] = [node];
           } else {
-            targetNode[propertyName].push(node);
+            targetNode[name].push(node);
           }
         } else {
           const isEmpty = (typeof node === "object") &&
@@ -252,11 +253,11 @@ const parse = (input: string) =>
             !(node instanceof Date);
           try {
             if (!isEmpty) {
-              targetNode[propertyName] = node;
+              targetNode[name] = node;
             }
           } catch {
-            console.error(
-              `Failed to add property ${propertyName} on node`,
+            console.warn(
+              `Failed to add property ${name} on node`,
               targetNode,
             );
           }
