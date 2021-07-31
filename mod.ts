@@ -1,13 +1,16 @@
 export type {
-  Atom,
   DeserializationResult,
   Feed,
   JsonFeed,
   RSS1,
-  RSS2,
+  RSS2
 } from "./src/types/mod.ts";
 
-export {
+export type {
+	Atom
+} from './src/types/atom.ts';
+
+export type {
   DublinCoreFields as DublinCore,
   FeedType,
   MediaRssFields as MediaRss,

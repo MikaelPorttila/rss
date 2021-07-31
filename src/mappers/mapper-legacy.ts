@@ -1,5 +1,4 @@
-import {
-  Atom,
+import type {
   FeedType,
   JsonFeed,
   JsonFeedAuthor,
@@ -7,6 +6,7 @@ import {
   RSS1,
   RSS2,
   Rss2Item,
+	Atom
 } from "./../types/mod.ts";
 
 import { copyValueFields, isValidURL } from "./../util.ts";

@@ -1,24 +1,26 @@
-import { AtomFields } from "./fields/atom-fields.ts";
+/*
+	Type is based on the W3 Atom documentation:
+	https://validator.w3.org/feed/docs/atom.html
+*/
 
-// https://validator.w3.org/feed/docs/atom.html
 export interface Atom {
   id: string;
-  title: Text;
+  title: AtomText;
   updated: Date;
   updatedRaw: string;
   icon?: string;
-  links?: Link[];
-  entries: Entry[];
-  categories?: Category[];
-  contributors?: Person[];
+  links?: AtomLink[];
+  entries: AtomEntry[];
+  categories?: AtomCategory[];
+  contributors?: AtomPerson[];
   generator?: string;
-  author?: Person;
+  author?: AtomPerson;
   logo?: string;
-  rights?: Text;
+  rights?: AtomText;
   subtitle?: string;
 }
 
-interface Link {
+export interface AtomLink {
   type: string;
   href: string;
   rel: string;
@@ -26,48 +28,48 @@ interface Link {
   length?: number;
 }
 
-interface Category {
+export interface AtomCategory {
   term: string;
   label?: string;
 }
 
-interface Entry {
+export interface AtomEntry {
   id: string;
-  title: Text;
+  title: AtomText;
   updated: Date;
   updatedRaw: string;
   published?: Date;
   publishedRaw?: string;
-  content?: Content;
-  links?: Link[];
-  author?: Person;
-  contributors?: Person[];
-  summary?: Text;
-  rights?: Text;
-  categories?: Category[];
-  source?: Source;
+  content?: AtomContent;
+  links?: AtomLink[];
+  author?: AtomPerson;
+  contributors?: AtomPerson[];
+  summary?: AtomText;
+  rights?: AtomText;
+  categories?: AtomCategory[];
+  source?: AtomSource;
   href?: string;
-  [AtomFields.FeedburnerOrigLink]?: string;
+  'feedburner:origlink'?: string;
 }
 
-interface Content extends Text {
+export interface AtomContent extends AtomText {
   src?: string;
 }
 
-interface Person {
+export interface AtomPerson {
   name: string;
   email?: string;
   uri?: string;
 }
 
-interface Source {
+export interface AtomSource {
   id?: string;
   title?: string;
   updated?: Date;
   updatedRaw?: Date;
 }
 
-interface Text {
+export interface AtomText {
   type: string;
   value: string;
 }

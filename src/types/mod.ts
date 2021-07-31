@@ -1,6 +1,15 @@
 export type { RSS1 } from "./rss1.ts";
 export type { RSS2, Rss2Channel, Rss2Item } from "./rss2.ts";
-export type { Atom } from "./atom.ts";
+export type {
+	Atom,
+	AtomCategory,
+	AtomLink,
+	AtomContent,
+	AtomEntry,
+	AtomPerson,
+	AtomSource,
+	AtomText
+} from "./atom.ts";
 export type { Feed, FeedEntry } from "./feed.ts";
 export type { JsonFeed } from "./json-feed.ts";
 export type { JsonFeedItem } from "./json-feed.ts";

@@ -16,7 +16,7 @@ import { parseFeed } from "./mod.ts";
   },
 ].forEach((feed) => {
   bench({
-    name: `ParseFeed ${feed.name}`,
+    name: `ParseFeed ${feed.name}, Chars: ${feed.source.length}`,
     runs: 10000,
     func: async (watch) => {
       watch.start();

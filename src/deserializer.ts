@@ -1,11 +1,11 @@
 import { SAXParser } from "../deps.ts";
 import type {
-  Atom,
-  DeserializationResult,
+	DeserializationResult,
   Feed,
   JsonFeed,
   RSS1,
   RSS2,
+  Atom,
 } from "./types/mod.ts";
 import { FeedParseType, FeedType } from "./types/mod.ts";
 
@@ -22,7 +22,7 @@ import {
   toLegacyRss1,
   toLegacyRss2,
 } from "./mappers/mod.ts";
-import { ResolverResult } from "./resolvers/types/resolver-result.ts";
+import type { ResolverResult } from "./resolvers/types/resolver-result.ts";
 
 export interface Options {
   outputJsonFeed?: boolean;

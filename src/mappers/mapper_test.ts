@@ -1150,6 +1150,39 @@ const testArrayLength = (
         }),
     ],
   },
+	{
+		name: "RSS2:Missing Objects:",
+		source: toFeed(
+      FeedType.Rss2,
+      composeRss2((data) => {
+        data.channel[DublinCoreFields.Creator] = undefined;
+        data.channel[DublinCoreFields.Description] = undefined;
+        data.channel[DublinCoreFields.URI] = undefined;
+        data.channel[DublinCoreFields.Title] = undefined;
+        data.channel[DublinCoreFields.Language] = undefined;
+        data.channel[DublinCoreFields.CreatedRaw] = undefined;
+        data.channel[DublinCoreFields.DateSubmittedRaw] = undefined;
+        data.channel.items[0][DublinCoreFields.Title] = undefined;
+        data.channel.items[0][DublinCoreFields.Description] = undefined;
+        data.channel.items[0][DublinCoreFields.URI] = undefined;
+				data.channel.cloud = {};
+				data.channel.category = [{}];
+				data.channel.skipDays = {};
+				data.channel.skipHours = {};
+				data.channel.items[0].enclosure = [{}];
+				data.channel.items[0].categories = [];
+				data.channel.title = undefined as any;
+				data.channel.description = undefined as any;
+      }),
+    ) as Feed,
+		tests: [
+			{
+        name: "Items",
+        getValue: (src: Feed) => src.entries,
+        assert: [{ fn: assertNotEquals, expect: undefined }]
+      },
+		]
+	},
   {
     name: "Atom",
     source: toFeed(FeedType.Atom, composeAtom()) as Feed,
