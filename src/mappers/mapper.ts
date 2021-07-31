@@ -4,11 +4,7 @@ import type {
   InternalRSS1,
   InternalRSS2,
 } from "../types/internal/mod.ts";
-import type {
-	Feed,
-	FeedEntry,
-	JsonFeed
-} from "./../types/mod.ts";
+import type { Feed, FeedEntry, JsonFeed } from "./../types/mod.ts";
 import { AtomFields, DublinCoreFields } from "./../types/fields/mod.ts";
 import { copyValueFields, isValidURL } from "./../util.ts";
 import { FeedType } from "./../types/mod.ts";
@@ -59,10 +55,12 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
   result.links = [];
   if (result[DublinCoreFields.URI]) {
     result.links.push(result[DublinCoreFields.URI] as string);
+    result.id = result[DublinCoreFields.URI] as string;
   }
 
   if (link?.value) {
     result.links.push(link.value);
+    result.id = link.value;
   }
 
   result.description = result[DublinCoreFields.Description] ||
@@ -189,6 +187,7 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
   result.type = FeedType.Rss2;
   copyValueFields(DublinCoreFieldArray, result, result);
 
+  result.id = link?.value as string || result[DublinCoreFields.URI] as string;
   result.title = {
     value: result[DublinCoreFields.Title] || title?.value,
     type: undefined,

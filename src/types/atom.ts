@@ -49,7 +49,7 @@ export interface AtomEntry {
   categories?: AtomCategory[];
   source?: AtomSource;
   href?: string;
-  'feedburner:origlink'?: string;
+  "feedburner:origlink"?: string;
 }
 
 export interface AtomContent extends AtomText {

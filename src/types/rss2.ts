@@ -75,4 +75,3 @@ interface Image extends DublinCore {
   width?: number;
   height?: number;
 }
-
