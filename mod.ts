@@ -3,14 +3,11 @@ export type {
   Feed,
   JsonFeed,
   RSS1,
-  RSS2
+  RSS2,
+	Atom
 } from "./src/types/mod.ts";
 
-export type {
-	Atom
-} from './src/types/atom.ts';
-
-export type {
+export {
   DublinCoreFields as DublinCore,
   FeedType,
   MediaRssFields as MediaRss,
