@@ -1,6 +1,6 @@
 import { assertEquals, assertNotEquals } from "../../test_deps.ts";
 import { resolveMediaRssField } from "./media-rss-resolver.ts";
-import { MediaRssFields } from "./../types/media-rss.ts";
+import { MediaRssFields } from "./../types/fields/mod.ts";
 
 [
   {

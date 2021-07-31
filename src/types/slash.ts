@@ -1,3 +1,4 @@
+import { SlashFields } from "./fields/mod.ts";
 import { ValueField } from "./value-field.ts";
 
 // Based of https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
@@ -13,13 +14,6 @@ export interface Slash {
   [SlashFields.Section]?: string;
   [SlashFields.Comments]?: number;
   [SlashFields.HitParade]?: string;
-}
-
-export enum SlashFields {
-  Department = "slash:department",
-  Section = "slash:section",
-  Comments = "slash:comments",
-  HitParade = "slash:hit_parade",
 }
 
 export const SlashFieldArray = [

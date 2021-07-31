@@ -1,14 +1,16 @@
-import type { Feed, FeedEntry, JsonFeed } from "./types/mod.ts";
-import { copyValueFields, isValidURL } from "./util.ts";
-import { FeedType } from "./types/mod.ts";
-import { DublinCoreFieldArray, DublinCoreFields } from "./types/dublin-core.ts";
-import { SlashFieldArray } from "./types/slash.ts";
-import { InternalAtom } from "./types/internal-atom.ts";
-import { InternalRSS2 } from "./types/internal-rss2.ts";
-import { InternalRSS1 } from "./types/internal-rss1.ts";
-import { AtomFields } from "./resolvers/types/atom-fields.ts";
-import { MediaRssValueFields } from "./types/media-rss.ts";
+import { Feed, FeedEntry, JsonFeed } from "./../types/mod.ts";
+import { AtomFields, DublinCoreFields } from "./../types/fields/mod.ts";
+import { copyValueFields, isValidURL } from "./../util.ts";
+import { FeedType } from "./../types/mod.ts";
+import { SlashFieldArray } from "./../types/slash.ts";
+import { MediaRssValueFields } from "./../types/media-rss.ts";
 import { copyMedia } from "./media-mapper.ts";
+import {
+  InternalAtom,
+  InternalRSS1,
+  InternalRSS2,
+} from "../types/internal/mod.ts";
+import { DublinCoreFieldArray } from "../types/internal/internal-dublin-core.ts";
 
 export const toFeed = (
   feedType: FeedType,
@@ -479,5 +481,3 @@ const createAuthor = (email?: string, name?: string, uri?: string) => ({
   name,
   uri,
 });
-
-

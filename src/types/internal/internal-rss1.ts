@@ -1,6 +1,6 @@
-import { DublinCoreValueFields } from "./dublin-core.ts";
-import { SlashValueFields } from "./slash.ts";
-import { ValueField } from "./value-field.ts";
+import { InternalDublinCore } from "./internal-dublin-core.ts";
+import { SlashValueFields } from "../slash.ts";
+import { ValueField } from "../value-field.ts";
 
 // https://validator.w3.org/feed/docs/rss1.html
 export interface InternalRSS1 {
@@ -16,20 +16,20 @@ export interface InternalRSS1 {
   };
 }
 
-interface Channel extends DublinCoreValueFields {
+interface Channel extends InternalDublinCore {
   title: ValueField<string>;
   link: ValueField<string>;
   description: ValueField<string>;
   about: ValueField<string>; // Mapped rdf:about
 }
 
-interface Item extends DublinCoreValueFields, SlashValueFields {
+interface Item extends InternalDublinCore, SlashValueFields {
   title: ValueField<string>;
   link: ValueField<string>;
   description: ValueField<string>;
 }
 
-interface Image extends DublinCoreValueFields {
+interface Image extends InternalDublinCore {
   about: string;
   resource: string;
   title: ValueField<string>;

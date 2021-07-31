@@ -1,9 +1,8 @@
-import { assert, assertEquals } from "../test_deps.ts";
-import type { Atom, RSS2 } from "./types/mod.ts";
-import { FeedType } from "./types/mod.ts";
+import { assert, assertEquals } from "../../test_deps.ts";
+import { AtomFields } from "../types/fields/mod.ts";
+import { Atom, DublinCoreFields, RSS2 } from "./../types/mod.ts";
+import { FeedType } from "./../types/mod.ts";
 import { toJsonFeed } from "./mapper-legacy.ts";
-import { AtomFields } from "./resolvers/types/atom-fields.ts";
-import { DublinCoreFields } from "./types/dublin-core.ts";
 const dateRaw = "Mon, 22 Jun 2020 20:00:00 GMT";
 const date = new Date(1989, 1, 1);
 

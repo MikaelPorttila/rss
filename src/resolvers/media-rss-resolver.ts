@@ -1,4 +1,4 @@
-import { MediaRssFields } from "../types/media-rss.ts";
+import { MediaRssFields } from "../types/fields/mod.ts";
 import { ResolverResult } from "./types/resolver-result.ts";
 
 export const resolveMediaRssField = (
@@ -12,13 +12,13 @@ export const resolveMediaRssField = (
     case MediaRssFields.Comment:
     case MediaRssFields.Response:
     case MediaRssFields.Scene:
-		case MediaRssFields.Group:
-		case MediaRssFields.Content:
+    case MediaRssFields.Group:
+    case MediaRssFields.Content:
       result.isArray = true;
       break;
-		case MediaRssFields.Price:
-			result.isNumber = true;
-			break;
+    case MediaRssFields.Price:
+      result.isNumber = true;
+      break;
     default:
       result.handled = false;
       break;

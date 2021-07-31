@@ -1,39 +1,42 @@
-import type {
+import {
   Atom,
+  FeedType,
   JsonFeed,
   JsonFeedAuthor,
   JsonFeedItem,
   RSS1,
   RSS2,
-} from "./types/mod.ts";
-import { copyValueFields, isValidURL } from "./util.ts";
-import { FeedType } from "./types/mod.ts";
-import { DublinCoreFieldArray, DublinCoreFields } from "./types/dublin-core.ts";
-import { SlashFieldArray } from "./types/slash.ts";
-import { InternalAtom } from "./types/internal-atom.ts";
-import { InternalRSS2 } from "./types/internal-rss2.ts";
-import { InternalRSS1 } from "./types/internal-rss1.ts";
-import { AtomFields } from "./resolvers/types/atom-fields.ts";
+  Rss2Item,
+} from "./../types/mod.ts";
+
+import { copyValueFields, isValidURL } from "./../util.ts";
+import { SlashFieldArray } from "./../types/slash.ts";
 import { copyMedia } from "./media-mapper.ts";
-import { Rss2Item } from './types/rss2.ts';
+import {
+  InternalAtom,
+  InternalRSS1,
+  InternalRSS2,
+} from "../types/internal/mod.ts";
+import { DublinCoreFieldArray } from "../types/internal/internal-dublin-core.ts";
+import { AtomFields, DublinCoreFields } from "../types/fields/mod.ts";
 
 export const toLegacyRss1 = (rss: InternalRSS1): RSS1 => {
-  const result = { } as RSS1;
+  const result = {} as RSS1;
 
-	const {
+  const {
     title,
     description,
     link,
-		about,
+    about,
     ...rest
   } = rss.channel;
 
-	result.channel = rest as any;
-	result.channel.title = title?.value as string;
-	result.channel.description = description?.value as string;
-	result.channel.link = link?.value as string;
-	result.channel.about = about?.value as string;
-	copyValueFields(DublinCoreFieldArray, result.channel, result.channel);
+  result.channel = rest as any;
+  result.channel.title = title?.value as string;
+  result.channel.description = description?.value as string;
+  result.channel.link = link?.value as string;
+  result.channel.about = about?.value as string;
+  copyValueFields(DublinCoreFieldArray, result.channel, result.channel);
 
   if (rss.image) {
     result.image = {
@@ -46,7 +49,7 @@ export const toLegacyRss1 = (rss: InternalRSS1): RSS1 => {
   }
 
   result.item = rss.item?.map((item) => {
-		const {
+    const {
       link,
       title,
       description,
@@ -54,7 +57,7 @@ export const toLegacyRss1 = (rss: InternalRSS1): RSS1 => {
     } = item;
 
     const itemResult = itemRest as any;
-		itemResult.title = title?.value as string;
+    itemResult.title = title?.value as string;
     itemResult.description = description?.value as string;
     itemResult.link = link?.value as string;
     copyValueFields(DublinCoreFieldArray, item, itemResult);
@@ -79,30 +82,30 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
   const result = {} as RSS2;
 
   if (rss.channel) {
-		const {
-			items,
-			title,
-			description,
-			generator,
-			pubDate,
-			pubDateRaw,
-			lastBuildDate,
-			lastBuildDateRaw,
-			docs,
-			webMaster,
-			language,
-			copyright,
-			ttl,
-			skipDays,
-			skipHours,
-			link,
-			image,
-			...rest
-		} = rss.channel;
+    const {
+      items,
+      title,
+      description,
+      generator,
+      pubDate,
+      pubDateRaw,
+      lastBuildDate,
+      lastBuildDateRaw,
+      docs,
+      webMaster,
+      language,
+      copyright,
+      ttl,
+      skipDays,
+      skipHours,
+      link,
+      image,
+      ...rest
+    } = rss.channel;
 
-		result.channel = rest as any;
-		 Object.assign(result.channel, {
-			title: title?.value,
+    result.channel = rest as any;
+    Object.assign(result.channel, {
+      title: title?.value,
       description: description?.value,
       language: language?.value,
       link: rss.channel.link?.value,
@@ -118,19 +121,19 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
       generator: rss.channel.generator?.value,
       category: rss.channel.category?.map((x) => x.value),
       items: rss.channel.items?.map((item) => {
-				const {
-					guid,
-					pubDate,
-					pubDateRaw,
-					title,
-					description,
-					link,
-					author,
-					enclosure,
-					comments,
-					categories,
-					...itemRest
-				} = item;
+        const {
+          guid,
+          pubDate,
+          pubDateRaw,
+          title,
+          description,
+          link,
+          author,
+          enclosure,
+          comments,
+          categories,
+          ...itemRest
+        } = item;
 
         const itemResult = Object.assign(itemRest as Rss2Item, {
           guid: guid?.value,
@@ -151,41 +154,42 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
             }
             : undefined,
           comments: comments?.value,
-          categories: categories?.map((x) => x.value as string)
+          categories: categories?.map((x) => x.value as string),
         });
-				copyValueFields(DublinCoreFieldArray, item, itemResult);
-				copyMedia(item, itemResult);
+        copyValueFields(DublinCoreFieldArray, item, itemResult);
+        copyMedia(item, itemResult);
         return itemResult;
-      })});
+      }),
+    });
 
-		if (image) {
-			result.channel.image = {
-				url: image.url?.value,
+    if (image) {
+      result.channel.image = {
+        url: image.url?.value,
         title: image.title?.value,
         link: image.link?.value,
         width: image.width?.value,
         height: image.height?.value,
-			};
-		}
+      };
+    }
 
-		if (skipHours && skipHours.hour) {
-			result.channel.skipHours = {
-				hour: skipHours.hour?.map((x) => x?.value) as number[]
-			};
-		}
+    if (skipHours && skipHours.hour) {
+      result.channel.skipHours = {
+        hour: skipHours.hour?.map((x) => x?.value) as number[],
+      };
+    }
 
-		if (skipDays && skipDays.day) {
-			result.channel.skipDays = {
-				day: skipDays.day?.map((x) => x.value) as string[]
-			}
-		}
+    if (skipDays && skipDays.day) {
+      result.channel.skipDays = {
+        day: skipDays.day?.map((x) => x.value) as string[],
+      };
+    }
   }
 
   return result;
 };
 
 export const toLegacyAtom = (atom: InternalAtom): Atom => {
-	const {
+  const {
     id,
     generator,
     title,
@@ -201,109 +205,110 @@ export const toLegacyAtom = (atom: InternalAtom): Atom => {
     ...rest
   } = atom;
 
-	const result = Object.assign(
-		rest as Atom, {
-    title: {
-      type: atom.title?.type,
-      value: atom.title?.value,
+  const result = Object.assign(
+    rest as Atom,
+    {
+      title: {
+        type: atom.title?.type,
+        value: atom.title?.value,
+      },
+      id: id?.value,
+      icon: icon?.value,
+      logo: logo?.value,
+      updated: updated?.value,
+      updatedRaw: updatedRaw?.value,
+      links: links?.map((x) => ({
+        href: x.href,
+        rel: x.rel,
+        type: x.type,
+        length: x.length,
+      })),
+      categories: categories?.map((x) => ({
+        term: x.term,
+        label: x.label,
+      })),
+      subtitle: subtitle?.value,
+      author: {
+        name: author?.name?.value,
+        email: author?.email?.value,
+        uri: author?.uri?.value,
+      },
+      entries: entries?.map((entry) => {
+        const {
+          links,
+          href,
+          id,
+          title,
+          summary,
+          published,
+          publishedRaw,
+          updated,
+          updatedRaw,
+          source,
+          author,
+          content,
+          contributors,
+          categories,
+          rights,
+          ...entryRest
+        } = entry;
+
+        const entryResult = Object.assign(entryRest, {
+          id: id?.value,
+          title: {
+            type: title?.type,
+            value: title?.value,
+          },
+          updated: updated?.value,
+          updatedRaw: updatedRaw?.value,
+          published: published?.value,
+          publishedRaw: publishedRaw?.value,
+          href: href,
+          content: {
+            type: content?.type,
+            src: content?.src,
+            value: content?.value,
+          },
+          links: links?.map((x) => ({
+            type: x.type,
+            href: x.href,
+            rel: x.rel,
+            length: x.length,
+          })),
+          author: {
+            name: author?.name?.value,
+            email: author?.email?.value,
+            uri: author?.uri?.value,
+          },
+          contributors: contributors?.map((contributor) => ({
+            name: contributor?.name?.value,
+            email: contributor?.email?.value,
+            uri: contributor?.uri?.value,
+          })),
+          summary: {
+            type: summary?.type,
+            value: summary?.value,
+          },
+          rights: {
+            type: rights?.type,
+            value: rights?.value,
+          },
+          categories: categories?.map((category) => ({
+            label: category.label,
+            term: category.term,
+          })),
+          source: {
+            id: source?.id?.value,
+            title: source?.title?.value,
+            updated: source?.updated?.value,
+            updatedRaw: source?.updatedRaw?.value,
+          },
+        });
+
+        return entryResult;
+      }),
     },
-    id: id?.value,
-    icon: icon?.value,
-    logo: logo?.value,
-    updated: updated?.value,
-    updatedRaw: updatedRaw?.value,
-    links: links?.map((x) => ({
-      href: x.href,
-      rel: x.rel,
-      type: x.type,
-      length: x.length,
-    })),
-    categories: categories?.map((x) => ({
-      term: x.term,
-      label: x.label,
-    })),
-    subtitle: subtitle?.value,
-    author: {
-      name: author?.name?.value,
-      email: author?.email?.value,
-      uri: author?.uri?.value,
-    },
-    entries: entries?.map((entry) => {
-
-			const {
-				links,
-				href,
-				id,
-				title,
-				summary,
-				published,
-				publishedRaw,
-				updated,
-				updatedRaw,
-				source,
-				author,
-				content,
-				contributors,
-				categories,
-				rights,
-				...entryRest
-			} = entry;
-
-      const entryResult = Object.assign(entryRest, {
-        id: id?.value,
-        title: {
-          type: title?.type,
-          value: title?.value,
-        },
-        updated: updated?.value,
-        updatedRaw: updatedRaw?.value,
-        published: published?.value,
-        publishedRaw: publishedRaw?.value,
-        href: href,
-        content: {
-          type: content?.type,
-          src: content?.src,
-          value: content?.value,
-        },
-        links: links?.map((x) => ({
-          type: x.type,
-          href: x.href,
-          rel: x.rel,
-          length: x.length,
-        })),
-        author: {
-          name: author?.name?.value,
-          email: author?.email?.value,
-          uri: author?.uri?.value,
-        },
-        contributors: contributors?.map((contributor) => ({
-          name: contributor?.name?.value,
-          email: contributor?.email?.value,
-          uri: contributor?.uri?.value,
-        })),
-        summary: {
-          type: summary?.type,
-          value: summary?.value,
-        },
-        rights: {
-          type: rights?.type,
-          value: rights?.value,
-        },
-        categories: categories?.map((category) => ({
-          label: category.label,
-          term: category.term,
-        })),
-        source: {
-          id: source?.id?.value,
-          title: source?.title?.value,
-          updated: source?.updated?.value,
-          updatedRaw: source?.updatedRaw?.value,
-        },
-      })
-
-      return entryResult;
-    }),
-  })
+  );
   return result;
 };
 
@@ -476,4 +481,3 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
 
   return feed;
 };
-

@@ -1,4 +1,4 @@
-import { SlashFields } from "../types/slash.ts";
+import { SlashFields } from "../types/fields/mod.ts";
 import { ResolverResult } from "./types/resolver-result.ts";
 
 export const resolveSlashField = (

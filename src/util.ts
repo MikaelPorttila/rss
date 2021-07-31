@@ -8,7 +8,7 @@ export const isValidURL = (text: string) => {
   return ["https:", "http:", "ftp://", "mailto:", "news://"].includes(
     url.protocol,
   );
-}
+};
 
 export const copyValueFields = (fields: string[], source: any, target: any) => {
   fields.forEach((fieldName: string) => {

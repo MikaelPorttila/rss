@@ -1,5 +1,4 @@
 // https://validator.w3.org/feed/docs/rss2.html#requiredChannelElements
-
 import { DublinCore } from "./dublin-core.ts";
 import { MediaRss } from "./media-rss.ts";
 

@@ -1,6 +1,6 @@
+import { Rss2Fields } from "../types/fields/mod.ts";
 import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
 import { resolveMediaRssField } from "./media-rss-resolver.ts";
-import { Rss2Fields } from "./types/rss2-fields.ts";
 
 export const resolveRss2Field = (
   nodeName: string,

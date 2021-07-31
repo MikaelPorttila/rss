@@ -1,3 +1,4 @@
+import { MediaRssFields } from "./fields/mod.ts";
 import { ValueField } from "./value-field.ts";
 
 // Based on https://www.rssboard.org/media-rss
@@ -27,22 +28,22 @@ export interface MediaRssValueFields {
     lang?: string;
   }[];
   [MediaRssFields.Group]?: {
-		[MediaRssFields.Content]?: {
-			url?: string;
-			fileSize?: string;
-			type?: string;
-			medium?: string;
-			isDefault?: string;
-			expression?: string;
-			bitrate?: string;
-			samplingrate?: string;
-			channels?: string;
-			duration?: string;
-			height?: number;
-			width?: number;
-			lang?: string;
-		}[];
-	}[];
+    [MediaRssFields.Content]?: {
+      url?: string;
+      fileSize?: string;
+      type?: string;
+      medium?: string;
+      isDefault?: string;
+      expression?: string;
+      bitrate?: string;
+      samplingrate?: string;
+      channels?: string;
+      duration?: string;
+      height?: number;
+      width?: number;
+      lang?: string;
+    }[];
+  }[];
   [MediaRssFields.Keywords]?: ValueField<string>;
   [MediaRssFields.Thumbnails]?: {
     url?: string;
@@ -81,7 +82,7 @@ export interface MediaRssValueFields {
     relationship?: string;
     type?: string;
   };
-  [MediaRssFields.Community]?:{
+  [MediaRssFields.Community]?: {
     [MediaRssFields.StarRating]?: {
       average?: string;
       count?: string;
@@ -134,11 +135,11 @@ export interface MediaRssValueFields {
     lang?: string;
     href?: string;
   };
-  [MediaRssFields.PeerLink]?:{
+  [MediaRssFields.PeerLink]?: {
     type?: string;
     href?: string;
   };
-  [MediaRssFields.Rights]?:{
+  [MediaRssFields.Rights]?: {
     status?: string;
   };
   [MediaRssFields.Scenes]?: {
@@ -177,22 +178,22 @@ export interface MediaRss {
     lang?: string;
   }[];
   [MediaRssFields.Group]?: {
-		[MediaRssFields.Content]?: {
-			url?: string;
-			fileSize?: string;
-			type?: string;
-			medium?: string;
-			isDefault?: string;
-			expression?: string;
-			bitrate?: string;
-			samplingrate?: string;
-			channels?: string;
-			duration?: string;
-			height?: number;
-			width?: number;
-			lang?: string;
-		}[]
-	}[];
+    [MediaRssFields.Content]?: {
+      url?: string;
+      fileSize?: string;
+      type?: string;
+      medium?: string;
+      isDefault?: string;
+      expression?: string;
+      bitrate?: string;
+      samplingrate?: string;
+      channels?: string;
+      duration?: string;
+      height?: number;
+      width?: number;
+      lang?: string;
+    }[];
+  }[];
   [MediaRssFields.Keywords]?: string;
   [MediaRssFields.Thumbnails]?: {
     url?: string;
@@ -242,7 +243,7 @@ export interface MediaRss {
       views?: string;
       favorites?: string;
     };
-    [MediaRssFields.Tags]?:{
+    [MediaRssFields.Tags]?: {
       value?: string;
     };
   };
@@ -301,44 +302,6 @@ export interface MediaRss {
   };
 }
 
-export enum MediaRssFields {
-  Rating = "media:rating",
-  Title = "media:title",
-  Description = "media:description",
-  Content = "media:content",
-  Group = "media:group",
-  Keywords = "media:keywords",
-  Thumbnails = "media:thumbnails",
-  Category = "media:category",
-  Hash = "media:hash",
-  Player = "media:player",
-  Credit = "media:credit",
-  Copyright = "media:copyright",
-  Text = "media:text",
-  Restriction = "media:restriction",
-  Community = "media:community",
-  Comments = "media:comments",
-  Comment = "media:comment",
-  Embed = "media:embed",
-  Param = "media:param",
-  Responses = "media:responses",
-  Response = "media:response",
-  StarRating = "media:starRating",
-  Statistics = "media:statistics",
-  BackLinks = "media:backLinks",
-  BackLink = "media:backLink",
-  Status = "media:status",
-  Price = "media:price",
-  License = "media:license",
-  Subtitle = "media:subTitle",
-  PeerLink = "media:peerLink",
-  Rights = "media:rights",
-  Scenes = "media:scenes",
-  Scene = "media:scene",
-	Tags = "media:tags",
-	PriceValue = "price"
-}
-
 export const MediaRssFieldArray = [
   MediaRssFields.Rating,
   MediaRssFields.Title,
@@ -364,5 +327,5 @@ export const MediaRssFieldArray = [
   MediaRssFields.PeerLink,
   MediaRssFields.Rights,
   MediaRssFields.Scenes,
-	MediaRssFields.Tags
+  MediaRssFields.Tags,
 ];

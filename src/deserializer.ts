@@ -15,13 +15,14 @@ import {
   resolveRss1Field,
   resolveRss2Field,
 } from "./resolvers/mod.ts";
-import { toFeed } from "./mapper.ts";
 import {
+  toFeed,
   toJsonFeed,
   toLegacyAtom,
   toLegacyRss1,
   toLegacyRss2,
-} from "./mapper-legacy.ts";
+} from "./mappers/mod.ts";
+
 export interface Options {
   outputJsonFeed?: boolean;
 }
@@ -163,25 +164,24 @@ const parse = (input: string) =>
         }
 
         const newNode = attributeNames.reduce((builder, attrName) => {
+          const val = (node.attributes as any)[attrName];
+          if (val !== undefined && val !== null) {
+            const [
+              attributeName,
+              isArray,
+              isNumber,
+              isDate,
+            ] = resolveField(attrName);
 
-					const val = (node.attributes as any)[attrName];
-					if (val !== undefined && val !== null) {
-						const [
-							attributeName,
-							isArray,
-							isNumber,
-							isDate,
-						] = resolveField(attrName);
-
-          	if (isNumber) {
-							builder[attributeName] = parseInt(val);
-						} else if (isDate) {
-							builder[attributeName + "Raw"] = val;
-							builder[attributeName] = new Date(val);
-						} else {
-							builder[attributeName] = val;
-						}
-					}
+            if (isNumber) {
+              builder[attributeName] = parseInt(val);
+            } else if (isDate) {
+              builder[attributeName + "Raw"] = val;
+              builder[attributeName] = new Date(val);
+            } else {
+              builder[attributeName] = val;
+            }
+          }
 
           return builder;
         }, {} as any);
@@ -231,14 +231,14 @@ const parse = (input: string) =>
           return;
         }
 
-				if(node.value !== undefined && node.value !== null) {
-					if (isNumber) {
-						node.value = parseInt(node.value);
-					} else if (isDate) {
-						targetNode[propertyName + "Raw"] = { value: node.value };
-						node.value = new Date(node.value);
-					}
-				}
+        if (node.value !== undefined && node.value !== null) {
+          if (isNumber) {
+            node.value = parseInt(node.value);
+          } else if (isDate) {
+            targetNode[propertyName + "Raw"] = { value: node.value };
+            node.value = new Date(node.value);
+          }
+        }
 
         if (isArray) {
           if (!targetNode[propertyName]) {

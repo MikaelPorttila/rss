@@ -1,5 +1,5 @@
-import { AtomFields } from "../resolvers/types/atom-fields.ts";
-import { ValueField } from "./value-field.ts";
+import { AtomFields } from "../fields/mod.ts";
+import { ValueField } from "./../value-field.ts";
 
 export interface InternalAtom {
   id: ValueField<string>;

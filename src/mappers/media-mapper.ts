@@ -1,4 +1,5 @@
-import { MediaRss, MediaRssFields, MediaRssValueFields } from "./types/media-rss.ts";
+import { MediaRssFields } from "../types/fields/mod.ts";
+import { MediaRss, MediaRssValueFields } from "./../types/media-rss.ts";
 
 export const copyMedia = (source: MediaRssValueFields, target: MediaRss) => {
   [
@@ -12,28 +13,28 @@ export const copyMedia = (source: MediaRssValueFields, target: MediaRss) => {
     }
   });
 
-	const mediaGroup = source[MediaRssFields.Group];
-	if (mediaGroup && mediaGroup.length > 0) {
-		target[MediaRssFields.Group] = mediaGroup.map((group) => {
-			return {
-				[MediaRssFields.Content]: group[MediaRssFields.Content]?.map((cnt) => ({
-					bitrate: cnt.bitrate,
-					channels: cnt.channels,
-					duration: cnt.duration,
-					expression: cnt.expression,
-					fileSize: cnt.fileSize,
-					height: cnt.height,
-					width: cnt.width,
-					isDefault: cnt.isDefault,
-					lang: cnt.lang,
-					medium: cnt.medium,
-					samplingrate: cnt.samplingrate,
-					type: cnt.type,
-					url: cnt.url
-				}))
-			}
-		});
-	}
+  const mediaGroup = source[MediaRssFields.Group];
+  if (mediaGroup && mediaGroup.length > 0) {
+    target[MediaRssFields.Group] = mediaGroup.map((group) => {
+      return {
+        [MediaRssFields.Content]: group[MediaRssFields.Content]?.map((cnt) => ({
+          bitrate: cnt.bitrate,
+          channels: cnt.channels,
+          duration: cnt.duration,
+          expression: cnt.expression,
+          fileSize: cnt.fileSize,
+          height: cnt.height,
+          width: cnt.width,
+          isDefault: cnt.isDefault,
+          lang: cnt.lang,
+          medium: cnt.medium,
+          samplingrate: cnt.samplingrate,
+          type: cnt.type,
+          url: cnt.url,
+        })),
+      };
+    });
+  }
 
   const credit = source[MediaRssFields.Credit];
   if (credit) {
@@ -145,19 +146,19 @@ export const copyMedia = (source: MediaRssValueFields, target: MediaRss) => {
 
   const embed = source[MediaRssFields.Embed];
   if (embed) {
-		target[MediaRssFields.Embed] = {
-			url: embed.url,
+    target[MediaRssFields.Embed] = {
+      url: embed.url,
       height: embed.height,
       width: embed.width,
     };
 
-		const mediaParam = embed[MediaRssFields.Param];
-		if (mediaParam) {
-			(target[MediaRssFields.Embed] as any)[MediaRssFields.Param] = {
-				value: mediaParam?.value,
-				name: mediaParam?.name,
-			};
-		}
+    const mediaParam = embed[MediaRssFields.Param];
+    if (mediaParam) {
+      (target[MediaRssFields.Embed] as any)[MediaRssFields.Param] = {
+        value: mediaParam?.value,
+        name: mediaParam?.name,
+      };
+    }
   }
 
   const responses = source[MediaRssFields.Responses];
