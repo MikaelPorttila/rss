@@ -93,6 +93,31 @@
 					<guid isPermaLink="true">http://example.com/test/1592855940</guid>
 					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
 					<pubDate>Mon, 22 Jun 2020 19:59:00 GMT</pubDate>
+					<media:group>
+						<media:content url="RSS2:Item:2:Media:Group:MediaContent:0:Url"
+							fileSize="1000" bitrate="64" type="RSS2:Item:2:Media:Group:MediaContent:0:Type"
+							isDefault="true" expression="RSS2:Item:2:Media:Group:MediaContent:0:Expression" />
+
+						<media:content url="RSS2:Item:2:Media:Group:MediaContent:1:Url"
+							fileSize="2000" bitrate="128" type="RSS2:Item:2:Media:Group:MediaContent:1:Type"
+							expression="RSS2:Item:2:Media:Group:MediaContent:1:Expression" />
+
+						<media:content url="RSS2:Item:2:Media:Group:MediaContent:2:Url"
+							fileSize="4000" bitrate="256" type="RSS2:Item:2:Media:Group:MediaContent:2:Type"
+							expression="RSS2:Item:2:Media:Group:MediaContent:2:Expression" />
+
+						<media:content url="RSS2:Item:2:Media:Group:MediaContent:3:Url"
+							fileSize="8000" type="RSS2:Item:2:Media:Group:MediaContent:3:Type"
+							expression="RSS2:Item:2:Media:Group:MediaContent:3:Expression" />
+
+						<media:content url="http://www.foo.com/song.wav"
+							fileSize="16000" type="audio/x-wav" expression="full" />
+
+						<media:credit role="RSS2:Item:2:Media:Group:Media:Credit:0:Role">RSS2:Item:2:Media:Group:Media:Credit:0</media:credit>
+						<media:credit role="RSS2:Item:2:Media:Group:Media:Credit:1:Role">RSS2:Item:2:Media:Group:Media:Credit:1</media:credit>
+						<media:category>RSS2:Item:2:Media:Group:Media:Category</media:category>
+						<media:rating>RSS2:Item:2:Media:Group:Media:Rating</media:rating>
+					</media:group>
 			</item>
 			<item>
 					<title><![CDATA[RSS2:Item:3:Title:CData]]></title>
@@ -101,6 +126,21 @@
 					<guid isPermaLink="true">http://example.com/test/1592855880</guid>
 					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
 					<pubDate>Mon, 22 Jun 2020 19:58:00 GMT</pubDate>
+					<media:content url="RSS2:Item:3:Media:Content:0:Media:Content" fileSize="1000" type="RSS2:Item:3:Media:Content:0:Media:Content:Type" expression="RSS2:Item:3:Media:Content:0:Media:Content:Expression">
+						<media:credit role="RSS2:Item:3:Media:Content:0:Media:Credit:0">RSS2:Item:3:Media:Content:0:Media:Credit:0</media:credit>
+						<media:category>RSS2:Item:3:Media:Content:0:Media:Category:0</media:category>
+						<media:rating>RSS2:Item:3:Media:Content:0:Media:Rating:0</media:rating>
+					</media:content>
+					<media:content url="RSS2:Item:3:Media:Content:1:Media:Content" fileSize="2000" type="RSS2:Item:3:Media:Content:1:Media:Content:Type" expression="RSS2:Item:3:Media:Content:1:Expression">
+						<media:credit role="RSS2:Item:3:Media:Content:1:Media:Credit:Role">RSS2:Item:3:Media:Content:1:Media:Content:1:Media:Credit</media:credit>
+						<media:category>RSS2:Item:3:Media:Content:1:Media:Category</media:category>
+						<media:rating>RSS2:Item:3:Media:Content:1:Media:Category</media:rating>
+					</media:content>
+					<media:content url="RSS2:Item:3:Media:Content:2:" fileSize="1500" type="RSS2:Item:3:Media:Content:2:Type" expression="RSS2:Item:3:Media:Content:2:Expression">
+						<media:credit role="RSS2:Item:3:Media:Content:2:Media:Credit:Role">RSS2:Item:3:Media:Content:2:Media:Credit</media:credit>
+						<media:category>RSS2:Item:3:Media:Content:2:Media:Category</media:category>
+						<media:rating>RSS2:Item:3:Media:Content:2:Media:Rating</media:rating>
+					</media:content>
 			</item>
 			<item>
 					<title><![CDATA[RSS2:Item:4:Title:CData]]></title>
@@ -109,6 +149,53 @@
 					<guid isPermaLink="true">http://example.com/test/1592855820</guid>
 					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
 					<pubDate>Mon, 22 Jun 2020 19:57:00 GMT</pubDate>
+					<media:community>
+						<media:starRating average="3.5" count="20" min="1" max="10" />
+						<media:statistics views="5" favorites="5" />
+						<media:tags>news: 5, abc:3</media:tags>
+					</media:community>
+					<media:comments>
+						<media:comment>comment1</media:comment>
+						<media:comment>comment2</media:comment>
+					</media:comments>
+					<media:embed url="http://www.foo.com/player.swf" width="512" height="323">
+						<media:param name="type">application/x-shockwave-flash</media:param>
+						<media:param name="width">512</media:param>
+						<media:param name="height">323</media:param>
+						<media:param name="allowFullScreen">true</media:param>
+						<media:param name="flashVars">
+							id=12345&amp;vid=678912i&amp;lang=en-us&amp;intl=us&amp;thumbUrl=http://www.foo.com/thumbnail.jpg
+						</media:param>
+					</media:embed>
+					<media:responses>
+						<media:response>http://www.response1.com</media:response>
+						<media:response>http://www.response2.com</media:response>
+					</media:responses>
+					<media:backLinks>
+						<media:backLink>http://www.backlink1.com</media:backLink>
+						<media:backLink>http://www.backlink2.com</media:backLink>
+					</media:backLinks>
+					<media:status state="active" />
+					<media:price type="rent" price="19.99" currency="EUR" />
+					<media:license type="text/html" href="http://www.licensehost.com/license"> Sample license for a video</media:license>
+					<media:subTitle type="application/smil" lang="en-us" href="http://www.foo.org/subtitle.smil" />
+					<media:peerLink type="application/x-bittorrent " href="http://www.foo.org/sampleFile.torrent" />
+					<media:location description="My house" start="00:01" end="01:00">
+						<georss:where>
+							<gml:Point>
+							<gml:pos>35.669998 139.770004</gml:pos>
+							</gml:Point>
+						</georss:where>
+					</media:location>
+					<media:restriction type="sharing" relationship="deny" />
+					<media:scenes>
+						<media:scene>
+							<sceneTitle>sceneTitle1</sceneTitle>
+							<sceneDescription>sceneDesc1</sceneDescription>
+							<sceneStartTime>00:15</sceneStartTime>
+							<sceneEndTime>00:45</sceneEndTime>
+						</media:scene>
+					</media:scenes>
 			</item>
 			<item>
 					<title><![CDATA[RSS2:Item:5:Title:CData]]></title>

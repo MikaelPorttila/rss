@@ -1,5 +1,7 @@
 // https://validator.w3.org/feed/docs/atom.html
 
+import { AtomFields } from "../resolvers/types/atom-fields.ts";
+
 export interface Atom {
   id: string;
   title: Text;
@@ -46,7 +48,7 @@ interface Entry {
   categories?: Category[];
   source?: Source;
   href?: string;
-  "feedburner:origlink"?: string;
+  [AtomFields.FeedburnerOrigLink]?: string;
 }
 
 interface Content extends Text {

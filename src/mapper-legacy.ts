@@ -6,7 +6,7 @@ import type {
   RSS1,
   RSS2,
 } from "./types/mod.ts";
-import { isValidHttpURL } from "./util.ts";
+import { copyValueFields, isValidURL } from "./util.ts";
 import { FeedType } from "./types/mod.ts";
 import { DublinCoreFieldArray, DublinCoreFields } from "./types/dublin-core.ts";
 import { SlashFieldArray } from "./types/slash.ts";
@@ -15,17 +15,27 @@ import { InternalRSS2 } from "./types/internal-rss2.ts";
 import { InternalRSS1 } from "./types/internal-rss1.ts";
 import { MediaRssFields } from "./types/media-rss.ts";
 import { AtomFields } from "./resolvers/types/atom-fields.ts";
+import { MediaRssValueFields } from "./types/media-rss.ts";
+import { copyMedia } from "./media-mapper.ts";
+import { Rss2Item } from './types/rss2.ts';
 
 export const toLegacyRss1 = (rss: InternalRSS1): RSS1 => {
-  const result = {} as RSS1;
-  if (rss.channel) {
-    result.channel = {
-      title: rss.channel.title?.value as string,
-      description: rss.channel.description?.value as string,
-      link: rss.channel.link?.value as string,
-      about: rss.channel.link?.value as string,
-    };
-  }
+  const result = { } as RSS1;
+
+	const {
+    title,
+    description,
+    link,
+		about,
+    ...rest
+  } = rss.channel;
+
+	result.channel = rest as any;
+	result.channel.title = title?.value as string;
+	result.channel.description = description?.value as string;
+	result.channel.link = link?.value as string;
+	result.channel.about = about?.value as string;
+	copyValueFields(DublinCoreFieldArray, result.channel, result.channel);
 
   if (rss.image) {
     result.image = {
@@ -38,14 +48,19 @@ export const toLegacyRss1 = (rss: InternalRSS1): RSS1 => {
   }
 
   result.item = rss.item?.map((item) => {
-    const itemResult = {
-      title: item.title?.value as string,
-      description: item.description?.value as string,
-      link: item.link?.value as string,
-    };
+		const {
+      link,
+      title,
+      description,
+      ...itemRest
+    } = item;
 
-    copyFields(DublinCoreFieldArray, item, itemResult);
-    copyFields(SlashFieldArray, item, itemResult);
+    const itemResult = itemRest as any;
+		itemResult.title = title?.value as string;
+    itemResult.description = description?.value as string;
+    itemResult.link = link?.value as string;
+    copyValueFields(DublinCoreFieldArray, item, itemResult);
+    copyValueFields(SlashFieldArray, item, itemResult);
     return itemResult;
   });
 
@@ -66,40 +81,35 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
   const result = {} as RSS2;
 
   if (rss.channel) {
-    const image = rss.channel.image
-      ? {
-        url: rss.channel.image.url?.value,
-        title: rss.channel.image.title?.value,
-        link: rss.channel.image.link?.value,
-        width: rss.channel.image.width?.value,
-        height: rss.channel.image.height?.value,
-      }
-      : undefined as any;
+		const {
+			items,
+			title,
+			description,
+			generator,
+			pubDate,
+			pubDateRaw,
+			lastBuildDate,
+			lastBuildDateRaw,
+			docs,
+			webMaster,
+			language,
+			copyright,
+			ttl,
+			skipDays,
+			skipHours,
+			link,
+			image,
+			...rest
+		} = rss.channel;
 
-    const skipHours = (rss.channel.skipHours && rss.channel.skipHours.hour &&
-        rss.channel.skipHours.hour.length > 0)
-      ? {
-        hour: rss.channel.skipHours.hour?.map((x) => x.value),
-      }
-      : undefined as any;
-
-    const skipDays = (rss.channel.skipDays && rss.channel.skipDays.day &&
-        rss.channel.skipDays.day.length > 0)
-      ? {
-        day: rss.channel.skipDays.day?.map((x) => x.value),
-      }
-      : undefined as any;
-
-    result.channel = {
-      title: rss.channel.title?.value as string,
-      description: rss.channel.description?.value as string,
-      language: rss.channel.language?.value as string,
-      link: rss.channel.link?.value as string,
+		result.channel = rest as any;
+		 Object.assign(result.channel, {
+			title: title?.value,
+      description: description?.value,
+      language: language?.value,
+      link: rss.channel.link?.value,
       ttl: rss.channel.ttl?.value,
       docs: rss.channel.docs?.value,
-      image,
-      skipHours,
-      skipDays,
       copyright: rss.channel.copyright?.value,
       managingEditor: rss.channel.managingEditor?.value,
       lastBuildDate: rss.channel.lastBuildDate?.value,
@@ -108,32 +118,47 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
       pubDate: rss.channel.pubDate?.value,
       pubDateRaw: rss.channel.pubDateRaw?.value,
       generator: rss.channel.generator?.value,
-      category: rss.channel.category?.map((x) => x.value as string),
+      category: rss.channel.category?.map((x) => x.value),
       items: rss.channel.items?.map((item) => {
-        const itemResult: any = {
-          guid: item.guid?.value,
-          pubDate: item.pubDate?.value,
-          pubDateRaw: item.pubDateRaw?.value,
-          title: item.title?.value,
-          description: item.description?.value,
-          link: item.link?.value,
-          author: item.author?.value ||
+				const {
+					guid,
+					pubDate,
+					pubDateRaw,
+					title,
+					description,
+					link,
+					author,
+					enclosure,
+					comments,
+					categories,
+					...itemRest
+				} = item;
+
+        const itemResult = Object.assign(itemRest as Rss2Item, {
+          guid: guid?.value,
+          pubDate: pubDate?.value,
+          pubDateRaw: pubDateRaw?.value,
+          title: title?.value,
+          description: description?.value,
+          link: link?.value,
+          author: author?.value ||
             ((item[DublinCoreFields.Creator]?.length || 0) > 0
               ? item[DublinCoreFields.Creator]?.[0].value
               : undefined),
-          enclosure: item.enclosure?.[0]
+          enclosure: enclosure?.[0]
             ? {
-              url: item.enclosure?.[0].url,
-              type: item.enclosure?.[0].type,
-              length: item.enclosure?.[0].length,
+              url: enclosure?.[0].url,
+              type: enclosure?.[0].type,
+              length: enclosure?.[0].length,
             }
             : undefined,
-          comments: item.comments?.value,
-          categories: item.categories?.map((x) => x.value as string),
-          /* "media:description": item[MediaRssFields.Description]?.value, */
-        };
+          comments: comments?.value,
+          categories: categories?.map((x) => x.value as string)
+        });
+				copyValueFields(DublinCoreFieldArray, item, itemResult);
+				copyMedia(item, itemResult);
 
-        const mediaCredit = item[MediaRssFields.Credit];
+/*         const mediaCredit = item[MediaRssFields.Credit];
         if (mediaCredit) {
           itemResult[MediaRssFields.Credit] = {
             value: mediaCredit.value,
@@ -166,100 +191,157 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
             height: mediaContent.height,
             width: mediaContent.width,
           };
-        }
+        } */
 
-        copyFields(DublinCoreFieldArray, item, itemResult);
         return itemResult;
-      }),
-    };
-    copyFields(DublinCoreFieldArray, rss.channel, result.channel);
+      })});
+
+		if (image) {
+			result.channel.image = {
+				url: image.url?.value,
+        title: image.title?.value,
+        link: image.link?.value,
+        width: image.width?.value,
+        height: image.height?.value,
+			};
+		}
+
+		if (skipHours && skipHours.hour) {
+			result.channel.skipHours = {
+				hour: skipHours.hour?.map((x) => x?.value) as number[]
+			};
+		}
+
+		if (skipDays && skipDays.day) {
+			result.channel.skipDays = {
+				day: skipDays.day?.map((x) => x.value) as string[]
+			}
+		}
   }
 
   return result;
 };
 
 export const toLegacyAtom = (atom: InternalAtom): Atom => {
-  const result = {
+	const {
+    id,
+    generator,
+    title,
+    subtitle,
+    updated,
+    updatedRaw,
+    icon,
+    links,
+    logo,
+    categories,
+    author,
+    entries,
+    ...rest
+  } = atom;
+
+	const result = Object.assign(
+		rest as Atom, {
     title: {
       type: atom.title?.type,
       value: atom.title?.value,
     },
-    id: atom.id?.value,
-    icon: atom.icon?.value,
-    logo: atom.logo?.value,
-    updated: atom.updated?.value,
-    updatedRaw: atom.updatedRaw?.value,
-    links: atom.links?.map((x) => ({
+    id: id?.value,
+    icon: icon?.value,
+    logo: logo?.value,
+    updated: updated?.value,
+    updatedRaw: updatedRaw?.value,
+    links: links?.map((x) => ({
       href: x.href,
       rel: x.rel,
       type: x.type,
       length: x.length,
     })),
-    categories: atom.categories?.map((x) => ({
+    categories: categories?.map((x) => ({
       term: x.term,
       label: x.label,
     })),
-    subtitle: atom.subtitle?.value,
+    subtitle: subtitle?.value,
     author: {
-      name: atom.author?.name?.value,
-      email: atom.author?.email?.value,
-      uri: atom.author?.uri?.value,
+      name: author?.name?.value,
+      email: author?.email?.value,
+      uri: author?.uri?.value,
     },
-    entries: atom.entries?.map((entry) => {
-      const entryResult = {
-        id: entry.id?.value,
+    entries: entries?.map((entry) => {
+
+			const {
+				links,
+				href,
+				id,
+				title,
+				summary,
+				published,
+				publishedRaw,
+				updated,
+				updatedRaw,
+				source,
+				author,
+				content,
+				contributors,
+				categories,
+				rights,
+				...entryRest
+			} = entry;
+
+      const entryResult = Object.assign(entryRest, {
+        id: id?.value,
         title: {
-          type: entry.title?.type,
-          value: entry.title?.value,
+          type: title?.type,
+          value: title?.value,
         },
-        updated: entry.updated?.value,
-        updatedRaw: entry.updatedRaw?.value,
-        published: entry.published?.value,
-        publishedRaw: entry.publishedRaw?.value,
-        href: entry.href,
+        updated: updated?.value,
+        updatedRaw: updatedRaw?.value,
+        published: published?.value,
+        publishedRaw: publishedRaw?.value,
+        href: href,
         content: {
-          type: entry.content?.type,
-          src: entry.content?.src,
-          value: entry.content?.value,
+          type: content?.type,
+          src: content?.src,
+          value: content?.value,
         },
-        links: entry.links?.map((x) => ({
+        links: links?.map((x) => ({
           type: x.type,
           href: x.href,
           rel: x.rel,
           length: x.length,
         })),
         author: {
-          name: entry.author?.name?.value,
-          email: entry.author?.email?.value,
-          uri: entry.author?.uri?.value,
+          name: author?.name?.value,
+          email: author?.email?.value,
+          uri: author?.uri?.value,
         },
-        contributors: entry.contributors?.map((contributor) => ({
+        contributors: contributors?.map((contributor) => ({
           name: contributor?.name?.value,
           email: contributor?.email?.value,
           uri: contributor?.uri?.value,
         })),
         summary: {
-          type: entry.summary?.type,
-          value: entry.summary?.value,
+          type: summary?.type,
+          value: summary?.value,
         },
         rights: {
-          type: entry.rights?.type,
-          value: entry.rights?.value,
+          type: rights?.type,
+          value: rights?.value,
         },
-        categories: entry.categories?.map((category) => ({
+        categories: categories?.map((category) => ({
           label: category.label,
           term: category.term,
         })),
         source: {
-          id: entry.source?.id?.value,
-          title: entry.source?.title?.value,
-          updated: entry.source?.updated?.value,
-          updatedRaw: entry.source?.updatedRaw?.value,
+          id: source?.id?.value,
+          title: source?.title?.value,
+          updated: source?.updated?.value,
+          updatedRaw: source?.updatedRaw?.value,
         },
-      };
+      })
+
       return entryResult;
     }),
-  } as Atom;
+  })
   return result;
 };
 
@@ -375,7 +457,7 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
         url = entry[AtomFields.FeedburnerOrigLink];
       } else if (entry.href) {
         url = entry.href;
-      } else if (isValidHttpURL(entry.id)) {
+      } else if (isValidURL(entry.id)) {
         url = entry.id;
       }
 
@@ -433,13 +515,3 @@ const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
   return feed;
 };
 
-const copyFields = (fields: string[], source: any, target: any) => {
-  fields.forEach((fieldName: string) => {
-    const val = source[fieldName];
-    if (val) {
-      target[fieldName] = Array.isArray(val)
-        ? val.map((x) => (x?.value || x))
-        : (val?.value || val);
-    }
-  });
-};

@@ -1,17 +1,14 @@
 import type { Feed, FeedEntry, JsonFeed } from "./types/mod.ts";
-import { isValidHttpURL } from "./util.ts";
+import { copyValueFields, isValidURL } from "./util.ts";
 import { FeedType } from "./types/mod.ts";
 import { DublinCoreFieldArray, DublinCoreFields } from "./types/dublin-core.ts";
 import { SlashFieldArray } from "./types/slash.ts";
 import { InternalAtom } from "./types/internal-atom.ts";
 import { InternalRSS2 } from "./types/internal-rss2.ts";
 import { InternalRSS1 } from "./types/internal-rss1.ts";
-import {
-  MediaRss,
-  MediaRssFields,
-  MediaRssValueFields,
-} from "./types/media-rss.ts";
 import { AtomFields } from "./resolvers/types/atom-fields.ts";
+import { MediaRssValueFields } from "./types/media-rss.ts";
+import { copyMedia } from "./media-mapper.ts";
 
 export const toFeed = (
   feedType: FeedType,
@@ -42,7 +39,7 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
   } = rss.channel;
 
   const result = (rest as any) as Feed;
-  copyFields(DublinCoreFieldArray, rss.channel, result);
+  copyValueFields(DublinCoreFieldArray, rss.channel, result);
   result.type = FeedType.Rss1;
 
   const titleValue = result[DublinCoreFields.Title] || title?.value;
@@ -95,8 +92,8 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
     } = item;
 
     const entry = (itemRest as any) as FeedEntry;
-    copyFields(DublinCoreFieldArray, entry, entry);
-    copyFields(SlashFieldArray, entry, entry);
+    copyValueFields(DublinCoreFieldArray, entry, entry);
+    copyValueFields(SlashFieldArray, entry, entry);
 
     entry.id = entry[DublinCoreFields.URI] || link?.value as string;
     entry.published = entry[DublinCoreFields.DateSubmitted] ||
@@ -174,7 +171,7 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
 
   const result = (rest as any) as Feed;
   result.type = FeedType.Rss2;
-  copyFields(DublinCoreFieldArray, result, result);
+  copyValueFields(DublinCoreFieldArray, result, result);
 
   result.title = {
     value: result[DublinCoreFields.Title] || title?.value,
@@ -239,7 +236,7 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
     } = item;
 
     const entry = itemRest as FeedEntry;
-    copyFields(DublinCoreFieldArray, entry, entry);
+    copyValueFields(DublinCoreFieldArray, entry, entry);
     copyMedia(entry as MediaRssValueFields, entry);
 
     entry.id = guid?.value as string || entry[DublinCoreFields.URI] as string;
@@ -428,7 +425,7 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
       entry.links.push({ href });
     }
 
-    if (isValidHttpURL(id.value as string)) {
+    if (isValidURL(id.value as string)) {
       entry.links.push({ href: id.value });
     }
 
@@ -483,233 +480,4 @@ const createAuthor = (email?: string, name?: string, uri?: string) => ({
   uri,
 });
 
-const copyMedia = (source: MediaRssValueFields, target: MediaRss) => {
-  [
-    MediaRssFields.Rating,
-    MediaRssFields.Group,
-    MediaRssFields.Keywords,
-    MediaRssFields.Category,
-  ].forEach((fieldName) => {
-    const val = (source as any)[fieldName];
-    if (val) {
-      (target as any)[fieldName] = (val as any).value;
-    }
-  });
 
-  const credit = source[MediaRssFields.Credit];
-  if (credit) {
-    target[MediaRssFields.Credit] = {
-      value: credit.value,
-      role: credit.role,
-      scheme: credit.scheme,
-    };
-  }
-
-  const title = source[MediaRssFields.Title];
-  if (title) {
-    target[MediaRssFields.Title] = {
-      value: title.value,
-      type: title.type,
-    };
-  }
-
-  const description = source[MediaRssFields.Description];
-  if (description) {
-    target[MediaRssFields.Description] = {
-      value: description.value,
-      type: description.type,
-    };
-  }
-
-  const content = source[MediaRssFields.Content];
-  if (content) {
-    target[MediaRssFields.Content] = {
-      bitrate: content.bitrate,
-      channels: content.channels,
-      duration: content.duration,
-      expression: content.expression,
-      fileSize: content.fileSize,
-      height: content.height,
-      width: content.width,
-      isDefault: content.isDefault,
-      lang: content.lang,
-      medium: content.medium,
-      samplingrate: content.samplingrate,
-      type: content.type,
-      url: content.url,
-    };
-  }
-
-  const thumbnails = source[MediaRssFields.Thumbnails];
-  if (thumbnails) {
-    target[MediaRssFields.Thumbnails] = {
-      url: thumbnails.url,
-      height: thumbnails.height,
-      width: thumbnails.width,
-      time: thumbnails.time,
-    };
-  }
-
-  const hash = source[MediaRssFields.Hash];
-  if (hash) {
-    target[MediaRssFields.Hash] = {
-      value: hash.value,
-      algo: hash.algo,
-    };
-  }
-
-  const player = source[MediaRssFields.Player];
-  if (player) {
-    target[MediaRssFields.Player] = {
-      url: player.url,
-      height: player.height,
-      width: player.width,
-    };
-  }
-
-  const copyright = source[MediaRssFields.Copyright];
-  if (copyright) {
-    target[MediaRssFields.Copyright] = {
-      url: copyright.url,
-      value: copyright.value,
-    };
-  }
-
-  const text = source[MediaRssFields.Text];
-  if (text) {
-    target[MediaRssFields.Text] = {
-      value: text.value,
-      type: text.value,
-      lang: text.value,
-      start: text.start,
-      end: text.end,
-    };
-  }
-
-  const restriction = source[MediaRssFields.Restriction];
-  if (restriction) {
-    target[MediaRssFields.Restriction] = {
-      value: restriction.value,
-      relationship: restriction.relationship,
-      type: restriction.type,
-    };
-  }
-
-  const comments = source[MediaRssFields.Comments];
-  if (comments) {
-    target[MediaRssFields.Comments] = {
-      "media:comment": comments[MediaRssFields.Comment]?.map((x) =>
-        x.value
-      ) as string[],
-    };
-  }
-
-  const embed = source[MediaRssFields.Embed];
-  if (embed) {
-		target[MediaRssFields.Embed] = {
-			url: embed.url,
-      height: embed.height,
-      width: embed.width,
-    };
-
-		const mediaParam = embed[MediaRssFields.Param];
-		if (mediaParam) {
-			(target[MediaRssFields.Embed] as any)[MediaRssFields.Param] = {
-				value: mediaParam?.value,
-				name: mediaParam?.name,
-			};
-		}
-  }
-
-  const responses = source[MediaRssFields.Responses];
-  if (responses) {
-    target[MediaRssFields.Responses] = {
-      "media:response": responses[MediaRssFields.Response]?.map((x) =>
-        x.value
-      ) as string[],
-    };
-  }
-
-  const backLinks = source[MediaRssFields.BackLinks];
-  if (backLinks) {
-    target[MediaRssFields.BackLinks] = {
-      "media:backLink": backLinks[MediaRssFields.BackLink]?.map((x) =>
-        x.value
-      ) as string[],
-    };
-  }
-
-  const status = source[MediaRssFields.Status];
-  if (status) {
-    target[MediaRssFields.Status] = {
-      state: status.state,
-      reason: status.reason,
-    };
-  }
-
-  const price = source[MediaRssFields.Price];
-  if (price) {
-    target[MediaRssFields.Price] = {
-      type: price.type,
-      price: price.price,
-      info: price.info,
-      currency: price.currency,
-    };
-  }
-
-  const license = source[MediaRssFields.License];
-  if (license) {
-    target[MediaRssFields.License] = {
-      value: license.value,
-      type: license.type,
-      href: license.href,
-    };
-  }
-
-  const subtitle = source[MediaRssFields.Subtitle];
-  if (subtitle) {
-    target[MediaRssFields.Subtitle] = {
-      type: subtitle.type,
-      lang: subtitle.lang,
-      href: subtitle.href,
-    };
-  }
-
-  const peerLink = source[MediaRssFields.PeerLink];
-  if (peerLink) {
-    target[MediaRssFields.PeerLink] = {
-      type: peerLink.type,
-      href: peerLink.href,
-    };
-  }
-
-  const rights = source[MediaRssFields.Rights];
-  if (rights) {
-    target[MediaRssFields.Rights] = {
-      status: rights.status,
-    };
-  }
-
-  const scenes = source[MediaRssFields.Scenes];
-  if (scenes) {
-    target[MediaRssFields.Scenes] = {
-      "media:scene": scenes[MediaRssFields.Scene]?.map((x) => ({
-        sceneTitle: x.sceneTitle,
-        sceneDescription: x.sceneDescription,
-        sceneStartTime: x.sceneStartTime,
-        sceneEndTime: x.sceneEndTime,
-      })) as [],
-    };
-  }
-};
-
-const copyFields = (fields: string[], source: any, target: any) => {
-  fields.forEach((fieldName: string) => {
-    const val = source[fieldName];
-    if (val) {
-      target[fieldName] = Array.isArray(val)
-        ? val.map((x) => (x?.value || x))
-        : (val?.value || val);
-    }
-  });
-};

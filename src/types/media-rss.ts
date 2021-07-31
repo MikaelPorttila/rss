@@ -25,8 +25,24 @@ export interface MediaRssValueFields {
     height?: number;
     width?: number;
     lang?: string;
-  };
-  [MediaRssFields.Group]?: ValueField<string>;
+  }[];
+  [MediaRssFields.Group]?: {
+		[MediaRssFields.Content]?: {
+			url?: string;
+			fileSize?: string;
+			type?: string;
+			medium?: string;
+			isDefault?: string;
+			expression?: string;
+			bitrate?: string;
+			samplingrate?: string;
+			channels?: string;
+			duration?: string;
+			height?: number;
+			width?: number;
+			lang?: string;
+		}[];
+	}[];
   [MediaRssFields.Keywords]?: ValueField<string>;
   [MediaRssFields.Thumbnails]?: {
     url?: string;
@@ -159,8 +175,24 @@ export interface MediaRss {
     height?: number;
     width?: number;
     lang?: string;
-  };
-  [MediaRssFields.Group]?: string;
+  }[];
+  [MediaRssFields.Group]?: {
+		[MediaRssFields.Content]?: {
+			url?: string;
+			fileSize?: string;
+			type?: string;
+			medium?: string;
+			isDefault?: string;
+			expression?: string;
+			bitrate?: string;
+			samplingrate?: string;
+			channels?: string;
+			duration?: string;
+			height?: number;
+			width?: number;
+			lang?: string;
+		}[]
+	}[];
   [MediaRssFields.Keywords]?: string;
   [MediaRssFields.Thumbnails]?: {
     url?: string;

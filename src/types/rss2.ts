@@ -5,14 +5,14 @@ import { MediaRss } from "./media-rss.ts";
 
 export interface RSS2 {
   version: number;
-  channel: Channel;
+  channel: Rss2Channel;
 }
 
-interface Channel extends DublinCore {
+export interface Rss2Channel extends DublinCore {
   title: string;
   link: string;
   description: string;
-  items: Item[];
+  items: Rss2Item[];
   language?: string;
   copyright?: string;
   managingEditor?: string;
@@ -36,7 +36,7 @@ interface Channel extends DublinCore {
   };
 }
 
-interface Item extends DublinCore, MediaRss {
+export interface Rss2Item extends DublinCore, MediaRss {
   title?: string;
   description?: string;
   link?: string;
@@ -70,9 +70,9 @@ interface Cloud {
 }
 
 interface Image extends DublinCore {
-  url: string;
-  title: string;
-  link: string;
+  url?: string;
+  title?: string;
+  link?: string;
   width?: number;
   height?: number;
 }

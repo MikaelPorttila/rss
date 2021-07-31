@@ -12,6 +12,8 @@ export const resolveMediaRssField = (
     case MediaRssFields.Comment:
     case MediaRssFields.Response:
     case MediaRssFields.Scene:
+		case MediaRssFields.Group:
+		case MediaRssFields.Content:
       result.isArray = true;
       break;
 		case MediaRssFields.Price:

@@ -1,3 +1,4 @@
+import { AtomFields } from "../resolvers/types/atom-fields.ts";
 import { ValueField } from "./value-field.ts";
 
 export interface InternalAtom {
@@ -45,7 +46,7 @@ interface Entry {
   categories?: Category[];
   source?: Source;
   href?: string;
-  "feedburner:origlink"?: ValueField<string>;
+  [AtomFields.FeedburnerOrigLink]?: ValueField<string>;
 }
 
 interface Content extends Text {

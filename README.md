@@ -74,12 +74,4 @@ const { feed } = await parseFeed(xml);
 | Dublin Core Namespace | -                                             | All Dublin Core fields                 | All Dublin Core fields        |
 | Slash Namespace       | -                                             | -                                      | All Slash fields              |
 
-## Benchmark
 
-Hardware: Intel i7-9750H 2.60GHz, 32GB 2667 MHz.
-
-Rounds: 10000
-
-| Release | ATOM (4KB sample) | RSS 2.0 (4 KB sample) | RSS 1.0 (3 KB sample) |
-| ------- | ----------------- | --------------------- | --------------------- |
-| 0.1     | 0.454ms           | 0.490ms               | 0.182ms               |

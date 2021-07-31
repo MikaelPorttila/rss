@@ -2,6 +2,8 @@ import { assert, assertEquals } from "../test_deps.ts";
 import type { Atom, RSS2 } from "./types/mod.ts";
 import { FeedType } from "./types/mod.ts";
 import { toJsonFeed } from "./mapper-legacy.ts";
+import { AtomFields } from "./resolvers/types/atom-fields.ts";
+import { DublinCoreFields } from "./types/dublin-core.ts";
 const dateRaw = "Mon, 22 Jun 2020 20:00:00 GMT";
 const date = new Date(1989, 1, 1);
 
@@ -73,7 +75,7 @@ Deno.test("Mapper ATOM -> JSON Feed", () => {
           value:
             "<entry.content.type.xhtml.value></<entry.content.type.xhtml.value>",
         },
-        "feedburner:origlink":
+        [AtomFields.FeedburnerOrigLink]:
           "https://security.googleblog.com/2021/05/introducing-security-by-design.html",
       },
     ],
@@ -247,7 +249,7 @@ Deno.test("Mapper RSS2 -> JSON Feed", () => {
         guid: "item.guid2",
         title: "item.title",
         description: "item.description",
-        "dc:creator": ["dccreator1", "dccreator2"] as any,
+        [DublinCoreFields.Creator]: ["dccreator1", "dccreator2"] as any,
         link: "item.link",
         comments: "item.comments",
         categories: ["item.link.category1", "item.link.category2"],
