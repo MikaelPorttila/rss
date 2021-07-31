@@ -73,5 +73,3 @@ const { feed } = await parseFeed(xml);
 | Media Namespace       | -                                             | All Media fields                       | -                             |
 | Dublin Core Namespace | -                                             | All Dublin Core fields                 | All Dublin Core fields        |
 | Slash Namespace       | -                                             | -                                      | All Slash fields              |
-
-

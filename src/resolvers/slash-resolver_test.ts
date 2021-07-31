@@ -9,7 +9,7 @@ import { resolveSlashField } from "./slash-resolver.ts";
       isArray: undefined,
       isNumber: undefined,
       isDate: undefined,
-      newName: undefined,
+      propertyName: '',
       handled: false,
     },
   },
@@ -19,7 +19,7 @@ import { resolveSlashField } from "./slash-resolver.ts";
       isArray: undefined,
       isNumber: true,
       isDate: undefined,
-      newName: undefined,
+      propertyName: SlashFields.Comments,
       handled: true,
     },
   },
@@ -30,8 +30,8 @@ import { resolveSlashField } from "./slash-resolver.ts";
     assertNotEquals(result, null);
     assertEquals(result.handled, test.expect.handled, "handled");
     assertEquals(result.isArray, test.expect.isArray, "isArray");
-    assertEquals(result.isNumber, test.expect.isNumber, "isNumber");
-    assertEquals(result.newName, test.expect.newName, "newName");
+    assertEquals(result.isInt, test.expect.isNumber, "isNumber");
+    assertEquals(result.propertyName, test.expect.propertyName, "propertyName");
     assertEquals(result.isDate, test.expect.isDate, "isDate");
   });
 });

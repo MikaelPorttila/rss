@@ -2,13 +2,14 @@ import { DublinCoreFields } from "../types/fields/mod.ts";
 import { ResolverResult } from "./types/resolver-result.ts";
 
 export const resolveDublinCoreField = (
-  fieldName: string,
+  propertyName: string,
 ): ResolverResult => {
   const result = {
+		propertyName,
     handled: true,
   } as ResolverResult;
 
-  switch (fieldName) {
+  switch (propertyName) {
     case DublinCoreFields.Date:
     case DublinCoreFields.Created:
     case DublinCoreFields.DateSubmitted:

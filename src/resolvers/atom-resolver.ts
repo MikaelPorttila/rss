@@ -41,13 +41,11 @@ export const resolveAtomField = (
           isDate = true;
         }
 
-        if (resolverResult.isNumber) {
+        if (resolverResult.isInt || resolverResult.isFloat) {
           isNumber = true;
         }
 
-        if (!!resolverResult.newName) {
-          propertyName = resolverResult.newName;
-        }
+				propertyName = resolverResult.propertyName;
       }
       break;
   }

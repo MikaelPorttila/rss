@@ -1,7 +1,8 @@
 export interface ResolverResult {
   handled: boolean;
   isDate?: boolean;
-  isNumber?: boolean;
+  isInt?: boolean;
+	isFloat?: boolean;
   isArray?: boolean;
-  newName?: string;
+  propertyName: string;
 }

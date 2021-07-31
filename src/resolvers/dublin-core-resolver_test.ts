@@ -7,9 +7,10 @@ import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
     propertyName: "",
     expect: {
       isArray: undefined,
-      isNumber: undefined,
+      isInt: undefined,
+			isFloat: undefined,
       isDate: undefined,
-      newName: undefined,
+      propertyName: '',
       handled: false,
     },
   },
@@ -17,9 +18,10 @@ import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
     propertyName: DublinCoreFields.Date,
     expect: {
       isArray: undefined,
-      isNumber: undefined,
+      isInt: undefined,
+			isFloat: undefined,
       isDate: true,
-      newName: undefined,
+      propertyName: DublinCoreFields.Date,
       handled: true,
     },
   },
@@ -27,9 +29,10 @@ import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
     propertyName: DublinCoreFields.Created,
     expect: {
       isArray: undefined,
-      isNumber: undefined,
+      isInt: undefined,
+			isFloat: undefined,
       isDate: true,
-      newName: undefined,
+      propertyName: DublinCoreFields.Created,
       handled: true,
     },
   },
@@ -37,9 +40,10 @@ import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
     propertyName: DublinCoreFields.DateSubmitted,
     expect: {
       isArray: undefined,
-      isNumber: undefined,
+      isInt: undefined,
+			isFloat: undefined,
       isDate: true,
-      newName: undefined,
+      propertyName: DublinCoreFields.DateSubmitted,
       handled: true,
     },
   },
@@ -47,9 +51,10 @@ import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
     propertyName: DublinCoreFields.Copyrighted,
     expect: {
       isArray: undefined,
-      isNumber: undefined,
+      isInt: undefined,
+			isFloat: undefined,
       isDate: true,
-      newName: undefined,
+      propertyName: DublinCoreFields.Copyrighted,
       handled: true,
     },
   },
@@ -57,9 +62,10 @@ import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
     propertyName: DublinCoreFields.DateAccepted,
     expect: {
       isArray: undefined,
-      isNumber: undefined,
+      isInt: undefined,
+			isFloat: undefined,
       isDate: true,
-      newName: undefined,
+      propertyName: DublinCoreFields.DateAccepted,
       handled: true,
     },
   },
@@ -70,8 +76,9 @@ import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
     assertNotEquals(result, null);
     assertEquals(result.handled, test.expect.handled, "handled");
     assertEquals(result.isArray, test.expect.isArray, "isArray");
-    assertEquals(result.isNumber, test.expect.isNumber, "isNumber");
-    assertEquals(result.newName, test.expect.newName, "newName");
+    assertEquals(result.isInt, test.expect.isInt, "isInt");
+		assertEquals(result.isFloat, test.expect.isFloat, "isFloat");
+    assertEquals(result.propertyName, test.expect.propertyName, "propertyName");
     assertEquals(result.isDate, test.expect.isDate, "isDate");
   });
 });
