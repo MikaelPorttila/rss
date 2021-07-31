@@ -11,7 +11,7 @@ showcase](https://repl.it/@MikaelPorttila/Deno-RSS-Module)
 
 ## Usage
 
-Download and parse feed:
+### Download and parse feed:
 
 ```typescript
 import { parseFeed } from "https://deno.land/x/rss/mod.ts";
@@ -20,9 +20,31 @@ const response = await fetch(
   "http://static.userland.com/gems/backend/rssTwoExample2.xml",
 );
 const xml = await response.text();
-const { feed } = await parseFeed(xml);
+const feed = await parseFeed(xml);
 
 // Your code...
+```
+
+### How to access Dublin Core or MediaRss fields (RSS and RSS2 Only)
+
+```typescript
+import {
+  DublinCore,
+  MediaRss,
+  parseFeed,
+} from "https://deno.land/x/rss/mod.ts";
+
+const response = await fetch(
+  "http://static.userland.com/gems/backend/rssTwoExample2.xml",
+);
+const xml = await response.text();
+
+// Optional destructuring assignment
+const { entries } = await parseFeed(xml);
+
+// Access fields using the DublinCore and MediaRss enums
+const dcTitle = entries[0][DublinCore.Title];
+const mediaContent = entries[0][MediaRss.Content];
 ```
 
 ## Mapping Table
@@ -32,7 +54,7 @@ const { feed } = await parseFeed(xml);
 | Feed                  | Atom      | RSS2                                                                  | RSS                                       |
 | --------------------- | --------- | --------------------------------------------------------------------- | ----------------------------------------- |
 | FeedType              | Atom      | RSS2                                                                  | RSS1                                      |
-| Id                    | Id        | -                                                                     | -                                         |
+| Id                    | Id        | Link or DC:URI                                                        | Link or DC:URI                            |
 | Title                 | Title     | Title or DC:Title                                                     | Title or DC:Title                         |
 | Description           | Subtitle  | Description or DC:Description                                         | Description or DC:Description             |
 | Links                 | Links     | Link, DC:URI                                                          | Link or DC:URI                            |
