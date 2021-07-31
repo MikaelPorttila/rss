@@ -13,9 +13,7 @@ import { SlashFieldArray } from "./types/slash.ts";
 import { InternalAtom } from "./types/internal-atom.ts";
 import { InternalRSS2 } from "./types/internal-rss2.ts";
 import { InternalRSS1 } from "./types/internal-rss1.ts";
-import { MediaRssFields } from "./types/media-rss.ts";
 import { AtomFields } from "./resolvers/types/atom-fields.ts";
-import { MediaRssValueFields } from "./types/media-rss.ts";
 import { copyMedia } from "./media-mapper.ts";
 import { Rss2Item } from './types/rss2.ts';
 
@@ -157,42 +155,6 @@ export const toLegacyRss2 = (rss: InternalRSS2): RSS2 => {
         });
 				copyValueFields(DublinCoreFieldArray, item, itemResult);
 				copyMedia(item, itemResult);
-
-/*         const mediaCredit = item[MediaRssFields.Credit];
-        if (mediaCredit) {
-          itemResult[MediaRssFields.Credit] = {
-            value: mediaCredit.value,
-            role: mediaCredit.role,
-            scheme: mediaCredit.scheme,
-          };
-        }
-
-        const mediaDescription = item[MediaRssFields.Description];
-        if (mediaDescription) {
-          itemResult[MediaRssFields.Description] = {
-            value: mediaDescription.value,
-            type: mediaDescription.type,
-          };
-        }
-
-        const mediaContent = item[MediaRssFields.Content];
-        if (mediaContent) {
-          itemResult[MediaRssFields.Content] = {
-            url: mediaContent.url,
-            fileSize: mediaContent.fileSize,
-            type: mediaContent.type,
-            medium: mediaContent.medium,
-            isDefault: mediaContent.isDefault,
-            expression: mediaContent.expression,
-            bitrate: mediaContent.bitrate,
-            samplingrate: mediaContent.samplingrate,
-            channels: mediaContent.channels,
-            duration: mediaContent.duration,
-            height: mediaContent.height,
-            width: mediaContent.width,
-          };
-        } */
-
         return itemResult;
       })});
 
