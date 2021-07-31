@@ -64,7 +64,7 @@ const { feed } = await parseFeed(xml);
 | Content               | Content                                       | -                                      | -                             |
 | Links                 | Links, feedburner:origlink, Href, (Id if URL) | Href                                   | Link, DC:URI                  |
 | Attachments           | Links (marked as enclosure)                   | Enclosure                              | -                             |
-| Published             | Published                                     | DC:DateSubmitted or PubDate or DC:date | DC:DateSubmitted or DC:Date   |
+| Published             | Published                                     | DC:DateSubmitted or PubDate or DC:Date | DC:DateSubmitted or DC:Date   |
 | Updated               | Updated                                       | PubDate                                | DC:DateSubmitted or DC:Date   |
 | Categories            | Category                                      | Category                               | -                             |
 | Contributors          | Contributors                                  | DC:Contributor                         | DC:Contributor                |

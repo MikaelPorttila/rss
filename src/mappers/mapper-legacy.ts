@@ -330,7 +330,7 @@ export const toJsonFeed = (
       result = mapRss2ToJsonFeed(feed as RSS2);
       break;
     case FeedType.Rss1:
-      const rss1 = feed as RSS1;
+      result = mapRss1ToJsonFeed(feed as RSS1);
       break;
   }
 
@@ -407,6 +407,55 @@ const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
     author,
     hubs,
   } as JsonFeed;
+};
+
+const mapRss1ToJsonFeed = (rss: RSS1): JsonFeed => {
+	const result = {
+	} as JsonFeed;
+
+	if (rss?.channel) {
+		result.title = rss.channel.title;
+		result.description = rss.channel.description;
+		result.feed_url = rss.channel.link;
+
+		const authorNames = rss.channel[DublinCoreFields.Creator];
+		if (authorNames && authorNames.length > 0) {
+			result.author = {
+				name: authorNames[0]
+			};
+		}
+
+		result.items = rss.item.map((item) => {
+			let author, authors;
+			const authorNames = item[DublinCoreFields.Creator];
+			if(authorNames && authorNames.length > 0) {
+				author = {
+					name: authorNames[0]
+				};
+				authors = authorNames.map((x) => ({name: x[0]}));
+			}
+
+			const itemResult = {
+				id: item.link || item[DublinCoreFields.URI],
+				title: item.title,
+				summary: item.description,
+				url: item.link || item[DublinCoreFields.URI],
+				author,
+				authors,
+				date_modified: item[DublinCoreFields.DateSubmitted] || item[DublinCoreFields.Date],
+				date_modifiedRaw: item[DublinCoreFields.DateSubmittedRaw] || item[DublinCoreFields.DateRaw],
+				date_published: item[DublinCoreFields.DateSubmitted] || item[DublinCoreFields.Date],
+				date_publishedRaw: item[DublinCoreFields.DateSubmittedRaw] || item[DublinCoreFields.DateRaw]
+			} as JsonFeedItem;
+			return itemResult;
+		});
+	}
+
+	if (rss?.image) {
+		result.icon = rss.image.url;
+	}
+
+	return result;
 };
 
 const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {
