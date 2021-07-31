@@ -8,5 +8,5 @@ import { parseFeed } from "./mod.ts";
   const response = await fetch(feedUrl);
   const xml = await response.text();
   await parseFeed(xml);
-  console.log(`Parsed ${feedUrl}`);
+  console.log(`✔ Parsed ${feedUrl}`);
 });

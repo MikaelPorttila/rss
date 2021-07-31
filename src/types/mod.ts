@@ -10,3 +10,4 @@ export type { DeserializationResult } from "./deserialization-result.ts";
 export { FeedType } from "./feed-type.ts";
 export { FeedParseType } from "./feed-type.ts";
 export { DublinCoreFields } from "./fields/dublin-core-fields.ts";
+export { MediaRssFields } from './fields/media-rss-fields.ts';
