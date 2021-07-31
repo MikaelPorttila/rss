@@ -1,74 +1,75 @@
+import { AtomFields } from "../types/fields/mod.ts";
+import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
+import type { ResolverResult } from "./types/resolver-result.ts";
+
 export const resolveAtomField = (
-	nodeName: string,
-): [string, boolean, boolean, boolean] => {
-	let isArrayNode = false;
-	let isNumber = false;
-	let isDate = false;
-	let propertyName = nodeName;
+  name: string,
+): ResolverResult => {
+  const result = {
+    name,
+    isHandled: true,
+    isArray: false,
+    isInt: false,
+    isFloat: false,
+    isDate: false,
+  } as ResolverResult;
 
-	switch (nodeName) {
-		case Field.Category:
-			propertyName = "categories";
-			isArrayNode = true;
-			break;
-		case Field.Contributor:
-			propertyName = "contributors";
-			isArrayNode = true;
-			break;
-		case Field.Link:
-			propertyName = "links";
-			isArrayNode = true;
-			break;
-		case Field.Entry:
-			propertyName = "entries";
-			isArrayNode = true;
-			break;
-		case Field.Updated:
-		case Field.Published:
-			propertyName = nodeName;
-			isDate = true;
-			break;
-		default:
-			propertyName = nodeName;
-	}
+  switch (name) {
+    case AtomFields.Category:
+      result.name = "categories";
+      result.isArray = true;
+      break;
+    case AtomFields.Contributor:
+      result.name = "contributors";
+      result.isArray = true;
+      break;
+    case AtomFields.Link:
+      result.name = "links";
+      result.isArray = true;
+      break;
+    case AtomFields.Entry:
+      result.name = "entries";
+      result.isArray = true;
+      break;
+    case AtomFields.Updated:
+    case AtomFields.Published:
+      result.isDate = true;
+      break;
+    default:
+      const resolverResult = resolveDublinCoreField(name);
+      if (resolverResult.isHandled) {
+        if (resolverResult.isArray) {
+          result.isArray = true;
+        }
 
-	return [propertyName, isArrayNode, isNumber, isDate];
+        if (resolverResult.isDate) {
+          result.isDate = true;
+        }
+
+        if (resolverResult.isInt) {
+          result.isInt = true;
+        }
+
+        if (resolverResult.isFloat) {
+          result.isFloat = true;
+        }
+
+        result.name = resolverResult.name;
+      }
+      break;
+  }
+
+  return result;
 };
 
 export const isAtomCDataField = (nodeName: string): boolean => {
-	switch (nodeName) {
-		case Field.Title:
-		case Field.Summary:
-		case Field.Content:
-		case Field.Rights:
-			return true;
-	}
+  switch (nodeName) {
+    case AtomFields.Title:
+    case AtomFields.Summary:
+    case AtomFields.Content:
+    case AtomFields.Rights:
+      return true;
+  }
 
-	return false;
-}
-
-enum Field {
-	Author = "author",
-	Category = "category",
-	Content = "content",
-	Contributor = "contributor",
-	Email = "email",
-	Entry = "entry",
-	Feed = "feed",
-	Href = "href",
-	Icon = "icon",
-	Id = "id",
-	Link = "link",
-	Name = "name",
-	Published = "published",
-	Rel = "rel",
-	Rights = "rights",
-	Source = "source",
-	Src = "src",
-	Summary = "summary",
-	Title = "title",
-	Type = "type",
-	Updated = "updated",
-	Uri = "uri",
-	Value = "value",
-}
+  return false;
+};

@@ -1,71 +1,75 @@
-// https://validator.w3.org/feed/docs/atom.html
+/*
+	Type is based on the W3 Atom documentation:
+	https://validator.w3.org/feed/docs/atom.html
+*/
 
-export interface Feed {
-	id: string;
-	title: Text;
-	updated: Date;
-	updatedRaw: string;
-	icon?: string;
-	links?: Link[];
-	entries: Entry[];
-	categories?: Category[];
-	contributors?: Person[];
-	generator?: string;
-	author?: Person;
-	logo?: string;
-	rights?: Text;
-	subtitle?: Text;
+export interface Atom {
+  id: string;
+  title: AtomText;
+  updated: Date;
+  updatedRaw: string;
+  icon?: string;
+  links?: AtomLink[];
+  entries: AtomEntry[];
+  categories?: AtomCategory[];
+  contributors?: AtomPerson[];
+  generator?: string;
+  author?: AtomPerson;
+  logo?: string;
+  rights?: AtomText;
+  subtitle?: string;
 }
 
-interface Link {
-	type: string;
-	href: string;
-	rel: string;
-	length?: number
+export interface AtomLink {
+  type: string;
+  href: string;
+  rel: string;
+  hreflang?: string;
+  length?: number;
 }
 
-interface Category {
-	term: string;
-	label?: string;
+export interface AtomCategory {
+  term: string;
+  label?: string;
 }
 
-interface Entry {
-	id: string;
-	title: Text;
-	updated: Date;
-	updatedRaw: string;
-	published?: Date;
-	publishedRaw?: string;
-	content?: Content;
-	links?: Link[];
-	author?: Person;
-	contributors?: Person[];
-	summary?: Text;
-	rights?: Text;
-	categories?: string[];
-	source?: Source;
-	href?: string;
-	[key: string]: any;
+export interface AtomEntry {
+  id: string;
+  title: AtomText;
+  updated: Date;
+  updatedRaw: string;
+  published?: Date;
+  publishedRaw?: string;
+  content?: AtomContent;
+  links?: AtomLink[];
+  author?: AtomPerson;
+  contributors?: AtomPerson[];
+  summary?: AtomText;
+  rights?: AtomText;
+  categories?: AtomCategory[];
+  source?: AtomSource;
+  href?: string;
+  "feedburner:origlink"?: string;
 }
 
-interface Content extends Text {
-	src?: string;
+export interface AtomContent extends AtomText {
+  src?: string;
 }
 
-interface Person {
-	name: string;
-	email?: string;
-	uri?: string;
+export interface AtomPerson {
+  name: string;
+  email?: string;
+  uri?: string;
 }
 
-interface Source {
-	id?: string;
-	title?: string;
-	updated?: Date;
-	updatedRaw?: Date;
+export interface AtomSource {
+  id?: string;
+  title?: string;
+  updated?: Date;
+  updatedRaw?: Date;
 }
 
-interface Text {
-	type: string;
-	value: string;
+export interface AtomText {
+  type: string;
+  value: string;
 }

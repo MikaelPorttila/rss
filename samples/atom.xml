@@ -1,49 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Example Feed</title>
-  <link href="http://example.org/"/>
-  <icon>/icon.jpg</icon>
-  <category term="tech"/>
-  <category term="sport"/>
+  <title>ATOM:Title</title>
+  <link href="https://AtomLink.org/"/>
+  <icon>/AtomIcon.jpg</icon>
+  <category term="ATOM:Category:0:Term" label="ATOM:Category:0:Label"/>
+  <category term="ATOM:Category:1:Term" label="ATOM:Category:1:Label"/>
   <updated>2003-12-13T18:30:02Z</updated>
+	<logo>Atom-Logo.com</logo>
+	<subtitle>ATOM:Subtitle</subtitle>
   <author>
-    <name>John Doe</name>
-    <email>JohnDoe@example.com</email>
-    <uri>http://example.com/~johndoe</uri>
+    <name>ATOM:Feed:Author:Name</name>
+    <email>ATOM:Feed:Author:Email</email>
+    <uri>ATOM:Feed:Author:Uri</uri>
   </author>
   <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>
   <entry>
     <title type="xhtml">
       <div xmlns="http://www.w3.org/1999/xhtml">
-        AT&amp;T bought <b>by SBC</b>!
+        HTML&amp;Test Brough to you by <b>Test</b>!
       </div>
     </title>
-    <link href="http://example.org/2003/12/12/atom01"/>
+    <link href="https://AtomLink.org/Entry/0/link" rel="ATOM:Feed:Entry:0:Link:Rel" type="ATOM:Feed:Entry:0:Link:Type"/>
+		<link href="https://AtomLink.org/Entry/1/link" rel="ATOM:Feed:Entry:1:Link:Rel" type="ATOM:Feed:Entry:1:Link:Type"/>
     <published>2003-12-13T18:30:02Z</published>
     <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da354efa6a</id>
     <updated>2003-12-13T18:30:02Z</updated>
-    <summary>Some text.</summary>
+    <summary type="xhtml">ATOM:Feed:Entry:0:Summary</summary>
     <author>
-      <name>John Doe</name>
-      <email>example@example.com</email>
-      <uri>www.example.com</uri>
+      <name>ATOM:Feed:Entry:0:Author:Name</name>
+      <email>ATOM:Feed:Entry:0:Author:Email</email>
+      <uri>ATOM:Feed:Entry:0:Author:Uri</uri>
     </author>
-    <content>Hello World</content>
-    <category term="tech"/>
-    <category term="sport"/>
+    <content>ATOM:Feed:Entry:0:Content</content>
+    <category term="ATOM:Feed:Entry:0:Category:0:Term" label="ATOM:Feed:Entry:0:Category:0:Label"/>
+    <category term="ATOM:Feed:Entry:0:Category:1:Term" label="ATOM:Feed:Entry:0:Category:1:Label"/>
     <source>
-      <id>http://example.org/</id>
-      <title>Example, Inc.</title>
+      <id>ATOM:Feed:Entry:0:Source:Id</id>
+      <title>ATOM:Feed:Entry:0:Source:Title</title>
       <updated>2003-12-13T18:30:02Z</updated>
     </source>
     <contributor>
-      <name>Micke</name>
+      <name>ATOM:Feed:Entry:0:Contributor:Name</name>
     </contributor>
     <rights type="html">
       &amp;copy; 2020 Micke
     </rights>
   </entry>
   <entry>
+    <feedburner:origLink>https://AtomFeedburner.org/Entry/1</feedburner:origLink>
     <title type="html">
       AT&amp;amp;T bought &amp;lt;b&amp;gt;by SBC&amp;lt;/b&amp;gt;
     </title>
@@ -86,11 +90,11 @@
       <uri>www.example.com</uri>
     </author>
     <source>
-    <id>http://example.org/</id>
-    <title>Example, Inc.</title>
-    <updated>2003-12-13T18:30:02Z</updated>
-  </source>
-    <category term="" /> 
+			<id>http://example.org/</id>
+			<title>Example, Inc.</title>
+			<updated>2003-12-13T18:30:02Z</updated>
+		</source>
+    <category term="" />
     <rights type="html">
       &amp;copy; 2020 Micke
     </rights>

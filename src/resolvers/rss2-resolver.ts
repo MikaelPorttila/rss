@@ -1,91 +1,101 @@
+import type { ResolverResult } from "./types/resolver-result.ts";
+import { Rss2Fields } from "../types/fields/mod.ts";
+import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
+import { resolveMediaRssField } from "./media-rss-resolver.ts";
+
 export const resolveRss2Field = (
-	nodeName: string,
-): [string, boolean, boolean, boolean] => {
-	let isArray = false;
-	let isNumber = false;
-	let isDate = false;
-	let propertyName = nodeName;
+  name: string,
+): ResolverResult => {
+  let result = {
+    name,
+    isHandled: true,
+    isArray: false,
+    isInt: false,
+    isFloat: false,
+    isDate: false,
+  } as ResolverResult;
 
-	switch (nodeName) {
-		case Field.TextInput:
-			propertyName = "textInput";
-			break;
-		case Field.SkipHours:
-			propertyName = "skipHours";
-			isNumber = true;
-			break;
-		case Field.SkipDays:
-			propertyName = "skipDays";
-			isNumber = true;
-			break;
-		case Field.PubDate:
-			propertyName = "pubDate";
-			isDate = true;
-			break;
-		case Field.ManagingEditor:
-			propertyName = "managingEditor";
-			break;
-		case Field.WebMaster:
-			propertyName = "webMaster";
-			break;
-		case Field.LastBuildDate:
-			propertyName = "lastBuildDate";
-			isDate = true;
-			break;
-		case Field.Item:
-			propertyName = "items";
-			isArray = true;
-			break;
-		case Field.Category:
-			propertyName = "categories";
-			isArray = true;
-			break;
-		case Field.DCCreator:
-			isArray = true;
-			break;
-		case Field.isPermaLink:
-			propertyName = "isPermaLink";
-			break;
-		case Field.Ttl:
-		case Field.Length:
-		case Field.Width:
-		case Field.Height:
-			isNumber = true;
-			break;
-	}
+  switch (name) {
+    case Rss2Fields.TextInput:
+      result.name = "textInput";
+      break;
+    case Rss2Fields.SkipHours:
+      result.name = "skipHours";
+      break;
+    case Rss2Fields.SkipDays:
+      result.name = "skipDays";
+      break;
+    case Rss2Fields.PubDate:
+      result.name = "pubDate";
+      result.isDate = true;
+      break;
+    case Rss2Fields.ManagingEditor:
+      result.name = "managingEditor";
+      break;
+    case Rss2Fields.WebMaster:
+      result.name = "webMaster";
+      break;
+    case Rss2Fields.LastBuildDate:
+      result.name = "lastBuildDate";
+      result.isDate = true;
+      break;
+    case Rss2Fields.Item:
+      result.name = "items";
+      result.isArray = true;
+      break;
+    case Rss2Fields.Enclosure:
+      result.isArray = true;
+      break;
+    case Rss2Fields.Category:
+      result.name = "categories";
+      result.isArray = true;
+      break;
+    case Rss2Fields.isPermaLink:
+      result.name = "isPermaLink";
+      break;
+    case Rss2Fields.Ttl:
+    case Rss2Fields.Length:
+    case Rss2Fields.Width:
+    case Rss2Fields.Height:
+      result.isInt = true;
+      break;
+    case Rss2Fields.Hour:
+      result.isArray = true;
+      result.isInt = true;
+      break;
+    case Rss2Fields.Day:
+      result.isArray = true;
+      break;
+    default:
+      const subNamespaceResolvers = [
+        resolveDublinCoreField,
+        resolveMediaRssField,
+      ];
+      for (let i = 0; i < subNamespaceResolvers.length; i++) {
+        const resolverResult = subNamespaceResolvers[i](name);
+        if (resolverResult.isHandled) {
+          if (resolverResult.isArray) {
+            result.isArray = true;
+          }
 
-	return [propertyName, isArray, isNumber, isDate];
+          if (resolverResult.isDate) {
+            result.isDate = true;
+          }
+
+          if (resolverResult.isInt) {
+            result.isInt = true;
+          }
+
+          if (resolverResult.isFloat) {
+            result.isFloat = true;
+          }
+
+          result.name = resolverResult.name;
+          break;
+        }
+      }
+      break;
+  }
+
+  return result;
 };
-
-enum Field {
-	Author = "author",
-	Category = "category",
-	Channel = "channel",
-	Cloud = "cloud",
-	Copyright = "copyright",
-	Description = "description",
-	Docs = "docs",
-	Enclosure = "enclosure",
-	Generator = "generator",
-	Guid = "guid",
-	Height = "height",
-	Image = "image",
-	isPermaLink = "ispermalink",
-	Item = "item",
-	Language = "language",
-	LastBuildDate = "lastbuilddate",
-	Length = "length",
-	Link = "link",
-	ManagingEditor = "managingeditor",
-	PubDate = "pubdate",
-	SkipDays = "skipdays",
-	SkipHours = "skiphours",
-	Source = "source",
-	TextInput = "textinput",
-	Title = "title",
-	Ttl = "ttl",
-	Url = "url",
-	WebMaster = "webmaster",
-	Width = "width",
-	DCCreator = "dc:creator"
-}

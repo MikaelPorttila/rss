@@ -3,99 +3,245 @@
     xmlns:content="http://purl.org/rss/1.0/modules/content/"
     xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title><![CDATA[Lorem ipsum feed for an interval of 1 minutes with 20 item(s)]]></title>
-        <description><![CDATA[This is a constantly updating lorem ipsum feed]]></description>
-        <link>http://example.com/</link>
-        <generator>RSS for Deno</generator>
-        <lastBuildDate>Mon, 22 Jun 2020 20:03:04 GMT</lastBuildDate>
-        <pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
-        <copyright><![CDATA[MIT]]></copyright>
-        <ttl>100</ttl>
-        <item>
-            <title><![CDATA[Lorem ipsum 2020-06-22T20:03:00Z]]></title>
-            <description><![CDATA[Non sit sunt cupidatat consequat esse eiusmod adipisicing enim aliquip nisi exercitation.]]></description>
-            <link>http://example.com/test/1592856180</link>
-            <guid isPermaLink="true">http://example.com/test/1592856180</guid>
-            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
-            <pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[Lorem ipsum 2020-06-22T20:00:00Z]]></title>
-            <description><![CDATA[Ullamco excepteur ad quis ullamco dolor reprehenderit ut mollit qui duis.]]></description>
-            <link>http://example.com/test/1592856000</link>
-            <guid isPermaLink="true">http://example.com/test/1592856000</guid>
-            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
-            <pubDate>Mon, 22 Jun 2020 20:00:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[Lorem ipsum 2020-06-22T19:59:00Z]]></title>
-            <description><![CDATA[Labore elit fugiat aliquip ipsum laboris do sunt exercitation.]]></description>
-            <link>http://example.com/test/1592855940</link>
-            <guid isPermaLink="true">http://example.com/test/1592855940</guid>
-            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
-            <pubDate>Mon, 22 Jun 2020 19:59:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[Lorem ipsum 2020-06-22T19:58:00Z]]></title>
-            <description><![CDATA[Reprehenderit amet incididunt sunt esse ut deserunt commodo magna ex cillum incididunt deserunt quis laborum.]]></description>
-            <link>http://example.com/test/1592855880</link>
-            <guid isPermaLink="true">http://example.com/test/1592855880</guid>
-            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
-            <pubDate>Mon, 22 Jun 2020 19:58:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[Lorem ipsum 2020-06-22T19:57:00Z]]></title>
-            <description><![CDATA[Quis esse commodo ea esse deserunt voluptate anim Lorem non irure Lorem Lorem reprehenderit velit.]]></description>
-            <link>http://example.com/test/1592855820</link>
-            <guid isPermaLink="true">http://example.com/test/1592855820</guid>
-            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
-            <pubDate>Mon, 22 Jun 2020 19:57:00 GMT</pubDate>
-        </item>
-        <item>
-            <title><![CDATA[Lorem ipsum 2020-06-22T19:54:00Z]]></title>
-            <description><![CDATA[Culpa mollit cillum enim mollit duis.]]></description>
-            <link>http://example.com/test/1592855640</link>
-            <guid isPermaLink="true">http://example.com/test/1592855640</guid>
-            <dc:creator><![CDATA[DENO RSS]]></dc:creator>
-            <pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
-        </item>
-				<item>
-					<title><![CDATA[Lorem ipsum 2020-06-22T19:54:00Z]]></title>
-					<description>
-						<p>Hello World!</p>
-						<a href="https://github.org"><em>Read more...</em></a>
-					</description>
+			<title><![CDATA[RSS2:Title:CData]]></title>
+			<description><![CDATA[RSS2:Description:CData]]></description>
+			<link>https://RSS2-link.com/</link>
+			<generator>RSS2:Generator</generator>
+			<language>RSS2:Language</language>
+			<lastBuildDate>Mon, 22 Jun 2020 20:03:04 GMT</lastBuildDate>
+			<skipDays>
+				<day>Monday</day>
+				<day>Tuesday</day>
+				<day>Wednesday</day>
+				<day>Thursday</day>
+				<day>Friday</day>
+				<day>Saturday</day>
+				<day>Sunday</day>
+			</skipDays>
+			<skipHours>
+				<hour>0</hour>
+				<hour>1</hour>
+				<hour>2</hour>
+				<hour>3</hour>
+				<hour>4</hour>
+				<hour>5</hour>
+				<hour>6</hour>
+				<hour>7</hour>
+				<hour>8</hour>
+				<hour>9</hour>
+				<hour>10</hour>
+				<hour>11</hour>
+				<hour>12</hour>
+				<hour>13</hour>
+				<hour>14</hour>
+				<hour>15</hour>
+				<hour>16</hour>
+				<hour>17</hour>
+				<hour>18</hour>
+				<hour>19</hour>
+				<hour>20</hour>
+				<hour>21</hour>
+				<hour>22</hour>
+				<hour>23</hour>
+			</skipHours>
+			<docs>https://RSS2-docs.com/</docs>
+			<managingEditor>mail@wRSS2-managingEditor.com</managingEditor>
+			<webMaster>mail@RSS2-webMaster.com</webMaster>
+			<pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
+			<copyright><![CDATA[RSS2:Copyright]]></copyright>
+			<ttl>100</ttl>
+			<image>
+				<url>RSS2-image.com</url>
+				<title>RSS2:Image</title>
+				<link>RSS2-image2.com</link>
+				<height>69</height>
+				<width>420</width>
+			</image>
+			<item>
+					<title><![CDATA[RSS2:Item:0:Title:CData]]></title>
+					<description><![CDATA[RSS2:Item:0:Description:CData]]></description>
+					<link>https://RSS2-entry-0-link.com/0</link>
+					<author>RSS2:Item:0:Author</author>
+					<guid isPermaLink="true">https://RSS2-entry-0-link.com/0</guid>
+					<dc:creator><![CDATA[RSS2:Item:0:DC:Creator]]></dc:creator>
+					<pubDate>Mon, 22 Jun 2020 20:03:00 GMT</pubDate>
+					<comments>https://RSS2-entry-0-comment.com/0</comments>
+					<category>RSS2:Item:0:Category:0</category>
+					<category>RSS2:Item:0:Category:1</category>
+					<category>RSS2:Item:0:Category:2</category>
+					<category>RSS2:Item:0:Category:3</category>
+					<category>RSS2:Item:0:Category:4</category>
+					<media:content height="1337" medium="image" url="https://RSS2-media-content.com/" width="1337"/>
+					<media:credit>RSS2:Media:Credit</media:credit>
+					<media:description>RSS2:Media:Description</media:description>
+					<enclosure length="24986239" type="audio/mpeg" url="https://RSS2-entry-0-enclosure-0-url.mp3" />
+					<enclosure length="24986239" type="audio/mpeg" url="https://RSS2-entry-0-enclosure-1-url.mp3" />
+			</item>
+			<item>
+					<title><![CDATA[RSS2:Item:1:Title:CData]]></title>
+					<description><![CDATA[Ullamco excepteur ad quis ullamco dolor reprehenderit ut mollit qui duis.]]></description>
+					<link>http://example.com/test/1592856000</link>
+					<guid isPermaLink="true">https://example.com/test/1592856000</guid>
+					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
+					<pubDate>Mon, 22 Jun 2020 20:00:00 GMT</pubDate>
+					<media:thumbnail url="RSS2:Item:1:Media:Thumbnail" width="69" height="420"/>
+			</item>
+			<item>
+					<title><![CDATA[RSS2:Item:2:Title:CData]]></title>
+					<description><![CDATA[Labore elit fugiat aliquip ipsum laboris do sunt exercitation.]]></description>
+					<link>http://example.com/test/1592855940</link>
+					<guid isPermaLink="true">http://example.com/test/1592855940</guid>
+					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
+					<pubDate>Mon, 22 Jun 2020 19:59:00 GMT</pubDate>
+					<media:group>
+						<media:content url="RSS2:Item:2:Media:Group:MediaContent:0:Url"
+							fileSize="1000" bitrate="64" type="RSS2:Item:2:Media:Group:MediaContent:0:Type"
+							isDefault="true" expression="RSS2:Item:2:Media:Group:MediaContent:0:Expression" />
+
+						<media:content url="RSS2:Item:2:Media:Group:MediaContent:1:Url"
+							fileSize="2000" bitrate="128" type="RSS2:Item:2:Media:Group:MediaContent:1:Type"
+							expression="RSS2:Item:2:Media:Group:MediaContent:1:Expression" />
+
+						<media:content url="RSS2:Item:2:Media:Group:MediaContent:2:Url"
+							fileSize="4000" bitrate="256" type="RSS2:Item:2:Media:Group:MediaContent:2:Type"
+							expression="RSS2:Item:2:Media:Group:MediaContent:2:Expression" />
+
+						<media:content url="RSS2:Item:2:Media:Group:MediaContent:3:Url"
+							fileSize="8000" type="RSS2:Item:2:Media:Group:MediaContent:3:Type"
+							expression="RSS2:Item:2:Media:Group:MediaContent:3:Expression" />
+
+						<media:content url="http://www.foo.com/song.wav"
+							fileSize="16000" type="audio/x-wav" expression="full" />
+
+						<media:credit role="RSS2:Item:2:Media:Group:Media:Credit:0:Role">RSS2:Item:2:Media:Group:Media:Credit:0</media:credit>
+						<media:credit role="RSS2:Item:2:Media:Group:Media:Credit:1:Role">RSS2:Item:2:Media:Group:Media:Credit:1</media:credit>
+						<media:category>RSS2:Item:2:Media:Group:Media:Category</media:category>
+						<media:rating>RSS2:Item:2:Media:Group:Media:Rating</media:rating>
+					</media:group>
+			</item>
+			<item>
+					<title><![CDATA[RSS2:Item:3:Title:CData]]></title>
+					<description><![CDATA[Reprehenderit amet incididunt sunt esse ut deserunt commodo magna ex cillum incididunt deserunt quis laborum.]]></description>
+					<link>http://example.com/test/1592855880</link>
+					<guid isPermaLink="true">http://example.com/test/1592855880</guid>
+					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
+					<pubDate>Mon, 22 Jun 2020 19:58:00 GMT</pubDate>
+					<media:content url="RSS2:Item:3:Media:Content:0:Media:Content" fileSize="1000" type="RSS2:Item:3:Media:Content:0:Media:Content:Type" expression="RSS2:Item:3:Media:Content:0:Media:Content:Expression">
+						<media:credit role="RSS2:Item:3:Media:Content:0:Media:Credit:0">RSS2:Item:3:Media:Content:0:Media:Credit:0</media:credit>
+						<media:category>RSS2:Item:3:Media:Content:0:Media:Category:0</media:category>
+						<media:rating>RSS2:Item:3:Media:Content:0:Media:Rating:0</media:rating>
+					</media:content>
+					<media:content url="RSS2:Item:3:Media:Content:1:Media:Content" fileSize="2000" type="RSS2:Item:3:Media:Content:1:Media:Content:Type" expression="RSS2:Item:3:Media:Content:1:Expression">
+						<media:credit role="RSS2:Item:3:Media:Content:1:Media:Credit:Role">RSS2:Item:3:Media:Content:1:Media:Content:1:Media:Credit</media:credit>
+						<media:category>RSS2:Item:3:Media:Content:1:Media:Category</media:category>
+						<media:rating>RSS2:Item:3:Media:Content:1:Media:Category</media:rating>
+					</media:content>
+					<media:content url="RSS2:Item:3:Media:Content:2:" fileSize="1500" type="RSS2:Item:3:Media:Content:2:Type" expression="RSS2:Item:3:Media:Content:2:Expression">
+						<media:credit role="RSS2:Item:3:Media:Content:2:Media:Credit:Role">RSS2:Item:3:Media:Content:2:Media:Credit</media:credit>
+						<media:category>RSS2:Item:3:Media:Content:2:Media:Category</media:category>
+						<media:rating>RSS2:Item:3:Media:Content:2:Media:Rating</media:rating>
+					</media:content>
+			</item>
+			<item>
+					<title><![CDATA[RSS2:Item:4:Title:CData]]></title>
+					<description><![CDATA[Quis esse commodo ea esse deserunt voluptate anim Lorem non irure Lorem Lorem reprehenderit velit.]]></description>
+					<link>http://example.com/test/1592855820</link>
+					<guid isPermaLink="true">http://example.com/test/1592855820</guid>
+					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
+					<pubDate>Mon, 22 Jun 2020 19:57:00 GMT</pubDate>
+					<media:community>
+						<media:starRating average="3.5" count="20" min="1" max="10" />
+						<media:statistics views="5" favorites="5" />
+						<media:tags>news: 5, abc:3</media:tags>
+					</media:community>
+					<media:comments>
+						<media:comment>comment1</media:comment>
+						<media:comment>comment2</media:comment>
+					</media:comments>
+					<media:embed url="http://www.foo.com/player.swf" width="512" height="323">
+						<media:param name="type">application/x-shockwave-flash</media:param>
+						<media:param name="width">512</media:param>
+						<media:param name="height">323</media:param>
+						<media:param name="allowFullScreen">true</media:param>
+						<media:param name="flashVars">
+							id=12345&amp;vid=678912i&amp;lang=en-us&amp;intl=us&amp;thumbUrl=http://www.foo.com/thumbnail.jpg
+						</media:param>
+					</media:embed>
+					<media:responses>
+						<media:response>http://www.response1.com</media:response>
+						<media:response>http://www.response2.com</media:response>
+					</media:responses>
+					<media:backLinks>
+						<media:backLink>http://www.backlink1.com</media:backLink>
+						<media:backLink>http://www.backlink2.com</media:backLink>
+					</media:backLinks>
+					<media:status state="active" />
+					<media:price type="rent" price="19.99" currency="EUR" />
+					<media:license type="text/html" href="http://www.licensehost.com/license"> Sample license for a video</media:license>
+					<media:subTitle type="application/smil" lang="en-us" href="http://www.foo.org/subtitle.smil" />
+					<media:peerLink type="application/x-bittorrent " href="http://www.foo.org/sampleFile.torrent" />
+					<media:location description="My house" start="00:01" end="01:00">
+						<georss:where>
+							<gml:Point>
+							<gml:pos>35.669998 139.770004</gml:pos>
+							</gml:Point>
+						</georss:where>
+					</media:location>
+					<media:restriction type="sharing" relationship="deny" />
+					<media:scenes>
+						<media:scene>
+							<sceneTitle>sceneTitle1</sceneTitle>
+							<sceneDescription>sceneDesc1</sceneDescription>
+							<sceneStartTime>00:15</sceneStartTime>
+							<sceneEndTime>00:45</sceneEndTime>
+						</media:scene>
+					</media:scenes>
+			</item>
+			<item>
+					<title><![CDATA[RSS2:Item:5:Title:CData]]></title>
+					<description><![CDATA[Culpa mollit cillum enim mollit duis.]]></description>
 					<link>http://example.com/test/1592855640</link>
 					<guid isPermaLink="true">http://example.com/test/1592855640</guid>
 					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
 					<pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
-        </item>
-				<item>
-					<title><![CDATA[Lorem ipsum 2020-06-22T19:54:00Z]]></title>
-					<description><![CDATA[Culpa mollit cillum enim mollit duis.]]> </description>
-					<link>http://example.com/test/1592855640</link>
-					<guid isPermaLink="true">http://example.com/test/1592855640</guid>
-					<dc:creator><![CDATA[DENO RSS]]></dc:creator>
-					<pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
-				</item>
-				<item>
-					<title>Item with element with missing end tags</title>
-					<link />
-					<guid isPermaLink="true">itemWithMissingEndTags</guid>
-					<atom:link href="https://github.com/MikaelPorttila/rss/1/RSS2" rel="standout"/>
-					<description />
-					<dc:creator>Deno RSS</dc:creator>
-					<pubDate>Thu, 08 Jul 2021 10:53:40 +0000</pubDate>
-				</item>
-				<item>
-					<title>Item with multiple dublin core creators</title>
-					<link />
-					<guid isPermaLink="true">itemWithMultipleDCCreators</guid>
-					<atom:link href="https://github.com/MikaelPorttila/rss/1/RSS2" rel="standout"/>
-					<description />
-					<dc:creator>Deno RSS</dc:creator>
-					<dc:creator>Deno RSS 2</dc:creator>
-					<pubDate>Thu, 08 Jul 2021 10:53:40 +0000</pubDate>
-				</item>
+			</item>
+			<item>
+				<title><![CDATA[RSS2:Item:6:Title:CData]]></title>
+				<description>
+					<p>Hello World!</p>
+					<a href="https://github.org"><em>Read more...</em></a>
+				</description>
+				<link>http://example.com/test/1592855640</link>
+				<guid isPermaLink="true">http://example.com/test/1592855640</guid>
+				<dc:creator><![CDATA[DENO RSS]]></dc:creator>
+				<pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
+			</item>
+			<item>
+				<title><![CDATA[RSS2:Item:7:Title:CData]]></title>
+				<description><![CDATA[Culpa mollit cillum enim mollit duis.]]> </description>
+				<link>http://example.com/test/1592855640</link>
+				<guid isPermaLink="true">http://example.com/test/1592855640</guid>
+				<dc:creator><![CDATA[DENO RSS]]></dc:creator>
+				<pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
+			</item>
+			<item>
+				<title>RSS2:Item:8:Title</title>
+				<link />
+				<guid isPermaLink="true">itemWithMissingEndTags</guid>
+				<atom:link href="https://github.com/MikaelPorttila/rss/1/RSS2" rel="standout"/>
+				<description />
+				<dc:creator>Deno RSS</dc:creator>
+				<pubDate>Thu, 08 Jul 2021 10:53:40 +0000</pubDate>
+			</item>
+			<item>
+				<title>RSS2:Item:9:Title</title>
+				<link />
+				<guid isPermaLink="true">itemWithMultipleDCCreators</guid>
+				<atom:link href="https://github.com/MikaelPorttila/rss/1/RSS2" rel="standout"/>
+				<description />
+				<dc:creator>Deno RSS</dc:creator>
+				<dc:creator>Deno RSS 2</dc:creator>
+				<pubDate>Thu, 08 Jul 2021 10:53:40 +0000</pubDate>
+			</item>
     </channel>
 </rss>

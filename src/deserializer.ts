@@ -1,231 +1,301 @@
 import { SAXParser } from "../deps.ts";
 import type {
-	DeserializationResult,
-	Feed,
-	JsonFeed,
-	RSS1,
-	RSS2,
+  Atom,
+  DeserializationResult,
+  Feed,
+  JsonFeed,
+  RSS1,
+  RSS2,
 } from "./types/mod.ts";
-
+import type { ResolverResult } from "./resolvers/types/resolver-result.ts";
 import { FeedParseType, FeedType } from "./types/mod.ts";
-
 import {
-	isAtomCDataField,
-	resolveAtomField,
-	resolveRss1Field,
-	resolveRss2Field,
+  isAtomCDataField,
+  resolveAtomField,
+  resolveRss1Field,
+  resolveRss2Field,
 } from "./resolvers/mod.ts";
-import { toJsonFeed } from './mapper.ts';
+import {
+  toFeed,
+  toJsonFeed,
+  toLegacyAtom,
+  toLegacyRss1,
+  toLegacyRss2,
+} from "./mappers/mod.ts";
+
 export interface Options {
-	outputJsonFeed?: boolean
+  outputJsonFeed?: boolean;
 }
 
-export const deserializeFeed = ((
-	input: string,
-	options?: Options
-) => new Promise<DeserializationResult<Feed | RSS1 | RSS2 | JsonFeed>>(
-	(resolve, reject) => {
-		if (!input) {
-			reject(new Error("Input was undefined, null or empty"));
-			return;
-		}
+export const parseFeed = (
+  input: string,
+): Promise<Feed> =>
+  new Promise<Feed>(async (resolve, reject) => {
+    if (!input) {
+      reject(new Error("Input was undefined, null or empty"));
+      return;
+    }
 
-		//	Handle invalid feed documents by converting the description field to CDATA.
-		input = input
-			.replaceAll(/<description>(?!(\s*<!\[CDATA))/g, `<description><![CDATA[`)
-			.replaceAll(/(?<!\]\]>\s*)<\/description>/g, `]]></description>`);
+    const { data, feedType } = await parse(input);
+    const result = toFeed(feedType, data) as Feed;
+    resolve(result);
+  });
 
-		let cDataLevel: number;
-		let cDataBuilder: string;
-		let cDataActive: boolean;
-		let feedType: FeedType;
-		const stack: any[] = [{}];
-		const parser = new SAXParser(false, {
-			trim: true,
-			lowercase: true,
-		});
+/**
+ * @deprecated The method should not be used, please use the parseFeed method instead.
+ */
+export const deserializeFeed = (async (
+  input: string,
+  options?: Options,
+) => {
+  console.warn(
+    "RSS: deserializeFeed is deprecated, please use parseFeed instead.",
+  );
+  const { data, feedType } = await parse(input);
 
-		let resolveField: (
-			nodeName: string,
-		) => [string, boolean, boolean, boolean];
+  let legacyFeed;
+  switch (feedType) {
+    case FeedType.Rss1:
+      legacyFeed = toLegacyRss1(data) as any;
+      break;
+    case FeedType.Rss2:
+      legacyFeed = toLegacyRss2(data) as any;
+      break;
+    case FeedType.Atom:
+      legacyFeed = toLegacyAtom(data) as any;
+      break;
+    default:
+      legacyFeed = data;
+      break;
+  }
 
-		let isCDataField: (nodeName: string) => boolean;
+  const result: DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed> & {
+    originalFeedType?: FeedType;
+  } = {
+    feed: options?.outputJsonFeed
+      ? toJsonFeed(feedType, legacyFeed)
+      : legacyFeed,
+    feedType: options?.outputJsonFeed ? FeedType.JsonFeed : feedType,
+    originalFeedType: feedType,
+  };
 
-		parser.ontext = (text: string): void => {
-			if (cDataActive) {
-				cDataBuilder += text;
-			} else {
-				stack[stack.length - 1] = text.trim();
-			}
-		};
-
-		parser.oncdata = (text: string): void => {
-			if (cDataActive) {
-				cDataBuilder += text;
-			} else {
-				stack[stack.length - 1] = text.trim();
-			}
-		};
-
-		const onOpenTag = (node: OpenTag): void => {
-			if (cDataActive) {
-				let attributes = Object
-					.keys(node.attributes)
-					.map((key) => `${key}="${(node.attributes as any)[key]}"`)
-					.join(' ')
-					.trim();
-
-				if (attributes.length) {
-					cDataBuilder += `<${node.name} ${attributes}>`
-				} else {
-					cDataBuilder += `<${node.name}>`
-				}
-
-				cDataLevel++;
-				return;
-			}
-
-			if (isCDataField(node.name)) {
-				cDataActive = true;
-				cDataBuilder = '';
-				cDataLevel = 0;
-			}
-			stack.push({ ...node.attributes });
-		};
-
-		parser.onattribute = (attr: Attribute): void => {
-			if (cDataActive) {
-				return;
-			}
-
-			try {
-				stack[stack.length - 1][attr.name] = attr.value.trim();
-			}
-			catch {
-				console.error(`Failed to assign property ${attr.name} with the value ${attr?.value?.trim()}`);
-			}
-		};
-
-		parser.onclosetag = (nodeName: string) => {
-			if (cDataActive && cDataLevel) {
-				cDataBuilder += `</${nodeName}>`
-				cDataLevel--;
-				return;
-			}
-
-			let node = stack.pop();
-
-			if (stack.length === 0) {
-				Object.assign(parser, {
-					onopentag: undefined,
-					onclosetag: undefined,
-					ontext: undefined,
-					oncdata: undefined,
-					onattribute: undefined,
-				});
-
-				const result: DeserializationResult<Feed | RSS1 | RSS2 | JsonFeed> & { originalFeedType?: FeedType } = {
-					feed: options?.outputJsonFeed ? toJsonFeed(feedType, node) : node,
-					feedType: options?.outputJsonFeed ? FeedType.JsonFeed : feedType,
-				};
-
-				if (options?.outputJsonFeed) {
-					result.originalFeedType = feedType
-				}
-
-				resolve(result);
-				return;
-			}
-
-			if (cDataActive) {
-				node['value'] = cDataBuilder;
-				stack[stack.length - 1][nodeName] = node;
-				cDataBuilder = '';
-				cDataActive = false;
-				cDataLevel = 0;
-				return;
-			}
-
-			const [
-				propertyName,
-				isArray,
-				isNumber,
-				isDate,
-			] = resolveField(nodeName);
-
-			const targetNode = stack[stack.length - 1];
-
-			if (isNumber) {
-				node = parseInt(node);
-			} else if (isDate) {
-				targetNode[propertyName + 'Raw'] = node;
-				node = new Date(node);
-			}
-
-			if (isArray) {
-				if (!targetNode[propertyName]) {
-					targetNode[propertyName] = [node];
-				} else {
-					targetNode[propertyName].push(node);
-				}
-			} else {
-				const isEmpty =
-					(typeof node === 'object') &&
-					Object.keys(node).length === 0 &&
-					!(node instanceof Date);
-
-
-				try {
-					if (!isEmpty) {
-						targetNode[propertyName] = node;
-					}
-				}
-				catch {
-					console.error(`Failed to add property ${propertyName} on node`, targetNode);
-				}
-			}
-		};
-
-		parser.onopentag = (node: OpenTag) => {
-			switch (node.name) {
-				case FeedParseType.Atom:
-					feedType = FeedType.Atom;
-					isCDataField = isAtomCDataField;
-					resolveField = resolveAtomField;
-					break;
-				case FeedParseType.Rss2:
-					feedType = FeedType.Rss2;
-					isCDataField = () => false;
-					resolveField = resolveRss2Field;
-					break;
-				case FeedParseType.Rss1:
-					feedType = FeedType.Rss1;
-					isCDataField = () => false;
-					resolveField = resolveRss1Field;
-					break;
-				default:
-					reject(new Error(`Type ${node.name} is not supported`));
-					break;
-			}
-			parser.onopentag = onOpenTag;
-		};
-
-		parser.write(input).close();
-	}
-)) as {
-	(input: string): Promise<DeserializationResult<Feed | RSS1 | RSS2>>;
-	(input: string, options: Options & { outputJsonFeed: false }): Promise<DeserializationResult<Feed | RSS1 | RSS2>>;
-	(input: string, options: Options & { outputJsonFeed: true }): Promise<DeserializationResult<JsonFeed> & { originalFeedType: FeedType }>;
-	(input: string, options?: Options): Promise<DeserializationResult<Feed | JsonFeed | RSS1 | RSS2>>;
+  return result;
+}) as {
+  (input: string): Promise<DeserializationResult<Atom | RSS1 | RSS2>>;
+  (
+    input: string,
+    options: Options & { outputJsonFeed: false },
+  ): Promise<DeserializationResult<Atom | RSS1 | RSS2>>;
+  (
+    input: string,
+    options: Options & { outputJsonFeed: true },
+  ): Promise<
+    DeserializationResult<JsonFeed> & { originalFeedType: FeedType }
+  >;
+  (
+    input: string,
+    options?: Options,
+  ): Promise<DeserializationResult<Atom | JsonFeed | RSS1 | RSS2>>;
 };
 
-interface Attribute {
-	name: string;
-	value: string;
-}
+const parse = (input: string) =>
+  new Promise<{ feedType: FeedType; data: any }>(
+    (resolve, reject) => {
+      if (!input) {
+        reject(new Error("Input was undefined, null or empty"));
+        return;
+      }
+
+      //	Handle invalid feed documents by converting the description field to CDATA.
+      input = input
+        .replaceAll(
+          /<description>(?!(\s*<!\[CDATA))/g,
+          `<description><![CDATA[`,
+        )
+        .replaceAll(/(?<!\]\]>\s*)<\/description>/g, `]]></description>`);
+
+      let cDataLevel: number;
+      let cDataBuilder: string;
+      let cDataActive: boolean;
+      let feedType: FeedType;
+      const stack: any[] = [{}];
+      const parser = new SAXParser(false, {
+        trim: true,
+        lowercase: true,
+      });
+
+      let resolveField: (
+        nodeName: string,
+      ) => ResolverResult;
+
+      let isCDataField: (nodeName: string) => boolean;
+
+      parser.oncdata = parser.ontext = (text: string): void => {
+        if (cDataActive) {
+          cDataBuilder += text;
+        } else {
+          stack[stack.length - 1].value = text.trim();
+        }
+      };
+
+      const onOpenTag = (node: OpenTag): void => {
+        const attributeNames = Object.keys(node.attributes);
+
+        if (cDataActive) {
+          const attributes = attributeNames
+            .map((key) => `${key}="${(node.attributes as any)[key]}"`)
+            .join(" ")
+            .trim();
+
+          if (attributes.length) {
+            cDataBuilder += `<${node.name} ${attributes}>`;
+          } else {
+            cDataBuilder += `<${node.name}>`;
+          }
+
+          cDataLevel++;
+          return;
+        }
+
+        if (isCDataField(node.name)) {
+          cDataActive = true;
+          cDataBuilder = "";
+          cDataLevel = 0;
+        }
+
+        const newNode = attributeNames.reduce((builder, attrName) => {
+          const val = (node.attributes as any)[attrName];
+          if (val !== undefined && val !== null) {
+            const { name, isInt, isFloat, isDate } = resolveField(attrName);
+
+            if (isInt) {
+              builder[name] = parseInt(val);
+            } else if (isFloat) {
+              builder[name] = parseFloat(val);
+            } else if (isDate) {
+              builder[name + "Raw"] = val;
+              builder[name] = new Date(val);
+            } else {
+              builder[name] = val;
+            }
+          }
+
+          return builder;
+        }, {} as any);
+
+        stack.push(newNode);
+      };
+
+      parser.onclosetag = (nodeName: string) => {
+        if (cDataActive && cDataLevel) {
+          cDataBuilder += `</${nodeName}>`;
+          cDataLevel--;
+          return;
+        }
+
+        let node = stack.pop();
+
+        if (stack.length === 0) {
+          Object.assign(parser, {
+            onopentag: undefined,
+            onclosetag: undefined,
+            ontext: undefined,
+            oncdata: undefined,
+          });
+
+          const result = {
+            feedType: feedType,
+            data: node,
+          };
+          resolve(result);
+          return;
+        }
+
+        const targetNode = stack[stack.length - 1];
+        const {
+          name,
+          isArray,
+          isInt,
+          isFloat,
+          isDate,
+        } = resolveField(nodeName);
+
+        if (cDataActive) {
+          node.value = cDataBuilder;
+          targetNode[name] = node;
+          cDataBuilder = "";
+          cDataActive = false;
+          cDataLevel = 0;
+          return;
+        }
+
+        if (node.value !== undefined && node.value !== null) {
+          if (isInt) {
+            node.value = parseInt(node.value);
+          } else if (isFloat) {
+            node.value = parseFloat(node.value);
+          } else if (isDate) {
+            targetNode[name + "Raw"] = { value: node.value };
+            node.value = new Date(node.value);
+          }
+        }
+
+        if (isArray) {
+          if (!targetNode[name]) {
+            targetNode[name] = [node];
+          } else {
+            targetNode[name].push(node);
+          }
+        } else {
+          const isEmpty = (typeof node === "object") &&
+            Object.keys(node).length === 0 &&
+            !(node instanceof Date);
+          try {
+            if (!isEmpty) {
+              targetNode[name] = node;
+            }
+          } catch {
+            console.warn(
+              `Failed to add property ${name} on node`,
+              targetNode,
+            );
+          }
+        }
+      };
+
+      parser.onopentag = (node: OpenTag) => {
+        switch (node.name) {
+          case FeedParseType.Atom:
+            feedType = FeedType.Atom;
+            isCDataField = isAtomCDataField;
+            resolveField = resolveAtomField;
+            break;
+          case FeedParseType.Rss2:
+            feedType = FeedType.Rss2;
+            isCDataField = () => false;
+            resolveField = resolveRss2Field;
+            break;
+          case FeedParseType.Rss1:
+            feedType = FeedType.Rss1;
+            isCDataField = () => false;
+            resolveField = resolveRss1Field;
+            break;
+          default:
+            reject(new Error(`Type ${node.name} is not supported`));
+            break;
+        }
+        parser.onopentag = onOpenTag;
+      };
+
+      parser
+        .write(input)
+        .close()
+        .flush();
+    },
+  );
 
 interface OpenTag {
-	name: string;
-	attributes: {};
-	isSelfClosing: boolean;
+  name: string;
+  attributes: {};
+  isSelfClosing: boolean;
 }

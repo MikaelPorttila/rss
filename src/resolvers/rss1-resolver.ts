@@ -1,38 +1,60 @@
+import type { ResolverResult } from "./types/resolver-result.ts";
+import { Rss1Fields } from "../types/fields/mod.ts";
+import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
+import { resolveSlashField } from "./slash-resolver.ts";
+
 export const resolveRss1Field = (
-	nodeName: string,
-): [string, boolean, boolean, boolean] => {
-	let isArrayNode = false;
-	let isNumber = false;
-	let isDate = false;
-	let propertyName = nodeName;
+  name: string,
+): ResolverResult => {
+  const result = {
+    name,
+    isHandled: true,
+    isArray: false,
+    isInt: false,
+    isFloat: false,
+    isDate: false,
+  } as ResolverResult;
 
-	switch (nodeName) {
-		case Field.TextInput:
-			propertyName = "textInput";
-			break;
-		case Field.Item:
-			propertyName = "items";
-			isArrayNode = true;
-			break;
-		case Field.About:
-			propertyName = "about";
-			break;
-		case Field.Resource:
-			propertyName = "resource";
-			break;
-	}
+  switch (name) {
+    case Rss1Fields.TextInput:
+      result.name = "textInput";
+      break;
+    case Rss1Fields.Item:
+      result.isArray = true;
+      break;
+    case Rss1Fields.About:
+      result.name = "about";
+      break;
+    case Rss1Fields.Resource:
+      result.name = "resource";
+      break;
+    default:
+      const subNamespaceResolvers = [resolveDublinCoreField, resolveSlashField];
+      for (let i = 0; i < subNamespaceResolvers.length; i++) {
+        const resolverResult = subNamespaceResolvers[i](name);
+        if (resolverResult.isHandled) {
+          if (resolverResult.isArray) {
+            result.isArray = true;
+          }
 
-	return [propertyName, isArrayNode, isNumber, isDate];
+          if (resolverResult.isDate) {
+            result.isDate = true;
+          }
+
+          if (resolverResult.isInt) {
+            result.isInt = true;
+          }
+
+          if (resolverResult.isFloat) {
+            result.isFloat = true;
+          }
+
+          result.name = resolverResult.name;
+          break;
+        }
+      }
+      break;
+  }
+
+  return result;
 };
-
-enum Field {
-	About = "rdf:about",
-	Channel = "channel",
-	Description = "description",
-	Image = "image",
-	Item = "item",
-	Link = "link",
-	Resource = "rdf:resource",
-	TextInput = "textinput",
-	Title = "title",
-}
