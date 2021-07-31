@@ -1,15 +1,19 @@
-import { Feed, FeedEntry, JsonFeed } from "./../types/mod.ts";
-import { AtomFields, DublinCoreFields } from "./../types/fields/mod.ts";
-import { copyValueFields, isValidURL } from "./../util.ts";
-import { FeedType } from "./../types/mod.ts";
-import { SlashFieldArray } from "./../types/slash.ts";
-import { copyMedia } from "./media-mapper.ts";
-import {
+import type {
   InternalAtom,
   InternalMediaRss,
   InternalRSS1,
   InternalRSS2,
 } from "../types/internal/mod.ts";
+import type {
+	Feed,
+	FeedEntry,
+	JsonFeed
+} from "./../types/mod.ts";
+import { AtomFields, DublinCoreFields } from "./../types/fields/mod.ts";
+import { copyValueFields, isValidURL } from "./../util.ts";
+import { FeedType } from "./../types/mod.ts";
+import { SlashFieldArray } from "./../types/slash.ts";
+import { copyMedia } from "./media-mapper.ts";
 import { DublinCoreFieldArray } from "../types/internal/internal-dublin-core.ts";
 
 export const toFeed = (

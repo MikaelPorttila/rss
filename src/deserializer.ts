@@ -7,6 +7,9 @@ import type {
   RSS2,
   Atom,
 } from "./types/mod.ts";
+import type {
+	ResolverResult
+} from "./resolvers/types/resolver-result.ts";
 import {
 	FeedParseType,
 	FeedType
@@ -24,9 +27,7 @@ import {
   toLegacyRss1,
   toLegacyRss2,
 } from "./mappers/mod.ts";
-import type {
-	ResolverResult
-} from "./resolvers/types/resolver-result.ts";
+
 
 export interface Options {
   outputJsonFeed?: boolean;

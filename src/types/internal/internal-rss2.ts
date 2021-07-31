@@ -1,8 +1,8 @@
 // https://validator.w3.org/feed/docs/rss2.html#requiredChannelElements
 
-import { InternalDublinCore } from "./internal-dublin-core.ts";
-import { InternalMediaRss } from "./internal-media-rss.ts";
-import { ValueField } from "../value-field.ts";
+import type { InternalDublinCore } from "./internal-dublin-core.ts";
+import type { InternalMediaRss } from "./internal-media-rss.ts";
+import type { ValueField } from "../value-field.ts";
 
 export interface InternalRSS2 {
   version: number;

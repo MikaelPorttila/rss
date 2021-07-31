@@ -1,7 +1,7 @@
+import type { ResolverResult } from "./types/resolver-result.ts";
 import { Rss1Fields } from "../types/fields/mod.ts";
 import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
 import { resolveSlashField } from "./slash-resolver.ts";
-import { ResolverResult } from "./types/resolver-result.ts";
 
 export const resolveRss1Field = (
   name: string,

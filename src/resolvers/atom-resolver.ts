@@ -1,6 +1,6 @@
 import { AtomFields } from "../types/fields/mod.ts";
 import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
-import { ResolverResult } from "./types/resolver-result.ts";
+import type { ResolverResult } from "./types/resolver-result.ts";
 
 export const resolveAtomField = (
   name: string,

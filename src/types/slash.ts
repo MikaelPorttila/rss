@@ -1,5 +1,5 @@
 import { SlashFields } from "./fields/mod.ts";
-import { ValueField } from "./value-field.ts";
+import type { ValueField } from "./value-field.ts";
 
 // Based of https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
 export interface SlashValueFields {

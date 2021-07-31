@@ -1,6 +1,6 @@
 import { assertEquals, assertNotEquals } from "./../../test_deps.ts";
 import { toFeed } from "./mapper.ts";
-import { Feed } from "../types/feed.ts";
+import type { Feed } from "../types/feed.ts";
 import { FeedType } from "../types/feed-type.ts";
 import { resolveRss1Field } from "../resolvers/rss1-resolver.ts";
 import { SlashFieldArray } from "../types/slash.ts";
@@ -11,11 +11,12 @@ import {
   MediaRssFields,
 } from "../types/fields/mod.ts";
 import { DublinCoreFieldArray } from "../types/internal/internal-dublin-core.ts";
-import {
+import type {
   InternalAtom,
   InternalRSS1,
   InternalRSS2,
 } from "../types/internal/mod.ts";
+
 const composeAtom = (
   setter: (data: InternalAtom) => void = () => {},
 ): InternalAtom => {

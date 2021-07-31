@@ -1,5 +1,4 @@
 import { MediaRssFields } from "./fields/mod.ts";
-import { ValueField } from "./value-field.ts";
 
 // Based on https://www.rssboard.org/media-rss
 export interface MediaRss {

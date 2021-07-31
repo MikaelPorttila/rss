@@ -5,7 +5,8 @@ import {
   assertThrowsAsync,
 } from "../test_deps.ts";
 import { deserializeFeed, parseFeed } from "./deserializer.ts";
-import { Feed, FeedType, RSS1 } from "../mod.ts";
+import type { Feed, RSS1 } from "../mod.ts";
+import { FeedType } from "../mod.ts";
 import type {
   Atom,
   DeserializationResult,

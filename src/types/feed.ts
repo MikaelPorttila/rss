@@ -1,7 +1,7 @@
-import { DublinCore } from "./dublin-core.ts";
-import { Slash } from "./slash.ts";
+import type { DublinCore } from "./dublin-core.ts";
+import type { Slash } from "./slash.ts";
+import type { MediaRss } from "./media-rss.ts";
 import { FeedType } from "./feed-type.ts";
-import { MediaRss } from "./media-rss.ts";
 
 export interface Feed extends DublinCore {
   version?: string;

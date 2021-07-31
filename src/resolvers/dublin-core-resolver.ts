@@ -1,5 +1,5 @@
+import type { ResolverResult } from "./types/resolver-result.ts";
 import { DublinCoreFields } from "../types/fields/mod.ts";
-import { ResolverResult } from "./types/resolver-result.ts";
 
 export const resolveDublinCoreField = (
   name: string,

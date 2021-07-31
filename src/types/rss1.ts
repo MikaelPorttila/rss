@@ -1,6 +1,5 @@
-import { DublinCore } from "./dublin-core.ts";
-import { MediaRss } from "./media-rss.ts";
-import { Slash } from "./slash.ts";
+import type { DublinCore } from "./dublin-core.ts";
+import type { Slash } from "./slash.ts";
 
 // https://validator.w3.org/feed/docs/rss1.html
 export interface RSS1 {

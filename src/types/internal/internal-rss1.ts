@@ -1,6 +1,6 @@
-import { InternalDublinCore } from "./internal-dublin-core.ts";
-import { SlashValueFields } from "../slash.ts";
-import { ValueField } from "../value-field.ts";
+import type { InternalDublinCore } from "./internal-dublin-core.ts";
+import type { SlashValueFields } from "../slash.ts";
+import type { ValueField } from "../value-field.ts";
 
 // https://validator.w3.org/feed/docs/rss1.html
 export interface InternalRSS1 {
