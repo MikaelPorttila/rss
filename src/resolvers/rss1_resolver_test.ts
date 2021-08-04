@@ -1,5 +1,5 @@
 import { assert, assertEquals } from "../../test_deps.ts";
-import { resolveRss1Field } from "./rss1-resolver.ts";
+import { resolveRss1Field } from "./rss1_resolver.ts";
 
 Deno.test("RSS 1.0 resolver", () => {
   [undefined, null].forEach((field: any) => {

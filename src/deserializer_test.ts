@@ -14,7 +14,7 @@ import type {
   Options,
   RSS2,
 } from "../mod.ts";
-import type { TestEntry } from "./test/test-entry.ts";
+import type { TestEntry } from "./test/test_entry.ts";
 import {
   DublinCoreFields,
   MediaRssFields,
@@ -1118,7 +1118,7 @@ Deno.test(`Call signatures compile without error`, async () => {
           expect: "ATOM:Feed:Entry:0:Contributor:Name",
         }],
       },
-      // TODO: Add the other contributor fields
+      // TODO(MikaelPorttila): Add the other contributor fields.
       {
         name: "Feed:Entry:0:Rights",
         getValue: (src: DeserializationResult<Atom>) =>

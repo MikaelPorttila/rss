@@ -1,7 +1,7 @@
-import type { ResolverResult } from "./types/resolver-result.ts";
+import type { ResolverResult } from "./types/resolver_result.ts";
 import { Rss2Fields } from "../types/fields/mod.ts";
-import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
-import { resolveMediaRssField } from "./media-rss-resolver.ts";
+import { resolveDublinCoreField } from "./dublin_core_resolver.ts";
+import { resolveMediaRssField } from "./media_rss_resolver.ts";
 
 export const resolveRss2Field = (
   name: string,

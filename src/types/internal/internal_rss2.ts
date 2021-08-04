@@ -1,8 +1,8 @@
 // https://validator.w3.org/feed/docs/rss2.html#requiredChannelElements
 
-import type { InternalDublinCore } from "./internal-dublin-core.ts";
-import type { InternalMediaRss } from "./internal-media-rss.ts";
-import type { ValueField } from "../value-field.ts";
+import type { InternalDublinCore } from "./internal_dublin_core.ts";
+import type { InternalMediaRss } from "./internal_media_rss.ts";
+import type { ValueField } from "../value_field.ts";
 
 export interface InternalRSS2 {
   version: number;
@@ -27,7 +27,7 @@ interface Channel extends InternalDublinCore {
   cloud?: Cloud;
   ttl?: ValueField<number>;
   image?: Image;
-  textInput?: any; // TODO: Fix
+  textInput?: any; // TODO(MikaelPorttila): Type textInput
   skipHours?: {
     hour?: ValueField<number>[];
   };

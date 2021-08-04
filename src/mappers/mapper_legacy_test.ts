@@ -2,7 +2,7 @@ import { assert, assertEquals } from "../../test_deps.ts";
 import { AtomFields } from "../types/fields/mod.ts";
 import { Atom, DublinCoreFields, RSS2 } from "./../types/mod.ts";
 import { FeedType } from "./../types/mod.ts";
-import { toJsonFeed } from "./mapper-legacy.ts";
+import { toJsonFeed } from "./mapper_legacy.ts";
 const dateRaw = "Mon, 22 Jun 2020 20:00:00 GMT";
 const date = new Date(1989, 1, 1);
 

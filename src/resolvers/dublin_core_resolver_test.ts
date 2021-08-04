@@ -1,6 +1,6 @@
 import { assertEquals, assertNotEquals } from "../../test_deps.ts";
 import { DublinCoreFields } from "../types/fields/mod.ts";
-import { resolveDublinCoreField } from "./dublin-core-resolver.ts";
+import { resolveDublinCoreField } from "./dublin_core_resolver.ts";
 
 [
   {

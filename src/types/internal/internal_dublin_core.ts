@@ -1,4 +1,4 @@
-import type { ValueField } from "../value-field.ts";
+import type { ValueField } from "../value_field.ts";
 import { DublinCoreFields } from "../fields/mod.ts";
 
 // Based on https://www.dublincore.org/specifications/dublin-core/dcmi-terms/

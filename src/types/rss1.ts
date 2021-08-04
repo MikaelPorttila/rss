@@ -1,4 +1,4 @@
-import type { DublinCore } from "./dublin-core.ts";
+import type { DublinCore } from "./dublin_core.ts";
 import type { Slash } from "./slash.ts";
 
 // https://validator.w3.org/feed/docs/rss1.html
