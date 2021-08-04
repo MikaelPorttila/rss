@@ -446,7 +446,7 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
       entry.links.push({ href });
     }
 
-    if (isValidURL(id.value as string)) {
+    if (id && isValidURL(id.value as string)) {
       entry.links.push({ href: id.value });
     }
 

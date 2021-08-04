@@ -456,7 +456,7 @@ Deno.test(`Call signatures compile without error`, async () => {
         name: "Feed:Channel:Item:Length",
         getValue: (src: DeserializationResult<RSS2>) =>
           src.feed.channel.items.length,
-        assert: [{ fn: assertEquals, expect: 10 }],
+        assert: [{ fn: assertEquals, expect: 11 }],
       },
       {
         name: "Feed:Channel:Item:0:Title",
@@ -640,6 +640,12 @@ Deno.test(`Call signatures compile without error`, async () => {
           src.feed.channel.items[9]["dc:creator"]?.length,
         assert: [{ fn: assertEquals, expect: 2 }],
       },
+      {
+        name: "Feed:Channel:Item:10:Description - Self Closing CData HTML",
+        getValue: (src: DeserializationResult<RSS2>) =>
+          src.feed.channel.items[10].description,
+        assert: [{ fn: assertEquals, expect: '<img src="test" />' }],
+      },
     ] as TestEntry<DeserializationResult<RSS2>>[],
   },
   {
@@ -815,7 +821,7 @@ Deno.test(`Call signatures compile without error`, async () => {
       {
         name: "Feed:Entry:Length",
         getValue: (src: DeserializationResult<Atom>) => src.feed.entries.length,
-        assert: [{ fn: assertEquals, expect: 3 }],
+        assert: [{ fn: assertEquals, expect: 4 }],
       },
       {
         name: "Feed:Entry:0",
@@ -1400,7 +1406,7 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       {
         name: "Items:Length",
         getValue: (src: Feed) => src.entries.length,
-        assert: [{ fn: assertEquals, expect: 10 }],
+        assert: [{ fn: assertEquals, expect: 11 }],
       },
       {
         name: "Items:[0]:Title:Type",
@@ -1774,7 +1780,7 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
       {
         name: "Entry:Length",
         getValue: (src: Feed) => src.entries.length,
-        assert: [{ fn: assertEquals, expect: 3 }],
+        assert: [{ fn: assertEquals, expect: 4 }],
       },
       {
         name: "Entry:[0]:Title",
@@ -1839,6 +1845,22 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
         name: "Entry:[0]:UpdatedRaw",
         getValue: (src: Feed) => src.entries[0].updatedRaw,
         assert: [{ fn: assertEquals, expect: "2003-12-13T18:30:02Z" }],
+      },
+      {
+        name: "Entry:[3]:UpdatedRaw:Title - SelfClosing CData",
+        getValue: (src: Feed) => src.entries[3].title?.value,
+        assert: [{
+          fn: assertEquals,
+          expect: '<div><img src="test" /><img src="test2" /></div>',
+        }],
+      },
+      {
+        name: "Entry:[3]:UpdatedRaw:Summary - SelfClosing CData",
+        getValue: (src: Feed) => src.entries[3].description?.value,
+        assert: [{
+          fn: assertEquals,
+          expect: '<div><img src="test" /><img src="test2" /></div>',
+        }],
       },
     ] as TestEntry<Feed>[],
   },
