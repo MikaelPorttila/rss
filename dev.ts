@@ -1,4 +1,4 @@
-import { deserializeFeed, DublinCore, MediaRss, parseFeed } from "./mod.ts";
+import { parseFeed } from "./mod.ts";
 import { isValidURL } from "./src/util.ts";
 
 const arg0 = Deno.args[0];

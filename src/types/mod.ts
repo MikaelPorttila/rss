@@ -7,8 +7,8 @@ export type {
   JsonFeedAuthor,
   JsonFeedHub,
   JsonFeedItem,
-} from "./json-feed.ts";
-export type { DeserializationResult } from "./deserialization-result.ts";
-export { FeedType } from "./feed-type.ts";
-export { FeedParseType } from "./feed-type.ts";
+} from "./json_feed.ts";
+export type { DeserializationResult } from "./deserialization_result.ts";
+export { FeedType } from "./feed_type.ts";
+export { FeedParseType } from "./feed_type.ts";
 export { DublinCoreFields, MediaRssFields, SlashFields } from "./fields/mod.ts";

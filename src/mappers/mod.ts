@@ -1,2 +1,2 @@
 export * from "./mapper.ts";
-export * from "./mapper-legacy.ts";
+export * from "./mapper_legacy.ts";

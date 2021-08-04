@@ -1,6 +1,6 @@
 // https://validator.w3.org/feed/docs/rss2.html#requiredChannelElements
-import type { DublinCore } from "./dublin-core.ts";
-import type { MediaRss } from "./media-rss.ts";
+import type { DublinCore } from "./dublin_core.ts";
+import type { MediaRss } from "./media_rss.ts";
 
 export interface RSS2 {
   version: number;

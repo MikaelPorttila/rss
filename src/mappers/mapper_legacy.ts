@@ -1,24 +1,27 @@
 import type {
-  Atom,
   JsonFeed,
   JsonFeedAuthor,
   JsonFeedItem,
   RSS1,
   RSS2,
   Rss2Item,
+	Atom
 } from "./../types/mod.ts";
 
-import { FeedType } from "./../types/mod.ts";
-
-import { copyValueFields, isValidURL } from "./../util.ts";
-import { SlashFieldArray } from "./../types/slash.ts";
-import { copyMedia } from "./media-mapper.ts";
-import {
+import type {
   InternalAtom,
   InternalRSS1,
   InternalRSS2,
 } from "../types/internal/mod.ts";
-import { DublinCoreFieldArray } from "../types/internal/internal-dublin-core.ts";
+
+import  {
+  FeedType
+} from "./../types/mod.ts";
+
+import { copyValueFields, isValidURL } from "./../util.ts";
+import { SlashFieldArray } from "./../types/slash.ts";
+import { copyMedia } from "./media_mapper.ts";
+import { DublinCoreFieldArray } from "../types/internal/internal_dublin_core.ts";
 import { AtomFields, DublinCoreFields } from "../types/fields/mod.ts";
 
 export const toLegacyRss1 = (rss: InternalRSS1): RSS1 => {
@@ -411,55 +414,52 @@ const mapRss2ToJsonFeed = (rss: RSS2): JsonFeed => {
 };
 
 const mapRss1ToJsonFeed = (rss: RSS1): JsonFeed => {
-  const result = {} as JsonFeed;
+	const result = {
+	} as JsonFeed;
 
-  if (rss?.channel) {
-    result.title = rss.channel.title;
-    result.description = rss.channel.description;
-    result.feed_url = rss.channel.link;
+	if (rss?.channel) {
+		result.title = rss.channel.title;
+		result.description = rss.channel.description;
+		result.feed_url = rss.channel.link;
 
-    const authorNames = rss.channel[DublinCoreFields.Creator];
-    if (authorNames && authorNames.length > 0) {
-      result.author = {
-        name: authorNames[0],
-      };
-    }
+		const authorNames = rss.channel[DublinCoreFields.Creator];
+		if (authorNames && authorNames.length > 0) {
+			result.author = {
+				name: authorNames[0]
+			};
+		}
 
-    result.items = rss.item.map((item) => {
-      let author, authors;
-      const authorNames = item[DublinCoreFields.Creator];
-      if (authorNames && authorNames.length > 0) {
-        author = {
-          name: authorNames[0],
-        };
-        authors = authorNames.map((x) => ({ name: x[0] }));
-      }
+		result.items = rss.item.map((item) => {
+			let author, authors;
+			const authorNames = item[DublinCoreFields.Creator];
+			if(authorNames && authorNames.length > 0) {
+				author = {
+					name: authorNames[0]
+				};
+				authors = authorNames.map((x) => ({name: x[0]}));
+			}
 
-      const itemResult = {
-        id: item.link || item[DublinCoreFields.URI],
-        title: item.title,
-        summary: item.description,
-        url: item.link || item[DublinCoreFields.URI],
-        author,
-        authors,
-        date_modified: item[DublinCoreFields.DateSubmitted] ||
-          item[DublinCoreFields.Date],
-        date_modifiedRaw: item[DublinCoreFields.DateSubmittedRaw] ||
-          item[DublinCoreFields.DateRaw],
-        date_published: item[DublinCoreFields.DateSubmitted] ||
-          item[DublinCoreFields.Date],
-        date_publishedRaw: item[DublinCoreFields.DateSubmittedRaw] ||
-          item[DublinCoreFields.DateRaw],
-      } as JsonFeedItem;
-      return itemResult;
-    });
-  }
+			const itemResult = {
+				id: item.link || item[DublinCoreFields.URI],
+				title: item.title,
+				summary: item.description,
+				url: item.link || item[DublinCoreFields.URI],
+				author,
+				authors,
+				date_modified: item[DublinCoreFields.DateSubmitted] || item[DublinCoreFields.Date],
+				date_modifiedRaw: item[DublinCoreFields.DateSubmittedRaw] || item[DublinCoreFields.DateRaw],
+				date_published: item[DublinCoreFields.DateSubmitted] || item[DublinCoreFields.Date],
+				date_publishedRaw: item[DublinCoreFields.DateSubmittedRaw] || item[DublinCoreFields.DateRaw]
+			} as JsonFeedItem;
+			return itemResult;
+		});
+	}
 
-  if (rss?.image) {
-    result.icon = rss.image.url;
-  }
+	if (rss?.image) {
+		result.icon = rss.image.url;
+	}
 
-  return result;
+	return result;
 };
 
 const mapAtomToJsonFeed = (atom: Atom): JsonFeed => {

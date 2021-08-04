@@ -1,6 +1,6 @@
 import { assertEquals, assertNotEquals } from "../../test_deps.ts";
 import { SlashFields } from "../types/fields/mod.ts";
-import { resolveSlashField } from "./slash-resolver.ts";
+import { resolveSlashField } from "./slash_resolver.ts";
 
 [
   {

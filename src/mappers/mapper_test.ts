@@ -1,16 +1,16 @@
 import { assertEquals, assertNotEquals } from "./../../test_deps.ts";
 import { toFeed } from "./mapper.ts";
 import type { Feed } from "../types/feed.ts";
-import { FeedType } from "../types/feed-type.ts";
-import { resolveRss1Field } from "../resolvers/rss1-resolver.ts";
+import { FeedType } from "../types/feed_type.ts";
+import { resolveRss1Field } from "../resolvers/rss1_resolver.ts";
 import { SlashFieldArray } from "../types/slash.ts";
-import { resolveRss2Field } from "../resolvers/rss2-resolver.ts";
+import { resolveRss2Field } from "../resolvers/rss2_resolver.ts";
 import {
   AtomFields,
   DublinCoreFields,
   MediaRssFields,
 } from "../types/fields/mod.ts";
-import { DublinCoreFieldArray } from "../types/internal/internal-dublin-core.ts";
+import { DublinCoreFieldArray } from "../types/internal/internal_dublin_core.ts";
 import type {
   InternalAtom,
   InternalRSS1,

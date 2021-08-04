@@ -1,7 +1,7 @@
-import type { DublinCore } from "./dublin-core.ts";
+import type { DublinCore } from "./dublin_core.ts";
 import type { Slash } from "./slash.ts";
-import type { MediaRss } from "./media-rss.ts";
-import { FeedType } from "./feed-type.ts";
+import type { MediaRss } from "./media_rss.ts";
+import { FeedType } from "./feed_type.ts";
 
 export interface Feed extends DublinCore {
   version?: string;
@@ -35,7 +35,8 @@ export interface FeedEntry extends DublinCore, Slash, MediaRss {
   description?: TextField;
   links: Link[];
   id: string;
-  author?: Author; // Todo, lets go with authors instead
+	// TODO(MikaelPorttila): Replace with Authors to match JSONFeed.
+  author?: Author;
   published?: Date;
   publishedRaw?: string;
   updated?: Date;

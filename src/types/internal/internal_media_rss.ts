@@ -1,4 +1,4 @@
-import type { ValueField } from "../value-field.ts";
+import type { ValueField } from "../value_field.ts";
 import { MediaRssFields } from "../fields/mod.ts";
 
 // Based on https://www.rssboard.org/media-rss

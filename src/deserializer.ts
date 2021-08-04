@@ -7,7 +7,7 @@ import type {
   RSS1,
   RSS2,
 } from "./types/mod.ts";
-import type { ResolverResult } from "./resolvers/types/resolver-result.ts";
+import type { ResolverResult } from "./resolvers/types/resolver_result.ts";
 import { FeedParseType, FeedType } from "./types/mod.ts";
 import {
   isAtomCDataField,
@@ -23,14 +23,12 @@ import {
   toLegacyRss2,
 } from "./mappers/mod.ts";
 
-export interface Options {
-  outputJsonFeed?: boolean;
-}
-
-export const parseFeed = (
-  input: string,
-): Promise<Feed> =>
-  new Promise<Feed>(async (resolve, reject) => {
+/**
+ * Parse Atom or RSS into a common Feed type
+ * @param Atom or RSS XML string
+ */
+export function parseFeed (input: string): Promise<Feed> {
+  return new Promise<Feed>(async (resolve, reject) => {
     if (!input) {
       reject(new Error("Input was undefined, null or empty"));
       return;
@@ -40,6 +38,11 @@ export const parseFeed = (
     const result = toFeed(feedType, data) as Feed;
     resolve(result);
   });
+}
+
+export interface Options {
+  outputJsonFeed?: boolean;
+}
 
 /**
  * @deprecated The method should not be used, please use the parseFeed method instead.
@@ -48,11 +51,7 @@ export const deserializeFeed = (async (
   input: string,
   options?: Options,
 ) => {
-  console.warn(
-    "RSS: deserializeFeed is deprecated, please use parseFeed instead.",
-  );
   const { data, feedType } = await parse(input);
-
   let legacyFeed;
   switch (feedType) {
     case FeedType.Rss1:

@@ -1,6 +1,6 @@
 import { assertEquals } from "../../test_deps.ts";
 import { DublinCoreFields, Rss2Fields } from "../types/fields/mod.ts";
-import { resolveRss2Field } from "./rss2-resolver.ts";
+import { resolveRss2Field } from "./rss2_resolver.ts";
 
 [
   {

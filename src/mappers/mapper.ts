@@ -9,8 +9,8 @@ import { AtomFields, DublinCoreFields } from "./../types/fields/mod.ts";
 import { copyValueFields, isValidURL } from "./../util.ts";
 import { FeedType } from "./../types/mod.ts";
 import { SlashFieldArray } from "./../types/slash.ts";
-import { copyMedia } from "./media-mapper.ts";
-import { DublinCoreFieldArray } from "../types/internal/internal-dublin-core.ts";
+import { copyMedia } from "./media_mapper.ts";
+import { DublinCoreFieldArray } from "../types/internal/internal_dublin_core.ts";
 
 export const toFeed = (
   feedType: FeedType,

@@ -3,7 +3,7 @@
 	https://validator.w3.org/feed/docs/atom.html
 */
 
-import { AtomFields } from "./fields/atom-fields.ts";
+import { AtomFields } from "./fields/atom_fields.ts";
 
 export interface Atom {
   id: string;
