@@ -243,5 +243,13 @@
 				<dc:creator>Deno RSS 2</dc:creator>
 				<pubDate>Thu, 08 Jul 2021 10:53:40 +0000</pubDate>
 			</item>
+			<item>
+				<title>RSS2:Item:10:Title</title>
+				<link />
+				<guid isPermaLink="true">SelfClosingCData</guid>
+				<description>
+					<![CDATA[<img src="test" />]]>
+				</description>
+			</item>
     </channel>
 </rss>

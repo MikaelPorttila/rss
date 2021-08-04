@@ -3,6 +3,8 @@
 	https://validator.w3.org/feed/docs/atom.html
 */
 
+import { AtomFields } from "./fields/atom-fields.ts";
+
 export interface Atom {
   id: string;
   title: AtomText;
@@ -49,7 +51,7 @@ export interface AtomEntry {
   categories?: AtomCategory[];
   source?: AtomSource;
   href?: string;
-  "feedburner:origlink"?: string;
+  [AtomFields.FeedburnerOrigLink]?: string;
 }
 
 export interface AtomContent extends AtomText {

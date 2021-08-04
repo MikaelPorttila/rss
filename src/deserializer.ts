@@ -118,6 +118,8 @@ const parse = (input: string) =>
       let cDataBuilder: string;
       let cDataActive: boolean;
       let feedType: FeedType;
+
+      let currentTag: OpenTag | undefined;
       const stack: any[] = [{}];
       const parser = new SAXParser(false, {
         trim: true,
@@ -139,6 +141,7 @@ const parse = (input: string) =>
       };
 
       const onOpenTag = (node: OpenTag): void => {
+        currentTag = node;
         const attributeNames = Object.keys(node.attributes);
 
         if (cDataActive) {
@@ -148,9 +151,11 @@ const parse = (input: string) =>
             .trim();
 
           if (attributes.length) {
-            cDataBuilder += `<${node.name} ${attributes}>`;
+            cDataBuilder += `<${node.name} ${attributes}${(node.isSelfClosing
+              ? " /"
+              : "")}>`;
           } else {
-            cDataBuilder += `<${node.name}>`;
+            cDataBuilder += `<${node.name}${(node.isSelfClosing ? " /" : "")}>`;
           }
 
           cDataLevel++;
@@ -187,8 +192,13 @@ const parse = (input: string) =>
       };
 
       parser.onclosetag = (nodeName: string) => {
+        const currentStartTag = currentTag;
+        currentTag = undefined;
         if (cDataActive && cDataLevel) {
-          cDataBuilder += `</${nodeName}>`;
+          if (!currentStartTag?.isSelfClosing) {
+            cDataBuilder += `</${nodeName}>`;
+          }
+
           cDataLevel--;
           return;
         }
@@ -207,6 +217,7 @@ const parse = (input: string) =>
             feedType: feedType,
             data: node,
           };
+
           resolve(result);
           return;
         }

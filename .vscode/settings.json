@@ -4,5 +4,6 @@
   "deno.suggest.imports.hosts": {
     "https://deno.land/": true
   },
-  "editor.renderWhitespace": "all"
+  "editor.renderWhitespace": "all",
+  "discord.enabled": true
 }

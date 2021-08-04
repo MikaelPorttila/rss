@@ -103,4 +103,8 @@
     </contributor>
     <content>Hello World</content>
   </entry>
+	<entry>
+		<title type="xhtml"><div><img src="test" /><img src="test2" /></div></title>
+		<summary type="xhtml"><div><img src="test" /><img src="test2" /></div></summary>
+	</entry>
 </feed>
