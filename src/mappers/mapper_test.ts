@@ -9,6 +9,7 @@ import {
   AtomFields,
   DublinCoreFields,
   MediaRssFields,
+  Rss2Fields,
 } from "../types/fields/mod.ts";
 import { DublinCoreFieldArray } from "../types/internal/internal_dublin_core.ts";
 import type {
@@ -355,6 +356,9 @@ const composeRss2 = (
             { value: "RSS2:Channel:Item:2:Categories:0:Value" },
             { value: "RSS2:Channel:Item:2:Categories:1:Value" },
           ],
+          "feedburner:origlink": {
+            value: "RSS2:Channel:Item:2:FeedburnerLink:Value",
+          },
         },
       ],
     },
@@ -1090,6 +1094,22 @@ const testArrayLength = (
         assert: [{
           fn: assertEquals,
           expect: "RSS2:Channel:Item:0:MediaContent:Url",
+        }],
+      },
+      {
+        name: "Items:2:FeedburnerLink",
+        getValue: (src: Feed) => src.entries[2].links?.length,
+        assert: [{
+          fn: assertEquals,
+          expect: 2,
+        }],
+      },
+      {
+        name: "Items:2:FeedburnerLink",
+        getValue: (src: Feed) => src.entries[2].links?.[0]?.href,
+        assert: [{
+          fn: assertEquals,
+          expect: "RSS2:Channel:Item:2:FeedburnerLink:Value",
         }],
       },
       ...DublinCoreFieldArray

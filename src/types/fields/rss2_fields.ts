@@ -30,4 +30,5 @@ export enum Rss2Fields {
   Width = "width",
   Hour = "hour",
   Day = "day",
+  FeedburnerOrigLink = "feedburner:origlink",
 }

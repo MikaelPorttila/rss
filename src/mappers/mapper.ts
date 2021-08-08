@@ -5,7 +5,11 @@ import type {
   InternalRSS2,
 } from "../types/internal/mod.ts";
 import type { Feed, FeedEntry, JsonFeed } from "./../types/mod.ts";
-import { AtomFields, DublinCoreFields } from "./../types/fields/mod.ts";
+import {
+  AtomFields,
+  DublinCoreFields,
+  Rss2Fields,
+} from "./../types/fields/mod.ts";
 import { copyValueFields, isValidURL } from "./../util.ts";
 import { FeedType } from "./../types/mod.ts";
 import { SlashFieldArray } from "./../types/slash.ts";
@@ -290,8 +294,14 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
       entry.author = createAuthor(undefined, creators[0]);
     }
 
+    entry.links = [];
+
+    if (item[Rss2Fields.FeedburnerOrigLink]?.value) {
+      entry.links.push({ href: item[Rss2Fields.FeedburnerOrigLink]?.value });
+    }
+
     if (link?.value) {
-      entry.links = [{ href: link?.value }];
+      entry.links.push({ href: link?.value });
     }
 
     if (enclosure) {

@@ -35,7 +35,7 @@ export interface FeedEntry extends DublinCore, Slash, MediaRss {
   description?: TextField;
   links: Link[];
   id: string;
-	// TODO(MikaelPorttila): Replace with Authors to match JSONFeed.
+  // TODO(MikaelPorttila): Replace with Authors to match JSONFeed.
   author?: Author;
   published?: Date;
   publishedRaw?: string;

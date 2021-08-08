@@ -213,6 +213,7 @@
 				</description>
 				<link>http://example.com/test/1592855640</link>
 				<guid isPermaLink="true">http://example.com/test/1592855640</guid>
+				<feedburner:origLink>RSS2:Item:6:FeedburnerOrigLink</feedburner:origLink>
 				<dc:creator><![CDATA[DENO RSS]]></dc:creator>
 				<pubDate>Mon, 22 Jun 2020 19:54:00 GMT</pubDate>
 			</item>
