@@ -1632,6 +1632,19 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
         getValue: (src: Feed) => src.entries[9]["dc:creator"]?.length,
         assert: [{ fn: assertEquals, expect: 2 }],
       },
+      {
+        name: "Items:[6]:FeedburnerOrigLink - Feedburner link",
+        getValue: (src: Feed) => src.entries[6].links?.length,
+        assert: [{ fn: assertEquals, expect: 2 }],
+      },
+      {
+        name: "Items:[6]:FeedburnerOrigLink - Feedburner link",
+        getValue: (src: Feed) => src.entries[6].links[0]?.href,
+        assert: [{
+          fn: assertEquals,
+          expect: "RSS2:Item:6:FeedburnerOrigLink",
+        }],
+      },
     ] as TestEntry<Feed>[],
   },
   {

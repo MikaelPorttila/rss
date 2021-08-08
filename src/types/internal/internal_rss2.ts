@@ -3,6 +3,7 @@
 import type { InternalDublinCore } from "./internal_dublin_core.ts";
 import type { InternalMediaRss } from "./internal_media_rss.ts";
 import type { ValueField } from "../value_field.ts";
+import { Rss2Fields } from "../fields/rss2_fields.ts";
 
 export interface InternalRSS2 {
   version: number;
@@ -49,6 +50,7 @@ interface Item extends InternalDublinCore, InternalMediaRss {
   pubDate?: ValueField<Date>;
   pubDateRaw?: ValueField<string>;
   source?: Source;
+  [Rss2Fields.FeedburnerOrigLink]?: ValueField<string>;
 }
 
 interface Enclosure {

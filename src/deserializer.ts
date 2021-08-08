@@ -27,7 +27,7 @@ import {
  * Parse Atom or RSS into a common Feed type
  * @param Atom or RSS XML string
  */
-export function parseFeed (input: string): Promise<Feed> {
+export function parseFeed(input: string): Promise<Feed> {
   return new Promise<Feed>(async (resolve, reject) => {
     if (!input) {
       reject(new Error("Input was undefined, null or empty"));
