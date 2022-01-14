@@ -51,6 +51,7 @@ interface Item extends InternalDublinCore, InternalMediaRss {
   pubDateRaw?: ValueField<string>;
   source?: Source;
   [Rss2Fields.FeedburnerOrigLink]?: ValueField<string>;
+  [Rss2Fields.ContentEncoded]?: ValueField<string>;
 }
 
 interface Enclosure {

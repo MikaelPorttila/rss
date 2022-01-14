@@ -76,6 +76,7 @@
 					<media:description>RSS2:Media:Description</media:description>
 					<enclosure length="24986239" type="audio/mpeg" url="https://RSS2-entry-0-enclosure-0-url.mp3" />
 					<enclosure length="24986239" type="audio/mpeg" url="https://RSS2-entry-0-enclosure-1-url.mp3" />
+					<content:encoded><![CDATA[<RSS2:Item:0:ConentEncoded:CData></RSS2:Item:0:ConentEncoded:CData>]]></content:encoded>
 			</item>
 			<item>
 					<title><![CDATA[RSS2:Item:1:Title:CData]]></title>
