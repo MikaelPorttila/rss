@@ -83,7 +83,7 @@ const mediaContent = entries[0][MediaRss.Content];
 | Author                | Author                                        | Author or DC:Creator                   | DC:Creator                    |
 | Title                 | Title                                         | Title or DC:Title                      | Title or DC:Title             |
 | Description           | Summary                                       | Description or DC:Description          | Description or DC:Description |
-| Content               | Content                                       | -                                      | -                             |
+| Content               | Content                                       | Content:Encoded                        | -                             |
 | Links                 | Links, feedburner:origlink, Href, (Id if URL) | Href                                   | Link, DC:URI                  |
 | Attachments           | Links (marked as enclosure)                   | Enclosure                              | -                             |
 | Published             | Published                                     | DC:DateSubmitted or PubDate or DC:Date | DC:DateSubmitted or DC:Date   |

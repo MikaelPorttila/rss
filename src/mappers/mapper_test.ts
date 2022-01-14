@@ -359,6 +359,9 @@ const composeRss2 = (
           "feedburner:origlink": {
             value: "RSS2:Channel:Item:2:FeedburnerLink:Value",
           },
+          "content:encoded": {
+            value: "RSS2:Channel:Item:2:content:encoded:Value"
+          }
         },
       ],
     },
@@ -1110,6 +1113,14 @@ const testArrayLength = (
         assert: [{
           fn: assertEquals,
           expect: "RSS2:Channel:Item:2:FeedburnerLink:Value",
+        }],
+      },
+      {
+        name: "Items:2:ContentEncoded",
+        getValue: (src: Feed) => src.entries[2].content?.value,
+        assert: [{
+          fn: assertEquals,
+          expect: "RSS2:Channel:Item:2:content:encoded:Value",
         }],
       },
       ...DublinCoreFieldArray

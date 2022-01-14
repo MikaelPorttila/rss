@@ -18,6 +18,7 @@ import type { TestEntry } from "./test/test_entry.ts";
 import {
   DublinCoreFields,
   MediaRssFields,
+  Rss2Fields,
   SlashFields,
 } from "./types/fields/mod.ts";
 
@@ -1475,6 +1476,11 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
           fn: assertEquals,
           expect: "RSS2:Item:0:Author",
         }],
+      },
+      {
+        name: "Items:[0]:ContentEncoded:Value",
+        getValue: (src: Feed) => src.entries[0].content?.value,
+        assert: [{ fn: assertEquals, expect: "<RSS2:Item:0:ConentEncoded:CData></RSS2:Item:0:ConentEncoded:CData>" }],
       },
       {
         name: "Items:[0]:Guid",
