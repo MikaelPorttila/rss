@@ -360,12 +360,12 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
     type: title?.type,
   };
   result.description = subtitle?.value;
-  result.updateDate = updated.value;
+  result.updateDate = updated?.value;
   result.updateDateRaw = updatedRaw?.value;
-  result.published = updated.value;
+  result.published = updated?.value;
   result.publishedRaw = updatedRaw?.value;
-  result.created = updated.value;
-  result.createdRaw = updatedRaw.value;
+  result.created = updated?.value;
+  result.createdRaw = updatedRaw?.value;
   result.icon = icon?.value;
   result.links = links?.map((x) => x.href) ?? [];
 
