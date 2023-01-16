@@ -5,7 +5,7 @@ import {
   assertThrowsAsync,
 } from "../test_deps.ts";
 import { deserializeFeed, parseFeed } from "./deserializer.ts";
-import type { Feed, RSS1 } from "../mod.ts";
+import { Feed, MediaRss, RSS1 } from "../mod.ts";
 import { FeedType } from "../mod.ts";
 import type {
   Atom,
@@ -1165,8 +1165,8 @@ Deno.test(`Call signatures compile without error`, async () => {
 ].forEach((workspace) => {
   workspace.tests.forEach((test) => {
     Deno.test(`parseFeed:${workspace.name}:${test.name}`, () => {
-      const target = test.getValue(workspace.source);
-      test.assert.forEach((x: TestEntry<Feed>) => x.fn(target, x.expect));
+      const target = test.getValue((workspace as any).source);
+      test.assert.forEach((assertion) => assertion.fn(target, assertion.expect));
     });
   });
 });
@@ -1881,13 +1881,21 @@ Deno.test("Deserialize RSS2 with convertToJsonFeed option", async () => {
           expect: '<div><img src="test" /><img src="test2" /></div>',
         }],
       },
+      {
+        name: "Entry:[2]:media:group - Nestd MediaRSS group",
+        getValue: (src: Feed) => src.entries[2]?.[MediaRss.Group]?.[MediaRss.Community]?.[MediaRss.Statistics]?.views,
+        assert: [{
+          fn: assertEquals,
+          expect: "1337",
+        }],
+      },
     ] as TestEntry<Feed>[],
   },
 ].forEach((workspace) => {
   workspace.tests.forEach((test) => {
     Deno.test(`parseFeed:${workspace.name}:${test.name}`, () => {
       const target = test.getValue(workspace.source);
-      test.assert.forEach((x: TestEntry<Feed>) => x.fn(target, x.expect));
+      test.assert.forEach((assertion) => assertion.fn(target, assertion.expect));
     });
   });
 });
