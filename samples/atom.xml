@@ -102,6 +102,16 @@
       <name>Micke</name>
     </contributor>
     <content>Hello World</content>
+    <media:group>
+      <media:title>media:group::media:title</media:title>
+      <media:content url="https://www.example.com/v/v1eWIshUzr8?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+      <media:thumbnail url="https://i3.example.com/vi/v1eWIshUzr8/hqdefault.jpg" width="480" height="360"/>
+      <media:description>media:group::media:title</media:description>
+      <media:community>
+        <media:starRating count="103624" average="5.00" min="1" max="5"/>
+        <media:statistics views="1337"/>
+      </media:community>
+    </media:group>
   </entry>
 	<entry>
 		<title type="xhtml"><div><img src="test" /><img src="test2" /></div></title>

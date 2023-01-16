@@ -42,7 +42,7 @@ export interface MediaRss {
       width?: number;
       lang?: string;
     }[];
-  }[];
+  }[] & MediaRss;
   [MediaRssFields.Keywords]?: string;
   [MediaRssFields.Thumbnails]?: {
     url?: string;
