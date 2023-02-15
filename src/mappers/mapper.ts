@@ -477,7 +477,7 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
     if (author) {
       entry.author = {
         email: author.email?.value,
-        name: author.name.value,
+        name: author.name?.value,
         uri: author.uri?.value,
       };
     }
