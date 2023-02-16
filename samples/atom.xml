@@ -114,6 +114,10 @@
     </media:group>
   </entry>
 	<entry>
+		<author>
+			<name></name>
+			<email>example@example.com</email>
+		</author>
 		<title type="xhtml"><div><img src="test" /><img src="test2" /></div></title>
 		<summary type="xhtml"><div><img src="test" /><img src="test2" /></div></summary>
 	</entry>
