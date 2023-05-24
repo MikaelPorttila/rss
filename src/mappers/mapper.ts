@@ -242,7 +242,7 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
     };
   }
 
-  result.entries = items.map((item) => {
+  result.entries = items?.map((item) => {
     const {
       author,
       title,
