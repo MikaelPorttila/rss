@@ -160,7 +160,7 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
     }));
 
     return entry;
-  });
+  }) ?? [];
 
   return result;
 };
@@ -329,7 +329,7 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
     }));
 
     return entry;
-  });
+  }) ?? [];
 
   return (result as any);
 };
@@ -505,7 +505,7 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
     }
 
     return entry;
-  });
+  }) ?? [];
 
   return result;
 };
