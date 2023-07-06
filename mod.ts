@@ -16,4 +16,4 @@ export {
 
 export type { Options } from "./src/deserializer.ts";
 
-export { deserializeFeed, parseFeed } from "./src/deserializer.ts";
+export { parseFeed } from "./src/deserializer.ts";
