@@ -1,13 +1,6 @@
-import { SAXParser } from "../deps.ts";
-import type {
-  Atom,
-  DeserializationResult,
-  Feed,
-  JsonFeed,
-  RSS1,
-  RSS2,
-} from "./types/mod.ts";
+import type { Feed } from "./types/mod.ts";
 import type { ResolverResult } from "./resolvers/types/resolver_result.ts";
+import { SAXParser } from "../deps.ts";
 import { FeedParseType, FeedType } from "./types/mod.ts";
 import {
   isAtomCDataField,
@@ -15,13 +8,7 @@ import {
   resolveRss1Field,
   resolveRss2Field,
 } from "./resolvers/mod.ts";
-import {
-  toFeed,
-  toJsonFeed,
-  toLegacyAtom,
-  toLegacyRss1,
-  toLegacyRss2,
-} from "./mappers/mod.ts";
+import { toFeed } from "./mappers/mod.ts";
 
 /**
  * Parse Atom or RSS into a common Feed type
@@ -39,59 +26,6 @@ export async function parseFeed(input: string): Promise<Feed> {
 export interface Options {
   outputJsonFeed?: boolean;
 }
-
-/**
- * @deprecated The method should not be used, please use the parseFeed method instead.
- */
-export const deserializeFeed = (async (
-  input: string,
-  options?: Options,
-) => {
-  const { data, feedType } = await parse(input);
-  let legacyFeed;
-  switch (feedType) {
-    case FeedType.Rss1:
-      legacyFeed = toLegacyRss1(data) as any;
-      break;
-    case FeedType.Rss2:
-      legacyFeed = toLegacyRss2(data) as any;
-      break;
-    case FeedType.Atom:
-      legacyFeed = toLegacyAtom(data) as any;
-      break;
-    default:
-      legacyFeed = data;
-      break;
-  }
-
-  const result: DeserializationResult<Atom | RSS1 | RSS2 | JsonFeed> & {
-    originalFeedType?: FeedType;
-  } = {
-    feed: options?.outputJsonFeed
-      ? toJsonFeed(feedType, legacyFeed)
-      : legacyFeed,
-    feedType: options?.outputJsonFeed ? FeedType.JsonFeed : feedType,
-    originalFeedType: feedType,
-  };
-
-  return result;
-}) as {
-  (input: string): Promise<DeserializationResult<Atom | RSS1 | RSS2>>;
-  (
-    input: string,
-    options: Options & { outputJsonFeed: false },
-  ): Promise<DeserializationResult<Atom | RSS1 | RSS2>>;
-  (
-    input: string,
-    options: Options & { outputJsonFeed: true },
-  ): Promise<
-    DeserializationResult<JsonFeed> & { originalFeedType: FeedType }
-  >;
-  (
-    input: string,
-    options?: Options,
-  ): Promise<DeserializationResult<Atom | JsonFeed | RSS1 | RSS2>>;
-};
 
 const parse = (input: string) =>
   new Promise<{ feedType: FeedType; data: any }>(

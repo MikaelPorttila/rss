@@ -5,6 +5,7 @@
   ],
   "scripts": {
     "start": "deno run dev.ts atom",
-    "test": "deno test"
+    "test": "deno test",
+    "benchmark": "deno run benchmark.ts"
   }
 }
