@@ -95,3 +95,50 @@ const mediaContent = entries[0][MediaRss.Content];
 | Media Namespace       | -                                             | All Media fields                       | -                             |
 | Dublin Core Namespace | -                                             | All Dublin Core fields                 | All Dublin Core fields        |
 | Slash Namespace       | -                                             | -                                      | All Slash fields              |
+
+## Development
+
+### Local sample parsing
+Using Denon
+```shell
+denon start
+```
+
+Using Deno
+```shell
+deno run --allow-read dev.ts atom
+```
+
+### Testing
+Using Denon
+```shell
+denon test
+```
+
+Using Deno
+```shell
+deno test --allow-read
+```
+
+### Benchmark
+Using Denon
+```shell
+denon benchmark
+```
+
+Using Deno
+```shell
+deno run --allow-read ./benchmark.ts 
+```
+
+### Memory footprint test
+Using Denon
+```shell
+denon memory
+```
+
+Using Deno
+```shell
+deno run --allow-read dev_memory_usage.ts
+```
+
