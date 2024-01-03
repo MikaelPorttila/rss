@@ -1,14 +1,15 @@
-import type { Feed } from "./types/mod.ts";
+import type { Feed } from "./types/feed.ts";
 import type { ResolverResult } from "./resolvers/types/resolver_result.ts";
 import { SAXParser } from "../deps.ts";
-import { FeedParseType, FeedType } from "./types/mod.ts";
-import {
-  isAtomCDataField,
-  resolveAtomField,
-  resolveRss1Field,
-  resolveRss2Field,
-} from "./resolvers/mod.ts";
-import { toFeed } from "./mappers/mod.ts";
+import { FeedParseType } from "./types/feed_type.ts";
+import { FeedType } from "./types/feed_type.ts";
+
+import { isAtomCDataField } from "./resolvers/atom_resolver.ts";
+import { resolveAtomField } from "./resolvers/atom_resolver.ts";
+import { resolveRss1Field } from "./resolvers/rss1_resolver.ts";
+import { resolveRss2Field } from "./resolvers/rss2_resolver.ts";
+
+import { toFeed } from "./mappers/mapper.ts";
 
 /**
  * Parse Atom or RSS into a common Feed type
@@ -132,7 +133,7 @@ const parse = (input: string) =>
           return;
         }
 
-        let node = stack.pop();
+        const node = stack.pop();
 
         if (stack.length === 0) {
           Object.assign(parser, {

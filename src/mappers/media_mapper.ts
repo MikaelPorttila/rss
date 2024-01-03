@@ -1,5 +1,5 @@
-import { MediaRssFields } from "../types/fields/mod.ts";
-import type { InternalMediaRss } from "../types/internal/mod.ts";
+import { MediaRssFields } from "../types/fields/media_rss_fields.ts";
+import type { InternalMediaRss } from "../types/internal/internal_media_rss.ts";
 import type { MediaRss } from "./../types/media_rss.ts";
 
 export const copyMedia = (source: InternalMediaRss, target: MediaRss) => {

@@ -3,10 +3,8 @@ import { parseFeed } from "./deserializer.ts";
 import { Feed, MediaRss } from "../mod.ts";
 import { FeedType } from "../mod.ts";
 import type { TestEntry } from "./test/test_entry.ts";
-import {
-  DublinCoreFields,
-  MediaRssFields
-} from "./types/fields/mod.ts";
+import { DublinCoreFields } from "./types/fields/dublin_core_fields.ts";
+import { MediaRssFields } from "./types/fields/media_rss_fields.ts";
 
 const atomTestSample = await Deno.readTextFile("./samples/atom.xml");
 const rss1TestSample = await Deno.readTextFile("./samples/rss1.xml");

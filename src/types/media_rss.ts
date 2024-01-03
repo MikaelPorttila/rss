@@ -1,4 +1,4 @@
-import { MediaRssFields } from "./fields/mod.ts";
+import { MediaRssFields } from "./fields/media_rss_fields.ts";
 
 // Based on https://www.rssboard.org/media-rss
 export interface MediaRss {

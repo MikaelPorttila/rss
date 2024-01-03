@@ -1,5 +1,5 @@
 import { assert, assertEquals } from "../../test_deps.ts";
-import { AtomFields } from "../types/fields/mod.ts";
+import { AtomFields } from "../types/fields/atom_fields.ts";
 import { isAtomCDataField, resolveAtomField } from "./atom_resolver.ts";
 
 Deno.test("Atom Resolver", () => {

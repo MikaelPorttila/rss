@@ -1,17 +1,17 @@
-import type {
-  InternalAtom,
-  InternalMediaRss,
-  InternalRSS1,
-  InternalRSS2,
-} from "../types/internal/mod.ts";
-import type { Feed, FeedEntry, JsonFeed } from "./../types/mod.ts";
-import {
-  AtomFields,
-  DublinCoreFields,
-  Rss2Fields,
-} from "./../types/fields/mod.ts";
+import type { InternalAtom } from "../types/internal/internal_atom.ts";
+import type { InternalMediaRss } from "../types/internal/internal_media_rss.ts";
+import type { InternalRSS1 } from "../types/internal/internal_rss1.ts";
+import type { InternalRSS2 } from "../types/internal/internal_rss2.ts";
+
+import type { Feed } from "./../types/feed.ts";
+import type { FeedEntry } from "./../types/feed.ts";
+import type { JsonFeed } from "./../types/json_feed.ts";
+import { AtomFields } from "./../types/fields/atom_fields.ts";
+import { DublinCoreFields } from "./../types/fields/dublin_core_fields.ts";
+import { Rss2Fields } from "./../types/fields/rss2_fields.ts";
+
 import { copyValueFields, isValidURL } from "./../util.ts";
-import { FeedType } from "./../types/mod.ts";
+import { FeedType } from "./../types/feed_type.ts";
 import { SlashFieldArray } from "./../types/slash.ts";
 import { copyMedia } from "./media_mapper.ts";
 import { DublinCoreFieldArray } from "../types/internal/internal_dublin_core.ts";

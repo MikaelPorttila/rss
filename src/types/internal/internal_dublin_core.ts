@@ -1,5 +1,5 @@
 import type { ValueField } from "../value_field.ts";
-import { DublinCoreFields } from "../fields/mod.ts";
+import { DublinCoreFields } from "../fields/dublin_core_fields.ts";
 
 // Based on https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
 export interface InternalDublinCore {

@@ -1,5 +1,5 @@
 import type { ResolverResult } from "./types/resolver_result.ts";
-import { MediaRssFields } from "../types/fields/mod.ts";
+import { MediaRssFields } from "../types/fields/media_rss_fields.ts";
 
 export const resolveMediaRssField = (
   name: string,
