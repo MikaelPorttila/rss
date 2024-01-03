@@ -13,7 +13,11 @@ if (isValidURL(arg0)) {
 
 const iterations = 10000;
 const snapshotCount = 120;
-const arr = new Array(snapshotCount);
+
+const heapUsageArr = new Array(snapshotCount);
+const heapTopArr = new Array(snapshotCount);
+const rssArr = new Array(snapshotCount);
+
 const snapshotPos = Math.floor(iterations / snapshotCount);
 console.log(`Running ${iterations} iterations, please wait...`);
 const initialDenoProcessAndV8MemoryUsage = Deno.memoryUsage();
@@ -22,13 +26,14 @@ for (let index = 0; index < iterations; index++) {
   await parseFeed(xml);
 
   if (index % snapshotPos === 0) {
-    const memoryUsage = (Deno.memoryUsage().heapUsed - initialDenoProcessAndV8MemoryUsage.heapUsed) / 1024 / 1024;
     const pos = index / snapshotPos;
     if (pos < snapshotCount) {
-      arr[pos] = memoryUsage;
+      heapUsageArr[pos] = (Deno.memoryUsage().heapUsed - initialDenoProcessAndV8MemoryUsage.heapUsed) / 1024 / 1024;
+      heapTopArr[pos] = (Deno.memoryUsage().heapTotal - initialDenoProcessAndV8MemoryUsage.heapTotal) / 1024 / 1024;
+      rssArr[pos] = (Deno.memoryUsage().rss - initialDenoProcessAndV8MemoryUsage.rss) / 1024 / 1024;
     }
   }
 }
 
-console.log("\nHeap memory usage (MB):");
-console.log(plot(arr, { colors: ["blue"], height: 20 } as config));
+console.log(`\nMemory usage (Heap: Blue, Heap Top: Green, RSS: Red)`);
+console.log(plot([heapUsageArr, heapTopArr, rssArr], { colors: ["blue", "green", "red"], height: 30 } as config));
