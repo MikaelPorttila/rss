@@ -228,6 +228,20 @@ const parse = (input: string) =>
         parser.onopentag = onOpenTag;
       };
 
+      parser.onend = () => {
+        if (!feedType) {
+          Object.assign(parser, {
+            onopentag: undefined,
+            onclosetag: undefined,
+            ontext: undefined,
+            oncdata: undefined,
+            onend: undefined
+          });
+
+          reject(new Error(`Invalid or unsupported feed format`));
+        }
+      }
+
       parser
         .write(input)
         .close()
