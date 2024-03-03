@@ -128,7 +128,7 @@ denon benchmark
 
 Using Deno
 ```shell
-deno run --allow-read ./benchmark.ts 
+deno bench --allow-read bench.ts
 ```
 
 ### Memory footprint test

@@ -1,4 +1,4 @@
-import { assertEquals, assertNotEquals } from "../test_deps.ts";
+import { assertEquals, assertNotEquals, assertRejects } from "../test_deps.ts";
 import { parseFeed } from "./deserializer.ts";
 import { Feed, MediaRss } from "../mod.ts";
 import { FeedType } from "../mod.ts";
@@ -725,4 +725,46 @@ const rss2DublinCoreTestSample = await Deno.readTextFile("./samples/rss2_dublin-
       test.assert.forEach((assertion) => assertion.fn(target, assertion.expect));
     });
   });
+});
+
+Deno.test('Should throw error on invalid feed format', async () => {
+  await assertRejects(() => parseFeed('Invalid feed string'), Error, "Invalid or unsupported feed format");
+});
+
+Deno.test('Should throw error on unsupported feed format', async () => {
+  const futureRSSFormat = `
+    <?xml version="1.0" encoding="UTF-8"?>
+    <xrss version="X.0" xmlns:media="http://schema.loremipsumuru.com/xrss/">
+      <channel>
+        <title>Future RSS Feed</title>
+        <link>https://example.com</link>
+        <description>An RSS feed from the future</description>
+        <language>en-us</language>
+        <lastBuildDate>[Last updated timestamp]</lastBuildDate>
+        <generator>FutureRSSGenerator v1.0</generator>
+        <pubDate>[Publication timestamp]</pubDate>
+        <copyright>Copyright © [Year] by [Your Organization]</copyright>
+        <managingEditor>[Editor's email]</managingEditor>
+        <webMaster>[Webmaster's email]</webMaster>
+        <image>
+          <url>https://example.com/logo.png</url>
+          <title>Future RSS Feed</title>
+          <link>https://example.com</link>
+        </image>
+        <item>
+          <title>[Title of the article]</title>
+          <link>[Link to the article]</link>
+          <description>[Description of the article]</description>
+          <author>[Author's name]</author>
+          <category>[Category of the article]</category>
+          <pubDate>[Publication timestamp]</pubDate>
+          <media:content url="[URL to media file]" type="[Media type]" vr="true" />
+          <media:vrFormat>360-degree video</media:vrFormat>
+          <media:vrPlatform>Oculus Rift</media:vrPlatform>
+        </item>
+        <!-- Additional items go here -->
+      </channel>
+    </xrss>
+  `;
+  await assertRejects(() => parseFeed(futureRSSFormat), Error, "Type xrss is not supported");
 });
