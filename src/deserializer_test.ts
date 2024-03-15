@@ -557,17 +557,17 @@ const rss2DublinCoreTestSample = await Deno.readTextFile(
       },
       {
         name: "Category:Length",
-        getValue: (src: Feed) => src.categories.length,
+        getValue: (src: Feed) => src.categories?.length,
         assert: [{ fn: assertEquals, expect: 2 }],
       },
       {
         name: "Category:[0]:Term",
-        getValue: (src: Feed) => src.categories[0].term,
+        getValue: (src: Feed) => src.categories?.[0].term,
         assert: [{ fn: assertEquals, expect: "ATOM:Category:0:Term" }],
       },
       {
         name: "Category:[1]:Term",
-        getValue: (src: Feed) => src.categories[1].term,
+        getValue: (src: Feed) => src.categories?.[1].term,
         assert: [{ fn: assertEquals, expect: "ATOM:Category:1:Term" }],
       },
       {
