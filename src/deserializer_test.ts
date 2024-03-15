@@ -9,7 +9,9 @@ import { MediaRssFields } from "./types/fields/media_rss_fields.ts";
 const atomTestSample = await Deno.readTextFile("./samples/atom.xml");
 const rss1TestSample = await Deno.readTextFile("./samples/rss1.xml");
 const rss2TestSample = await Deno.readTextFile("./samples/rss2.xml");
-const rss2DublinCoreTestSample = await Deno.readTextFile("./samples/rss2_dublin-core.xml");
+const rss2DublinCoreTestSample = await Deno.readTextFile(
+  "./samples/rss2_dublin-core.xml",
+);
 
 [
   {
@@ -307,7 +309,11 @@ const rss2DublinCoreTestSample = await Deno.readTextFile("./samples/rss2_dublin-
       {
         name: "Items:[0]:ContentEncoded:Value",
         getValue: (src: Feed) => src.entries[0].content?.value,
-        assert: [{ fn: assertEquals, expect: "<RSS2:Item:0:ConentEncoded:CData></RSS2:Item:0:ConentEncoded:CData>" }],
+        assert: [{
+          fn: assertEquals,
+          expect:
+            "<RSS2:Item:0:ConentEncoded:CData></RSS2:Item:0:ConentEncoded:CData>",
+        }],
       },
       {
         name: "Items:[0]:Guid",
@@ -710,7 +716,9 @@ const rss2DublinCoreTestSample = await Deno.readTextFile("./samples/rss2_dublin-
       },
       {
         name: "Entry:[2]:media:group - Nestd MediaRSS group",
-        getValue: (src: Feed) => src.entries[2]?.[MediaRss.Group]?.[MediaRss.Community]?.[MediaRss.Statistics]?.views,
+        getValue: (src: Feed) =>
+          src.entries[2]?.[MediaRss.Group]?.[MediaRss.Community]
+            ?.[MediaRss.Statistics]?.views,
         assert: [{
           fn: assertEquals,
           expect: "1337",
@@ -722,16 +730,22 @@ const rss2DublinCoreTestSample = await Deno.readTextFile("./samples/rss2_dublin-
   workspace.tests.forEach((test) => {
     Deno.test(`parseFeed:${workspace.name}:${test.name}`, () => {
       const target = test.getValue(workspace.source);
-      test.assert.forEach((assertion) => assertion.fn(target, assertion.expect));
+      test.assert.forEach((assertion) =>
+        assertion.fn(target, assertion.expect)
+      );
     });
   });
 });
 
-Deno.test('Should throw error on invalid feed format', async () => {
-  await assertRejects(() => parseFeed('Invalid feed string'), Error, "Invalid or unsupported feed format");
+Deno.test("Should throw error on invalid feed format", async () => {
+  await assertRejects(
+    () => parseFeed("Invalid feed string"),
+    Error,
+    "Invalid or unsupported feed format",
+  );
 });
 
-Deno.test('Should throw error on unsupported feed format', async () => {
+Deno.test("Should throw error on unsupported feed format", async () => {
   const futureRSSFormat = `
     <?xml version="1.0" encoding="UTF-8"?>
     <xrss version="X.0" xmlns:media="http://schema.loremipsumuru.com/xrss/">
@@ -766,5 +780,9 @@ Deno.test('Should throw error on unsupported feed format', async () => {
       </channel>
     </xrss>
   `;
-  await assertRejects(() => parseFeed(futureRSSFormat), Error, "Type xrss is not supported");
+  await assertRejects(
+    () => parseFeed(futureRSSFormat),
+    Error,
+    "Type xrss is not supported",
+  );
 });
