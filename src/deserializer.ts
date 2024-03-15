@@ -81,9 +81,8 @@ const parse = (input: string) =>
             .trim();
 
           if (attributes.length) {
-            cDataBuilder += `<${node.name} ${attributes}${(node.isSelfClosing
-              ? " /"
-              : "")}>`;
+            cDataBuilder +=
+              `<${node.name} ${attributes}${(node.isSelfClosing ? " /" : "")}>`;
           } else {
             cDataBuilder += `<${node.name}${(node.isSelfClosing ? " /" : "")}>`;
           }
@@ -235,12 +234,12 @@ const parse = (input: string) =>
             onclosetag: undefined,
             ontext: undefined,
             oncdata: undefined,
-            onend: undefined
+            onend: undefined,
           });
 
           reject(new Error(`Invalid or unsupported feed format`));
         }
-      }
+      };
 
       parser
         .write(input)

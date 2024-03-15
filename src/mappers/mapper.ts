@@ -282,13 +282,14 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
 
     entry.comments = comments?.value;
     entry.published = entry[DublinCoreFields.DateSubmitted] || pubDate?.value;
-    entry.publishedRaw = entry[DublinCoreFields.DateSubmittedRaw] || pubDateRaw?.value;
+    entry.publishedRaw = entry[DublinCoreFields.DateSubmittedRaw] ||
+      pubDateRaw?.value;
     entry.updated = pubDate?.value;
     entry.updatedRaw = item.pubDateRaw?.value;
 
     if (item[Rss2Fields.ContentEncoded]?.value) {
       entry.content = {
-        value: item[Rss2Fields.ContentEncoded]?.value
+        value: item[Rss2Fields.ContentEncoded]?.value,
       };
     }
 

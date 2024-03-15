@@ -32,8 +32,8 @@ export interface JsonFeedItem {
   date_modifiedRaw?: string;
   authors?: JsonFeedAuthor[];
   /**
-	 * @deprecated Please use the new JsonFeed 1.1 authors field instead.
-	 */
+   * @deprecated Please use the new JsonFeed 1.1 authors field instead.
+   */
   author?: JsonFeedAuthor;
   tags?: string[];
   attachments?: Attachment[];

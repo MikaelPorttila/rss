@@ -356,15 +356,15 @@ const composeRss2 = (
             value: "RSS2:Channel:Item:2:FeedburnerLink:Value",
           },
           "content:encoded": {
-            value: "RSS2:Channel:Item:2:content:encoded:Value"
-          }
+            value: "RSS2:Channel:Item:2:content:encoded:Value",
+          },
         },
       ],
     },
   } as InternalRSS2;
 
   DublinCoreFieldArray.forEach(
-    ((dcField) => {
+    (dcField) => {
       const fieldName = formatNamespaceFieldName(dcField);
       const { isArray, isDate, isInt, isFloat } = resolveRss2Field(
         dcField,
@@ -399,7 +399,7 @@ const composeRss2 = (
 
       (result.channel as any)[dcField] = channelValue;
       (result.channel.items[0] as any)[dcField] = itemValue;
-    }),
+    },
   );
 
   setter && setter(result);
@@ -453,7 +453,7 @@ const composeRss1 = (
   } as InternalRSS1;
 
   DublinCoreFieldArray.forEach(
-    ((dcField) => {
+    (dcField) => {
       const fieldName = formatNamespaceFieldName(dcField);
       const { isArray, isInt, isFloat, isDate } = resolveRss1Field(
         dcField,
@@ -484,7 +484,7 @@ const composeRss1 = (
         { value: `RSS1:Channel:${fieldName}:Value` };
       (result.item[0] as any)[dcField] = itemValue ||
         { value: `RSS1:Item:0:${fieldName}:Value` };
-    }),
+    },
   );
 
   SlashFieldArray.forEach((slashField) => {

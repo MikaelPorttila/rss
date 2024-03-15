@@ -28,12 +28,21 @@ for (let index = 0; index < iterations; index++) {
   if (index % snapshotPos === 0) {
     const pos = index / snapshotPos;
     if (pos < snapshotCount) {
-      heapUsageArr[pos] = (Deno.memoryUsage().heapUsed - initialDenoProcessAndV8MemoryUsage.heapUsed) / 1024 / 1024;
-      heapTopArr[pos] = (Deno.memoryUsage().heapTotal - initialDenoProcessAndV8MemoryUsage.heapTotal) / 1024 / 1024;
-      rssArr[pos] = (Deno.memoryUsage().rss - initialDenoProcessAndV8MemoryUsage.rss) / 1024 / 1024;
+      heapUsageArr[pos] = (Deno.memoryUsage().heapUsed -
+        initialDenoProcessAndV8MemoryUsage.heapUsed) / 1024 / 1024;
+      heapTopArr[pos] = (Deno.memoryUsage().heapTotal -
+        initialDenoProcessAndV8MemoryUsage.heapTotal) / 1024 / 1024;
+      rssArr[pos] =
+        (Deno.memoryUsage().rss - initialDenoProcessAndV8MemoryUsage.rss) /
+        1024 / 1024;
     }
   }
 }
 
 console.log(`\nMemory usage (Heap: Blue, Heap Top: Green, RSS: Red)`);
-console.log(plot([heapUsageArr, heapTopArr, rssArr], { colors: ["blue", "green", "red"], height: 30 } as config));
+console.log(
+  plot(
+    [heapUsageArr, heapTopArr, rssArr],
+    { colors: ["blue", "green", "red"], height: 30 } as config,
+  ),
+);
