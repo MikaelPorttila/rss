@@ -22,7 +22,7 @@ export interface Feed extends DublinCore {
   copyright?: string;
   author?: Author;
   ttl?: number;
-  categories: Category[];
+  categories?: Category[];
   skipHours?: number[];
   skipDays?: string[];
   image?: FeedImage;
