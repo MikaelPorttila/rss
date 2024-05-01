@@ -1,6 +1,8 @@
 ![CI](https://github.com/MikaelPorttila/rss/workflows/CI/badge.svg?branch=master)
 [![tag](https://img.shields.io/github/tag/MikaelPorttila/rss.svg)](https://github.com/MikaelPorttila/rss/releases)
-
+[![DenoLib](https://denolib.com/badge?scope=MikaelPorttila&repo=rss)](https://github.com/denolib)
+[![Deno Third Party Modules](https://shield.deno.dev/x/rss)](https://deno.land/x/rss)
+[![JSR](https://jsr.io/badges/@mikaelporttila/rss)](https://jsr.io/@mikaelporttila/rss)
 ## About
 
 RSS and Atom deserialization module for Deno.<br/>The project aims to provide a

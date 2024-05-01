@@ -1,2 +1,2 @@
 // Credit:
-export { SAXParser } from "https://deno.land/x/sax_ts@v1.2.12/src/sax.ts";
+export { SAXParser } from "jsr:@maxim-mazurok/sax-ts@1.2.13";
