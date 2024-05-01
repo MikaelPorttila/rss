@@ -1,0 +1,13 @@
+{
+    "name": "rss",
+    "author": "Mikael Porttila",
+    "keywords": [
+        "rss",
+        "rss-parser",
+        "deno",
+        "atom",
+        "feed",
+        "rss 2.0",
+        "JSON Feed"
+    ]
+}
