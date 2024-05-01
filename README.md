@@ -11,12 +11,13 @@ lightweight and easy-to-use feed deserializer.
 [Check out the deserializer in this online
 showcase](https://repl.it/@MikaelPorttila/Deno-RSS-Module)
 
-## Usage
+## Usage - Download and parse feed
 
-### Download and parse feed:
-
+### Download and parse feed
 ```typescript
-import { parseFeed } from "https://deno.land/x/rss/mod.ts";
+import { parseFeed } from "jsr:@mikaelporttila/rss@*";
+// Or by using Denoland direct import
+// import { parseFeed } from "https://deno.land/x/rss/mod.ts";
 
 const response = await fetch(
   "http://static.userland.com/gems/backend/rssTwoExample2.xml",
