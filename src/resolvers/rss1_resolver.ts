@@ -3,9 +3,9 @@ import { Rss1Fields } from "../types/fields/rss1_fields.ts";
 import { resolveDublinCoreField } from "./dublin_core_resolver.ts";
 import { resolveSlashField } from "./slash_resolver.ts";
 
-export const resolveRss1Field = (
+export function resolveRss1Field (
   name: string,
-): ResolverResult => {
+): ResolverResult {
   const result = {
     name,
     isHandled: true,

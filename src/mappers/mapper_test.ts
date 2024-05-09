@@ -14,9 +14,9 @@ import type { InternalAtom } from "../types/internal/internal_atom.ts";
 import type { InternalRSS1 } from "../types/internal/internal_rss1.ts";
 import type { InternalRSS2 } from "../types/internal/internal_rss2.ts";
 
-const composeAtom = (
+function composeAtom (
   setter: (data: InternalAtom) => void = () => {},
-): InternalAtom => {
+): InternalAtom {
   const result = {
     id: {
       value: "Atom:Id:Value",
@@ -170,9 +170,9 @@ const composeAtom = (
   return result;
 };
 
-const composeRss2 = (
+function composeRss2 (
   setter: (data: InternalRSS2) => void = () => {},
-): InternalRSS2 => {
+): InternalRSS2 {
   const result = {
     version: 1,
     channel: {
@@ -406,9 +406,9 @@ const composeRss2 = (
   return result;
 };
 
-const composeRss1 = (
+function composeRss1 (
   setter: (data: InternalRSS1) => void = () => {},
-): InternalRSS1 => {
+): InternalRSS1 {
   const result = {
     channel: {
       title: {
@@ -510,18 +510,18 @@ const composeRss1 = (
   return result;
 };
 
-const formatNamespaceFieldName = (field: string) => {
+function formatNamespaceFieldName (field: string) {
   const nameSplit = field.split(":");
   return nameSplit[0].toUpperCase() + nameSplit[1].charAt(0).toUpperCase() +
     nameSplit[1].slice(1);
 };
 
-const testTextField = (
+function testTextField (
   fieldName: string,
   target: any,
   type: string | undefined,
   value: string,
-) => {
+) {
   return [
     {
       name: fieldName,
@@ -544,11 +544,11 @@ const testTextField = (
   ];
 };
 
-const testArrayLength = (
+function testArrayLength (
   fieldName: string,
   target: any,
   expectedLength: number,
-) => {
+) {
   return [
     {
       name: fieldName,

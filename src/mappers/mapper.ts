@@ -10,16 +10,16 @@ import { AtomFields } from "./../types/fields/atom_fields.ts";
 import { DublinCoreFields } from "./../types/fields/dublin_core_fields.ts";
 import { Rss2Fields } from "./../types/fields/rss2_fields.ts";
 
-import { copyValueFields, isValidURL } from "./../util.ts";
+import { copyValueFields } from "./../util.ts";
 import { FeedType } from "./../types/feed_type.ts";
 import { SlashFieldArray } from "./../types/slash.ts";
 import { copyMedia } from "./media_mapper.ts";
 import { DublinCoreFieldArray } from "../types/internal/internal_dublin_core.ts";
 
-export const toFeed = (
+export function toFeed(
   feedType: FeedType,
   feed: InternalAtom | InternalRSS2 | InternalRSS1 | JsonFeed,
-): Feed | null => {
+): Feed | null {
   if (!feed) {
     return null;
   }
@@ -34,9 +34,9 @@ export const toFeed = (
     default:
       return null;
   }
-};
+}
 
-const mapRssToFeed = (rss: InternalRSS1): Feed => {
+function mapRssToFeed(rss: InternalRSS1): Feed {
   const {
     title,
     description,
@@ -163,9 +163,9 @@ const mapRssToFeed = (rss: InternalRSS1): Feed => {
   }) ?? [];
 
   return result;
-};
+}
 
-const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
+function mapRss2ToFeed(rss: InternalRSS2): Feed {
   const {
     items,
     title,
@@ -333,9 +333,9 @@ const mapRss2ToFeed = (rss: InternalRSS2): Feed => {
   }) ?? [];
 
   return (result as any);
-};
+}
 
-const mapAtomToFeed = (atom: InternalAtom): Feed => {
+function mapAtomToFeed(atom: InternalAtom): Feed {
   const {
     id,
     generator,
@@ -462,7 +462,7 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
       entry.links.push({ href });
     }
 
-    if (id && isValidURL(id.value as string)) {
+    if (id && URL.parse(id.value as string)) {
       entry.links.push({ href: id.value });
     }
 
@@ -509,10 +509,12 @@ const mapAtomToFeed = (atom: InternalAtom): Feed => {
   }) ?? [];
 
   return result;
-};
+}
 
-const createAuthor = (email?: string, name?: string, uri?: string) => ({
-  email,
-  name,
-  uri,
-});
+function createAuthor(email?: string, name?: string, uri?: string) {
+  return {
+    email,
+    name,
+    uri,
+  };
+}

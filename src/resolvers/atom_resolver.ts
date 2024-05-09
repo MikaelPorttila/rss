@@ -2,9 +2,9 @@ import { AtomFields } from "../types/fields/atom_fields.ts";
 import { resolveDublinCoreField } from "./dublin_core_resolver.ts";
 import type { ResolverResult } from "./types/resolver_result.ts";
 
-export const resolveAtomField = (
-  name: string,
-): ResolverResult => {
+export function resolveAtomField(
+  name: string
+): ResolverResult {
   const result = {
     name,
     isHandled: true,

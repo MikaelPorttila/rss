@@ -1,25 +1,22 @@
-import { assert, assertEquals } from "../test_deps.ts";
-import { copyValueFields, isValidURL } from "./util.ts";
-
-Deno.test("is valid HTTP URL", () => {
-  assert(isValidURL("https://test.test"));
-  assert(isValidURL("http://test.test"));
-  assert(!isValidURL("test.com/test"));
-  assert(!isValidURL("test/data/test"));
-});
+import { assertEquals } from "../test_deps.ts";
+import { copyValueFields } from "./util.ts";
 
 Deno.test("CopyValueFields", () => {
-  let target = {
+  // Setup
+  const target = {
     a: undefined,
     b: undefined,
     c: "cValue",
   };
-  let source = {
+  const source = {
     a: { value: "aValue" },
     b: "bValue",
   };
 
+  // Act
   copyValueFields(["a", "b", "c"], source, target);
+
+  // Assert
   assertEquals(target.a, "aValue");
   assertEquals(target.b, "bValue");
   assertEquals(target.c, "cValue");

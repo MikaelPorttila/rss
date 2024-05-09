@@ -1,9 +1,9 @@
 import type { ResolverResult } from "./types/resolver_result.ts";
 import { SlashFields } from "../types/fields/slash_fields.ts";
 
-export const resolveSlashField = (
+export function resolveSlashField (
   name: string,
-): ResolverResult => {
+): ResolverResult {
   const result = {
     name,
     isHandled: true,

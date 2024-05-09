@@ -3,10 +3,10 @@ import { Rss2Fields } from "../types/fields/rss2_fields.ts";
 import { resolveDublinCoreField } from "./dublin_core_resolver.ts";
 import { resolveMediaRssField } from "./media_rss_resolver.ts";
 
-export const resolveRss2Field = (
+export function resolveRss2Field(
   name: string,
-): ResolverResult => {
-  let result = {
+): ResolverResult {
+  const result = {
     name,
     isHandled: true,
     isArray: false,
@@ -67,31 +67,33 @@ export const resolveRss2Field = (
       result.isArray = true;
       break;
     default:
-      const subNamespaceResolvers = [
-        resolveDublinCoreField,
-        resolveMediaRssField,
-      ];
-      for (let i = 0; i < subNamespaceResolvers.length; i++) {
-        const resolverResult = subNamespaceResolvers[i](name);
-        if (resolverResult.isHandled) {
-          if (resolverResult.isArray) {
-            result.isArray = true;
-          }
+      {
+        const subNamespaceResolvers = [
+          resolveDublinCoreField,
+          resolveMediaRssField,
+        ];
+        for (let i = 0; i < subNamespaceResolvers.length; i++) {
+          const resolverResult = subNamespaceResolvers[i](name);
+          if (resolverResult.isHandled) {
+            if (resolverResult.isArray) {
+              result.isArray = true;
+            }
 
-          if (resolverResult.isDate) {
-            result.isDate = true;
-          }
+            if (resolverResult.isDate) {
+              result.isDate = true;
+            }
 
-          if (resolverResult.isInt) {
-            result.isInt = true;
-          }
+            if (resolverResult.isInt) {
+              result.isInt = true;
+            }
 
-          if (resolverResult.isFloat) {
-            result.isFloat = true;
-          }
+            if (resolverResult.isFloat) {
+              result.isFloat = true;
+            }
 
-          result.name = resolverResult.name;
-          break;
+            result.name = resolverResult.name;
+            break;
+          }
         }
       }
       break;
