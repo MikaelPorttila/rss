@@ -1,10 +1,9 @@
 import { config, plot } from "https://deno.land/x/chart/mod.ts";
 import { parseFeed } from "./mod.ts";
-import { isValidURL } from "./src/util.ts";
 
 const arg0 = Deno.args[0];
 let xml: string;
-if (isValidURL(arg0)) {
+if (URL.parse(arg0)) {
   const response = await fetch(arg0);
   xml = await response.text();
 } else {

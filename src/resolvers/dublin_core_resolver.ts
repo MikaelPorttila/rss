@@ -1,9 +1,9 @@
 import type { ResolverResult } from "./types/resolver_result.ts";
 import { DublinCoreFields } from "../types/fields/dublin_core_fields.ts";
 
-export const resolveDublinCoreField = (
+export function resolveDublinCoreField(
   name: string,
-): ResolverResult => {
+): ResolverResult {
   const result = {
     name,
     isHandled: true,

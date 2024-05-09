@@ -2,17 +2,19 @@ import { MediaRssFields } from "../types/fields/media_rss_fields.ts";
 import type { InternalMediaRss } from "../types/internal/internal_media_rss.ts";
 import type { MediaRss } from "./../types/media_rss.ts";
 
-export const copyMedia = (source: InternalMediaRss, target: MediaRss) => {
-  [
+export function copyMedia(source: InternalMediaRss, target: MediaRss) {
+  const fields = [
     MediaRssFields.Rating,
     MediaRssFields.Keywords,
     MediaRssFields.Category,
-  ].forEach((fieldName) => {
+  ];
+
+  for (const fieldName of fields) {
     const val = (source as any)[fieldName];
     if (val) {
       (target as any)[fieldName] = (val as any).value;
     }
-  });
+  }
 
   const mediaGroup = source[MediaRssFields.Group];
   if (mediaGroup && mediaGroup.length > 0) {

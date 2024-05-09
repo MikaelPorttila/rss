@@ -1,9 +1,9 @@
 import type { ResolverResult } from "./types/resolver_result.ts";
 import { MediaRssFields } from "../types/fields/media_rss_fields.ts";
 
-export const resolveMediaRssField = (
+export function resolveMediaRssField(
   name: string,
-): ResolverResult => {
+): ResolverResult {
   const result = {
     name,
     isHandled: true,
