@@ -1,6 +1,6 @@
 export type { Atom } from "./src/types/atom.ts";
 export type { DeserializationResult } from "./src/types/deserialization_result.ts";
-export type { Feed } from "./src/types/feed.ts";
+export type { Feed, FeedEntry } from "./src/types/feed.ts";
 export type { JsonFeed } from "./src/types/json_feed.ts";
 export type { RSS1 } from "./src/types/rss1.ts";
 export type { RSS2 } from "./src/types/rss2.ts";
