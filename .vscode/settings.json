@@ -6,5 +6,6 @@
   },
   "editor.renderWhitespace": "all",
   "discord.enabled": true,
+  "discord.removeLowerDetails": true,
   "editor.defaultFormatter": "denoland.vscode-deno"
 }
