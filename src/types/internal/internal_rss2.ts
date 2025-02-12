@@ -28,7 +28,7 @@ interface Channel extends InternalDublinCore {
   cloud?: Cloud;
   ttl?: ValueField<number>;
   image?: Image;
-  textInput?: any; // TODO(MikaelPorttila): Type textInput
+  textInput?: any; // TODO: Type textInput
   skipHours?: {
     hour?: ValueField<number>[];
   };
