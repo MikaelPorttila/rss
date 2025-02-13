@@ -261,8 +261,6 @@ function mapRss2ToFeed(rss: InternalRSS2): Feed {
     copyValueFields(DublinCoreFieldArray, entry, entry);
     copyMedia(entry as InternalMediaRss, entry);
 
-    entry.id = guid?.value as string || entry[DublinCoreFields.URI] as string;
-
     const titleValue = entry[DublinCoreFields.Title] || title?.value;
     if (titleValue) {
       entry.title = {
@@ -308,6 +306,14 @@ function mapRss2ToFeed(rss: InternalRSS2): Feed {
 
     if (link?.value) {
       entry.links.push({ href: link?.value });
+    }
+
+    entry.id = guid?.value as string || entry[DublinCoreFields.URI] as string;
+    if (!entry.id && entry.links.length > 0) {
+      const linkWithHref = entry.links.find(x => x.href);
+      if (linkWithHref) {
+        entry.id = linkWithHref.href;
+      }
     }
 
     if (enclosure) {
