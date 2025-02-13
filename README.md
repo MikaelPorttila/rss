@@ -82,7 +82,7 @@ const mediaContent = entries[0][MediaRss.Content];
 
 | Feed                  | Atom                                          | RSS2                                   | RSS                           |
 | --------------------- | --------------------------------------------- | -------------------------------------- | ----------------------------- |
-| Id                    | Id                                            | Guid                                   | DC:URI or Link                |
+| Id                    | Id                                            | Guid or Link or DC:URI                 | DC:URI or Link                |
 | Author                | Author                                        | Author or DC:Creator                   | DC:Creator                    |
 | Title                 | Title                                         | Title or DC:Title                      | Title or DC:Title             |
 | Description           | Summary                                       | Description or DC:Description          | Description or DC:Description |

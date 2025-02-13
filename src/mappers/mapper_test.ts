@@ -359,6 +359,30 @@ function composeRss2 (
             value: "RSS2:Channel:Item:2:content:encoded:Value",
           },
         },
+        {
+          title: {
+            value: "RSS2:Channel:Item:3:Title:Value",
+          },
+          description: {
+            value: "RSS2:Channel:Item:3:Description:Value",
+          },
+          author: {
+            value: "RSS2:Channel:Item:3:Author:Value",
+          },
+          link: {
+            value: "RSS2:Channel:Item:3:Link:Value",
+          },
+          guid: {
+            value: undefined,
+          },
+          comments: {
+            value: "RSS2:Channel:Item:3:Comments:Value",
+          },
+          categories: [
+            { value: "RSS2:Channel:Item:3:Categories:0:Value" },
+            { value: "RSS2:Channel:Item:3:Categories:1:Value" },
+          ]
+        },
       ],
     },
   } as InternalRSS2;
@@ -990,7 +1014,7 @@ function testArrayLength (
         getValue: (src: Feed) => src.image?.width,
         assert: [{ fn: assertEquals, expect: 34 }],
       },
-      ...testArrayLength("Items", (src: Feed) => src.entries, 3),
+      ...testArrayLength("Items", (src: Feed) => src.entries, 4),
       ...testTextField(
         "Items:0:Title",
         (src: Feed) => src.entries[0].title,
@@ -1109,6 +1133,14 @@ function testArrayLength (
         assert: [{
           fn: assertEquals,
           expect: "RSS2:Channel:Item:2:FeedburnerLink:Value",
+        }],
+      },
+      {
+        name: "Items:3:Id:Fallback",
+        getValue: (src: Feed) => src.entries[3].id,
+        assert: [{
+          fn: assertEquals,
+          expect: "RSS2:Channel:Item:3:Link:Value",
         }],
       },
       {
