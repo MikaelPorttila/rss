@@ -786,3 +786,15 @@ Deno.test("Should throw error on unsupported feed format", async () => {
     "Type xrss is not supported",
   );
 });
+
+Deno.test("Test empty node", async () => {
+  const feed = await parseFeed(`<rss version="2.0"
+	>
+  <channel>
+    <item>
+      <dc:creator><![CDATA[]]></dc:creator>
+    </item>
+  </channel>
+  </rss>`);
+  feed.entries[0].author?.name?.substring(0,1)
+})

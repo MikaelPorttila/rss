@@ -180,16 +180,19 @@ const parse = (input: string) => new Promise<{ feedType: FeedType; data: any }>(
         }
       }
 
-      if (isArray) {
-        if (!targetNode[name]) {
-          targetNode[name] = [node];
-        } else {
-          targetNode[name].push(node);
-        }
-      } else {
-        const isEmpty = (typeof node === "object") &&
+      const isEmpty = (typeof node === "object") &&
           Object.keys(node).length === 0 &&
           !(node instanceof Date);
+
+      if (isArray) {
+        const nameNode = isEmpty ? "" : node;
+        if (!targetNode[name]) {
+          targetNode[name] = [nameNode];
+        } else {
+          targetNode[name].push(nameNode);
+        }
+      } else {
+       
         try {
           if (!isEmpty) {
             targetNode[name] = node;
