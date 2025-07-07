@@ -56,6 +56,16 @@ const parse = (input: string) => new Promise<{ feedType: FeedType; data: any }>(
       lowercase: true,
     });
 
+    const resetParser = () => {
+      Object.assign(parser, {
+        onopentag: undefined,
+        onclosetag: undefined,
+        ontext: undefined,
+        oncdata: undefined,
+        onend: undefined,
+      });
+    };
+
     let resolveField: (
       nodeName: string,
     ) => ResolverResult;
@@ -135,12 +145,7 @@ const parse = (input: string) => new Promise<{ feedType: FeedType; data: any }>(
       const node = stack.pop();
 
       if (stack.length === 0) {
-        Object.assign(parser, {
-          onopentag: undefined,
-          onclosetag: undefined,
-          ontext: undefined,
-          oncdata: undefined,
-        });
+        resetParser();
 
         const result = {
           feedType: feedType,
@@ -232,13 +237,7 @@ const parse = (input: string) => new Promise<{ feedType: FeedType; data: any }>(
 
     parser.onend = () => {
       if (!feedType) {
-        Object.assign(parser, {
-          onopentag: undefined,
-          onclosetag: undefined,
-          ontext: undefined,
-          oncdata: undefined,
-          onend: undefined,
-        });
+        resetParser();
 
         reject(new Error("Invalid or unsupported feed format"));
       }
